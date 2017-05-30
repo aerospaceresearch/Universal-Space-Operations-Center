@@ -1,0 +1,4 @@
+/Universal-Space-Operations-Center/target/
+.*
+!/.gitignore
+/Universal-Space-Operations-Center/nbproject/
