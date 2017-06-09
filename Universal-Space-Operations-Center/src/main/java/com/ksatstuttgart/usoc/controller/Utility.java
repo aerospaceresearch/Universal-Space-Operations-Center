@@ -35,11 +35,18 @@ package com.ksatstuttgart.usoc.controller;
 
 public class Utility {
      
-    
-    public static int binToUInt(String t){
+    /**
+     * converts a String of 1's and 0's to an unsigned integer
+     * 
+     * @param binString : String - binary String
+     * @return unsigned integer 
+     */
+    public static int binToUInt(String binString){
         int num = 0;
         
-        String b = switchIntEndian(t);
+        //necessary due to different conversion between MIRKA2-RX microcontrollers 
+        //and Java
+        String b = switchIntEndian(binString);
         for (int i = 0; i < b.length(); i++) {
             if(b.charAt(i)=='1'){
                 num+=Math.pow(2, b.length()-(i+1));
@@ -49,14 +56,26 @@ public class Utility {
         return num;
     }
     
-    public static String switchIntEndian(String i){
-        return i.substring(8) + i.substring(0, 8);
+    /**
+     * switches the integer endian of a binary String 
+     * 
+     * @param binString
+     * @return switched String
+     */
+    public static String switchIntEndian(String binString){
+        return binString.substring(8) + binString.substring(0, 8);
     }
     
-    public static int binToInt(String t){
+    /**
+     * converts a binary String to a signed integer.
+     * 
+     * @param binString
+     * @return 
+     */
+    public static int binToInt(String binString){
         int num = 0;
         //System.out.println("bintoint: "+t);
-        String b = (t.length()==16) ? switchIntEndian(t) : t;
+        String b = (binString.length()==16) ? switchIntEndian(binString) : binString;
         //System.out.println("aftercon: "+b);
         for (int i = 1; i < b.length(); i++) {
             if(b.charAt(i)=='1'){
@@ -67,6 +86,12 @@ public class Utility {
         return b.charAt(0) == '1' ? num*(-1):num;
     }
     
+    /**
+     * converts an integer value to a String with 1's and 0's of length 8
+     * 
+     * @param b
+     * @return 
+     */
     public static String intToBits(int b){
         String s = Integer.toBinaryString(b);
         while(s.length()<8){
@@ -75,6 +100,14 @@ public class Utility {
         return s;
     }
     
+    /**
+     * Converts a String into a String of 1's and 0's using the String.getBytes()
+     * method. 
+     * 
+     * @param s : String 
+     * @return A String of 1's and 0's representing the binary values of the input 
+     * String
+     */
     public static String bytesToBinString(String s) {
         String text = "";
         for (byte b : s.getBytes()) {
@@ -83,29 +116,30 @@ public class Utility {
         return text;
     }
     
-    public static String floatEndianess(String s){
-        
-        return s.substring(24)+s.substring(16,24)+s.substring(8, 16)+s.substring(0, 8);
+    /**
+     * Changes the float endianess of a binary String corresponding to the 
+     * way the data was transmitted on the MIRKA2-RX mission
+     * 
+     * @param binaryString : String
+     * @return A binary String with a changed endianess
+     */
+    public static String floatEndianess(String binaryString){
+        return binaryString.substring(24)+binaryString.substring(16,24)
+                +binaryString.substring(8, 16)+binaryString.substring(0, 8);
     }
     
-    public static float stringToFloat(String s){
-        String b = floatEndianess(s);
+    /**
+     * Converts a binary String into a float value
+     * @param binaryString : String 
+     * @return 
+     */
+    public static float stringToFloat(String binaryString){
+        
+        //necessary due to different conversion between MIRKA2-RX microcontrollers 
+        //and Java
+        String b = floatEndianess(binaryString);
         int ii = Utility.binToInt(b);
         float f = Float.intBitsToFloat(ii);
         return f;
     }
-    
-    public static float stringToUFloat(String s){
-        return Float.intBitsToFloat(Integer.parseInt(s,2));
-    }
-    
-    public static byte[] getContentFromPos(int x, int y, byte[] content){
-        byte[] msg = new byte[y-x+1];
-        for (int i = 0; i < msg.length; i++) {
-            msg[i] = content[x+i];
-        }
-        return msg;
-    }
-    
-
 }
