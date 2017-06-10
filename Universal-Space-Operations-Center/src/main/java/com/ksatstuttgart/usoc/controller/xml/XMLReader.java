@@ -48,23 +48,21 @@ import javax.xml.stream.XMLStreamReader;
 public class XMLReader {
 
     private static XMLReader instance;
-    
-    public static XMLReader getInstance(){
-        if(instance == null){
+
+    public static XMLReader getInstance() {
+        if (instance == null) {
             instance = new XMLReader();
         }
         return instance;
     }
-    
+
     public SBD340Message getMessageStructure(String filename) {
         InputStream file;
         try {
             file = new FileInputStream(filename);
-            if (file != null) {
-                return stax(file);
-            }
+            return stax(file);
         } catch (IOException ex) {
-            
+            System.err.println(ex.getMessage());
         }
 
         return new SBD340Message();
@@ -95,9 +93,24 @@ public class XMLReader {
                         break;
 
                     case XMLStreamConstants.START_ELEMENT:
-
+                        System.out.println("START_ELEMENT: " + parser.getLocalName());
+                        switch (parser.getLocalName()) {
+                            case "sensor":
+                                lastSensor = new Sensor();
+                                break;
+                            case "metadata":
+                                lastMetaData = new MetaData();
+                                break;
+                            case "datapoint":
+                                lastDataPoint = new DataPoint();
+                                break;
+                        }
+                        
                         for (int i = 0; i < parser.getAttributeCount(); i++) {
                             String value = parser.getAttributeValue(i);
+                            System.out.println("  Attribut: "
+                                    + parser.getAttributeLocalName(i)
+                                    + " Wert: " + parser.getAttributeValue(i));
                             switch (parser.getAttributeLocalName(i)) {
                                 case "protocol":
                                     sbd.setProtocol(ProtocolType.valueOf(value));
@@ -120,11 +133,14 @@ public class XMLReader {
                                 case "dataName":
                                     lastDataPoint.setDataName(value);
                                     break;
-                                case "datatype":
+                                case "dataType":
                                     lastDataPoint.setDataType(DataType.valueOf(value));
                                     break;
-                                case "numpoints":
+                                case "numPoints":
                                     lastDataPoint.setNumPoints(Integer.parseInt(value));
+                                    break;
+                                case "startPosition":
+                                    lastDataPoint.setStartPosition(Integer.parseInt(value));
                                     break;
                                 case "frequency":
                                     lastDataPoint.setFrequency(Double.parseDouble(value));
@@ -135,17 +151,6 @@ public class XMLReader {
                             }
                         }
 
-                        switch (parser.getLocalName()) {
-                            case "sensor":
-                                lastSensor = new Sensor();
-                                break;
-                            case "metadata":
-                                lastMetaData = new MetaData();
-                                break;
-                            case "datapoint":
-                                lastDataPoint = new DataPoint();
-                                break;
-                        }
                         break;
 
                     case XMLStreamConstants.CHARACTERS:
@@ -155,6 +160,7 @@ public class XMLReader {
                         switch (parser.getLocalName()) {
                             case "sensor":
                                 dataPackage.addSensor(lastSensor);
+                                lastSensor = new Sensor();
                                 break;
                             case "datapoint":
                                 lastSensor.addDataPoint(lastDataPoint);
@@ -162,6 +168,7 @@ public class XMLReader {
                                 break;
                             case "metadata":
                                 header.addMetaData(lastMetaData);
+                                lastMetaData = new MetaData();
                                 break;
                             case "header":
                                 sbd.setHeader(header);
@@ -178,9 +185,8 @@ public class XMLReader {
                 parser.next();
             }
         } catch (XMLStreamException ex) {
-            
+
         }
         return sbd;
     }
 }
-

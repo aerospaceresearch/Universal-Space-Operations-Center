@@ -48,7 +48,7 @@ public class XMLWriter {
     }
 
     public void saveMessageStructure(SBD340Message message, String filename) throws IOException {
-        writeXML(message,new File(filename));
+        writeXML(message,new File("protocols",filename));
     }
     
     private String getDefaultFileName(){
@@ -58,7 +58,6 @@ public class XMLWriter {
     private void writeXML(Object o, File f) throws IOException {
         
         if (!f.exists()) {
-            //f.mkdirs();
             f.createNewFile();
         }
         

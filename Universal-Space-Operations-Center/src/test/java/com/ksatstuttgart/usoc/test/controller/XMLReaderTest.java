@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc.test.controller;
 import com.ksatstuttgart.usoc.controller.xml.XMLReader;
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataPackage;
 import com.ksatstuttgart.usoc.data.message.DataPoint;
+import com.ksatstuttgart.usoc.data.message.ProtocolType;
 import com.ksatstuttgart.usoc.data.message.SBD340Message;
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
@@ -70,7 +71,7 @@ public class XMLReaderTest {
      */
     @org.junit.Test
     public void testReadingDatapackage() {
-        System.out.println("isOK");
+        System.out.println("testing Reading Data Structure");
 
         SBD340Message result = XMLReader.getInstance().getMessageStructure("protocols/testProtocol.xml");
 
@@ -82,7 +83,7 @@ public class XMLReaderTest {
         s.setType(SensorType.PRESSURE);
 
         DataPoint datapoint = new DataPoint();
-        datapoint.setDataName("testData");
+        datapoint.setDataName("testSensorData");
         datapoint.setDataType(DataType.FLOAT);
         datapoint.setStartPosition(40);
 
@@ -95,14 +96,18 @@ public class XMLReaderTest {
 
         MetaData m = new MetaData();
         m.setType(MetaDataType.TIME);
-        m.addDataPoint(datapoint);
+        DataPoint newDataPoint = new DataPoint();
+
+        newDataPoint.setDataName("testMetaData");
+        newDataPoint.setDataType(DataType.FLOAT);
+        newDataPoint.setStartPosition(40);
+
+        m.addDataPoint(newDataPoint);
         h.addMetaData(m);
 
         sbd.setHeader(h);
-        for (Sensor sensor : result.getDataPackage().getSensors()) {
-            System.out.println(sensor.getSensorName());
-        }
-        assertEquals(result, sbd);
+
+        assertEquals(sbd, result);
     }
 
 }

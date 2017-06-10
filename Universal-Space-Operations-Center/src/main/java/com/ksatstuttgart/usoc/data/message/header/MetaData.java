@@ -52,6 +52,7 @@ public class MetaData {
 
     @XmlAttribute(name = "metadataname")
     public String getMetaDataName() {
+        if(metaDataName == null) return "";
         return metaDataName;
     }
 
@@ -80,11 +81,19 @@ public class MetaData {
         if (o instanceof MetaData) {
             MetaData md = (MetaData) o;
             return (md.getDatapoints().equals(this.datapoints)
-                    && md.getMetaDataName().equals(this.metaDataName)
+                    && md.getMetaDataName().equals(this.getMetaDataName())
                     && md.getType() == this.type);
         } else {
             return false;
         }
     }
 
+    @Override
+    public String toString(){
+        String s = "Name: "+this.getMetaDataName()+"\nType: "+this.type+"\nDatapoints:\n";
+        for (DataPoint datapoint : datapoints) {
+            s+=datapoint.toString();
+        }
+        return s;
+    }
 }

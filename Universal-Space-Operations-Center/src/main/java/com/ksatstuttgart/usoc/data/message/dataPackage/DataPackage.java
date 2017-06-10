@@ -65,4 +65,12 @@ public class DataPackage {
         }
     }
     
+    @Override
+    public String toString(){
+        String s = "";
+        for (Sensor sensor : sensors) {
+            s+=sensor.toString()+"\n";
+        }
+        return s;
+    }
 }

@@ -71,7 +71,7 @@ public class XMLWriterTest {
     }
 
     /**
-     * Test of isOK method, of class DataController.
+     * Test of the writeMessageStructure method of the XMLWriter class.
      * 
      * @throws java.io.FileNotFoundException
      */
@@ -88,7 +88,7 @@ public class XMLWriterTest {
             s.setType(SensorType.PRESSURE);
             
             DataPoint datapoint = new DataPoint();
-            datapoint.setDataName("testData");
+            datapoint.setDataName("testSensorData");
             datapoint.setDataType(DataType.FLOAT);
             datapoint.setStartPosition(40);
             
@@ -101,17 +101,23 @@ public class XMLWriterTest {
             
             MetaData m = new MetaData();
             m.setType(MetaDataType.TIME);
-            m.addDataPoint(datapoint);
+            DataPoint newDataPoint = new DataPoint();
+            
+            newDataPoint.setDataName("testMetaData");
+            newDataPoint.setDataType(DataType.FLOAT);
+            newDataPoint.setStartPosition(40);
+            
+            m.addDataPoint(newDataPoint);
             h.addMetaData(m);
             
             sbd.setHeader(h);
             
             //fill datapackage
             
-            String filename = "procotols"+File.pathSeparator+"testProtocol.xml";
+            String filename = "testProtocol.xml";
             XMLWriter.getInstance().saveMessageStructure(sbd, filename);
             
-            BufferedReader br = new BufferedReader(new FileReader(filename));
+            BufferedReader br = new BufferedReader(new FileReader("protocols"+File.separator+filename));
             
             String result = "";
             String nextLine;
@@ -123,14 +129,14 @@ public class XMLWriterTest {
                     + "<ns2:sbd340Message xmlns:ns2=\"usoc/\">    "
                         + "<datapackage>        "
                             + "<sensor sensorname=\"testName\" sensortype=\"PRESSURE\">            "
-                                + "<datapoint dataName=\"testData\" dataType=\"FLOAT\" "
-                                + "frequency=\"0.0\" numPoints=\"0\" startPosition=\"40\"/>        "
+                                + "<datapoint dataName=\"testSensorData\" dataType=\"FLOAT\" "
+                                + "frequency=\"0.0\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
                         + "</sensor>    "
                         + "</datapackage>    "
                         + "<header>        "
-                            + "<metadata metadatatype=\"TIME\">            "
-                                + "<datapoint dataName=\"testData\" dataType=\"FLOAT\" "
-                                + "frequency=\"0.0\" numPoints=\"0\" startPosition=\"40\"/>        "
+                            + "<metadata metadataname=\"\" metadatatype=\"TIME\">            "
+                                + "<datapoint dataName=\"testMetaData\" dataType=\"FLOAT\" "
+                                + "frequency=\"0.0\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
                             + "</metadata>    "
                         + "</header>"
                     + "</ns2:sbd340Message>";

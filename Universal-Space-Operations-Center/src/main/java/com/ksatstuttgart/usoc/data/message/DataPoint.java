@@ -56,6 +56,7 @@ public class DataPoint {
 
     @XmlAttribute
     public String getDataName() {
+        if(dataName == null) return "";
         return dataName;
     }
 
@@ -82,6 +83,7 @@ public class DataPoint {
     
     @XmlAttribute
     public String getUnit() {
+        if(unit == null) return "";
         return unit;
     }
 
@@ -120,15 +122,21 @@ public class DataPoint {
     public boolean equals(Object o) {
         if (o instanceof DataPoint) {
             DataPoint dp = (DataPoint) o;
-            return (dp.getDataName().equals(this.dataName)
+            return (dp.getDataName().equals(this.getDataName())
                     && dp.getFrequency() == this.frequency
                     && dp.getNumPoints() == this.numPoints
                     && dp.getStartPosition() == this.startPosition
-                    && dp.getUnit().equals(this.unit)
+                    && dp.getUnit().equals(this.getUnit())
                     && dp.getDataType() == this.dataType);
         } else {
             return false;
         }
     }
 
+    @Override
+    public String toString(){
+        return "Name: "+this.getDataName()+"\nType: "+this.getDataType()
+                +"\nStartPosition: "+this.getStartPosition()+"\nNumPoints: "+this.getNumPoints()
+                +"\nFrequency: "+this.getFrequency()+"\nUnit: "+this.getUnit();
+    }
 }

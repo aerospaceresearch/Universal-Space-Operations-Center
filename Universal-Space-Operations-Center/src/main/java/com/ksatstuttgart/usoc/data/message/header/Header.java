@@ -62,4 +62,13 @@ public class Header {
             return false;
         }
     }
+    
+    @Override
+    public String toString(){
+        String s = "MetaData:\n";
+        for (MetaData md : metaData) {
+            s+=md.toString()+"\n";
+        }
+        return s;
+    }
 }

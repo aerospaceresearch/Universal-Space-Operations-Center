@@ -51,6 +51,7 @@ public class Sensor {
 
     @XmlAttribute ( name = "sensorname" )
     public String getSensorName() {
+        if(sensorName==null) return "";
         return sensorName;
     }
 
@@ -78,8 +79,8 @@ public class Sensor {
     public boolean equals(Object o) {
         if (o instanceof Sensor) {
             Sensor s = (Sensor) o;
-            return (s.getDatapoints().equals(this.datapoints)
-                    && s.getSensorName().equals(this.sensorName)
+            return (s.getDatapoints().equals(this.getDatapoints())
+                    && s.getSensorName().equals(this.getSensorName())
                     && s.getType() == this.type);
         } else {
             return false;
@@ -87,4 +88,12 @@ public class Sensor {
     }
     
     
+    @Override
+    public String toString(){
+        String s = "Name: "+this.getSensorName()+"\nType: "+this.type+"\nDatapoints:\n";
+        for (DataPoint datapoint : datapoints) {
+            s+=datapoint.toString();
+        }
+        return s;
+    }
 }

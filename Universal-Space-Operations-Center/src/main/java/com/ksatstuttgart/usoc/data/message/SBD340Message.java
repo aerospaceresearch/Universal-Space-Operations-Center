@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement (namespace = "usoc/")
 public class SBD340Message {
     private Header header;
-    private com.ksatstuttgart.usoc.data.message.dataPackage.DataPackage dataPackage;
+    private DataPackage dataPackage;
     private ProtocolType protocol;
 
     public SBD340Message() {
@@ -88,5 +88,13 @@ public class SBD340Message {
         }
     }
 
+    @Override
+    public String toString(){
+        String s = "SBD340Message:\nType: "+this.protocol
+                +"\nHeader:\n"+this.header.toString()
+                +"\nDataPackage\n"+this.dataPackage.toString();
+        
+        return s;
+    }
     
 }
