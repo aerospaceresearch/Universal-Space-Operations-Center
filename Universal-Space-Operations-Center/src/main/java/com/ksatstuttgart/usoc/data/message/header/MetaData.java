@@ -40,6 +40,16 @@ public class MetaData {
 
     public MetaData() {
     }
+    
+    public MetaData(MetaData m){
+        this.type = m.getType();
+        this.metaDataName = m.getMetaDataName();
+        datapoints = new ArrayList<>();
+        
+        for (DataPoint datapoint : m.getDatapoints()) {
+            datapoints.add(new DataPoint(datapoint));
+        }
+    }
 
     @XmlAttribute(name = "metadatatype")
     public MetaDataType getType() {

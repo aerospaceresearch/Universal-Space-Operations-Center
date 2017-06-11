@@ -74,7 +74,7 @@ public class ColdjunctionChart extends ChartSensor{
         int timeDiff = diff * 6;
         
         this.temp = Utility.binToInt(content.substring(SensorPos.CJ.getStart(m)+(num-1)*diff+(tpos-1)*timeDiff
-                , SensorPos.CJ.getEnd(m)+(num-1)*diff+(tpos-1)*timeDiff));
+                , SensorPos.CJ.getEnd(m)+(num-1)*diff+(tpos-1)*timeDiff), false);
         
     }
     

@@ -89,7 +89,7 @@ public class XMLWriterTest {
             
             DataPoint datapoint = new DataPoint();
             datapoint.setDataName("testSensorData");
-            datapoint.setDataType(DataType.FLOAT);
+            datapoint.setDataType(DataType.FLOAT32);
             datapoint.setStartPosition(40);
             
             s.addDataPoint(datapoint);
@@ -104,7 +104,7 @@ public class XMLWriterTest {
             DataPoint newDataPoint = new DataPoint();
             
             newDataPoint.setDataName("testMetaData");
-            newDataPoint.setDataType(DataType.FLOAT);
+            newDataPoint.setDataType(DataType.FLOAT32);
             newDataPoint.setStartPosition(40);
             
             m.addDataPoint(newDataPoint);
@@ -129,14 +129,14 @@ public class XMLWriterTest {
                     + "<ns2:sbd340Message xmlns:ns2=\"usoc/\">    "
                         + "<datapackage>        "
                             + "<sensor sensorname=\"testName\" sensortype=\"PRESSURE\">            "
-                                + "<datapoint dataName=\"testSensorData\" dataType=\"FLOAT\" "
-                                + "frequency=\"0.0\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
+                                + "<datapoint dataName=\"testSensorData\" dataType=\"FLOAT32\" "
+                                + "frequency=\"0.0\" isLittleEndian=\"false\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
                         + "</sensor>    "
                         + "</datapackage>    "
                         + "<header>        "
                             + "<metadata metadataname=\"\" metadatatype=\"TIME\">            "
-                                + "<datapoint dataName=\"testMetaData\" dataType=\"FLOAT\" "
-                                + "frequency=\"0.0\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
+                                + "<datapoint dataName=\"testMetaData\" dataType=\"FLOAT32\" "
+                                + "frequency=\"0.0\" isLittleEndian=\"false\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
                             + "</metadata>    "
                         + "</header>"
                     + "</ns2:sbd340Message>";

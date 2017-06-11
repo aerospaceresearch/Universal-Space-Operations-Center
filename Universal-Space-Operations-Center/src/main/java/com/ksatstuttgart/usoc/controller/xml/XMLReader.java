@@ -148,6 +148,9 @@ public class XMLReader {
                                 case "unit":
                                     lastDataPoint.setUnit(value);
                                     break;
+                                case "isLittleEndian":
+                                    lastDataPoint.setIsLittleEndian(Boolean.parseBoolean(value));
+                                    break;
                             }
                         }
 

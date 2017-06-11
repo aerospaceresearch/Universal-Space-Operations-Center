@@ -39,6 +39,16 @@ public class Sensor {
 
     public Sensor() {
     }
+    
+    public Sensor(Sensor s){
+        this.type = s.getType();
+        this.sensorName = s.getSensorName();
+        
+        datapoints = new ArrayList<>();
+        for (DataPoint datapoint : s.getDatapoints()) {
+            datapoints.add(new DataPoint(datapoint));
+        }
+    }
 
     @XmlAttribute ( name = "sensortype" )
     public SensorType getType() {

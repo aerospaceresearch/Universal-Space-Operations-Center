@@ -31,27 +31,29 @@ import javax.xml.bind.annotation.XmlAttribute;
  * 
  * @author valentinstarlinger
  */
-public class DataPoint {
+public class DataPoint implements Cloneable{
     private String dataName;
     private DataType dataType;
     private Object value;
     private int startPosition;
     private int numPoints;
     private double frequency;
+    private boolean isLittleEndian;
     private String unit;
-
-    public DataPoint(String dataName, DataType dataType, Object value, int startPosition, int numPoints, double frequency, String unit) {
-        this.dataName = dataName;
-        this.dataType = dataType;
-        this.value = value;
-        this.startPosition = startPosition;
-        this.numPoints = numPoints;
-        this.frequency = frequency;
-        this.unit = unit;
-    }
     
     public DataPoint(){
         
+    }
+    
+    public DataPoint(DataPoint dp){
+        this.dataName = (dp.getDataName());
+        this.dataType = (dp.getDataType());
+        this.frequency = (dp.getFrequency());
+        this.numPoints = (dp.getNumPoints());
+        this.startPosition = (dp.getStartPosition());
+        this.unit = (dp.getUnit());
+        this.value = (dp.getValue());
+        this.isLittleEndian = dp.isLittleEndian();
     }
 
     @XmlAttribute
@@ -116,6 +118,15 @@ public class DataPoint {
 
     public void setFrequency(double frequency) {
         this.frequency = frequency;
+    }
+    
+    @XmlAttribute (name = "isLittleEndian")
+    public boolean isLittleEndian(){
+        return isLittleEndian;
+    }
+    
+    public void setIsLittleEndian(boolean isLittleEndian){
+        this.isLittleEndian = isLittleEndian;
     }
 
     @Override

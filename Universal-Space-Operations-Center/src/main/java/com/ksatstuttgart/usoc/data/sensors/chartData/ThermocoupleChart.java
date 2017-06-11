@@ -77,7 +77,7 @@ public class ThermocoupleChart extends ChartSensor{
 //        System.out.println("ttpos: "+tpos);
         
         this.temp = Utility.binToInt(content.substring(SensorPos.TC.getStart(m)+(num-1)*diff+(tpos-1)*timeDiff
-                , SensorPos.TC.getEnd(m)+(num-1)*diff+(tpos-1)*timeDiff));
+                , SensorPos.TC.getEnd(m)+(num-1)*diff+(tpos-1)*timeDiff), false);
         
     }
     

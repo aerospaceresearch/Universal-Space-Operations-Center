@@ -63,7 +63,7 @@ public class ThermopileChart extends ChartSensor{
         int diff = SensorPos.TP.getDiff(m);
         
         this.temp = Utility.binToInt(content.substring(SensorPos.TP.getStart(m)+(tpos-1)*diff
-                , SensorPos.TP.getEnd(m)+(tpos-1)*diff));
+                , SensorPos.TP.getEnd(m)+(tpos-1)*diff), false);
         
     }
     

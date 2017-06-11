@@ -42,7 +42,7 @@ public class UtilityTest {
         System.out.println("binToUInt");
         String binaryString = "1111000010101010";
         int expResult = 43760;
-        int result = Utility.binToUInt(binaryString);
+        int result = Utility.binToUInt(binaryString, false);
         assertEquals(expResult, result);
         
     }
@@ -67,7 +67,7 @@ public class UtilityTest {
         System.out.println("binToInt");
         String binaryString = "00010101";
         int expResult = 21;
-        int result = Utility.binToInt(binaryString);
+        int result = Utility.binToInt(binaryString, false);
         assertEquals(expResult, result);
     }
 
@@ -129,7 +129,7 @@ public class UtilityTest {
         System.out.println("stringToFloat");
         String binaryString = "10101010111100000000111101010101";
         float expResult = 9.891487940608E12F;
-        float result = Utility.stringToFloat(binaryString);
+        float result = Utility.stringToFloat(binaryString, false);
         assertEquals(expResult, result, 0.0);
     }
 }

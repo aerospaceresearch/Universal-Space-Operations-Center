@@ -67,7 +67,7 @@ public class XMLReaderTest {
     }
 
     /**
-     * Test of isOK method, of class DataController.
+     * Test of the getMessageStructure method of the XMLReader class.
      */
     @org.junit.Test
     public void testReadingDatapackage() {
@@ -84,7 +84,7 @@ public class XMLReaderTest {
 
         DataPoint datapoint = new DataPoint();
         datapoint.setDataName("testSensorData");
-        datapoint.setDataType(DataType.FLOAT);
+        datapoint.setDataType(DataType.FLOAT32);
         datapoint.setStartPosition(40);
 
         s.addDataPoint(datapoint);
@@ -99,7 +99,7 @@ public class XMLReaderTest {
         DataPoint newDataPoint = new DataPoint();
 
         newDataPoint.setDataName("testMetaData");
-        newDataPoint.setDataType(DataType.FLOAT);
+        newDataPoint.setDataType(DataType.FLOAT32);
         newDataPoint.setStartPosition(40);
 
         m.addDataPoint(newDataPoint);

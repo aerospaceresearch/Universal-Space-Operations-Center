@@ -23,6 +23,8 @@
  */
 package com.ksatstuttgart.usoc.controller;
 
+import com.ksatstuttgart.usoc.data.message.DataPoint;
+
 /**
 * <h1>Util</h1>
 * This class provides Utility methods that are used all over the program
@@ -39,17 +41,20 @@ public class Utility {
      * converts a String of 1's and 0's to an unsigned integer
      * 
      * @param binString : String - binary String
+     * @param isLittleEndian : boolean - TRUE if the UINT value is in little endian.
      * @return unsigned integer 
      */
-    public static int binToUInt(String binString){
+    public static int binToUInt(String binString, boolean isLittleEndian){
         int num = 0;
         
         //necessary due to different conversion between MIRKA2-RX microcontrollers 
         //and Java
-        String b = switchIntEndian(binString);
-        for (int i = 0; i < b.length(); i++) {
-            if(b.charAt(i)=='1'){
-                num+=Math.pow(2, b.length()-(i+1));
+        if(!isLittleEndian){
+            binString = switchIntEndian(binString);
+        }
+        for (int i = 0; i < binString.length(); i++) {
+            if(binString.charAt(i)=='1'){
+                num+=Math.pow(2, binString.length()-(i+1));
             }
         }
         
@@ -69,21 +74,22 @@ public class Utility {
     /**
      * converts a binary String to a signed integer.
      * 
-     * @param binString
+     * @param binString - 
+     * @param isLittleEndian - 
      * @return 
      */
-    public static int binToInt(String binString){
+    public static int binToInt(String binString, boolean isLittleEndian){
         int num = 0;
-        //System.out.println("bintoint: "+t);
-        String b = (binString.length()==16) ? switchIntEndian(binString) : binString;
-        //System.out.println("aftercon: "+b);
-        for (int i = 1; i < b.length(); i++) {
-            if(b.charAt(i)=='1'){
-                num+=Math.pow(2, b.length()-(i+1));
+        if(!isLittleEndian){
+            binString = switchIntEndian(binString);
+        }
+        for (int i = 1; i < binString.length(); i++) {
+            if(binString.charAt(i)=='1'){
+                num+=Math.pow(2, binString.length()-(i+1));
             }
         }
-        //System.out.println("result: "+(b.charAt(0) == '1' ? num*(-1):num));
-        return b.charAt(0) == '1' ? num*(-1):num;
+        
+        return binString.charAt(0) == '1' ? num*(-1):num;
     }
     
     /**
@@ -131,15 +137,45 @@ public class Utility {
     /**
      * Converts a binary String into a float value
      * @param binaryString : String 
+     * @param isLittleEndian 
      * @return 
      */
-    public static float stringToFloat(String binaryString){
+    public static float stringToFloat(String binaryString, boolean isLittleEndian){
         
         //necessary due to different conversion between MIRKA2-RX microcontrollers 
         //and Java
-        String b = floatEndianess(binaryString);
-        int ii = Utility.binToInt(b);
+        if(!isLittleEndian){
+            binaryString = floatEndianess(binaryString);
+        }
+        
+        int ii = Utility.binToInt(binaryString, isLittleEndian);
         float f = Float.intBitsToFloat(ii);
         return f;
+    }
+
+    static Object getDataPointValue(DataPoint dataPoint, String dataContent) {
+        
+        switch(dataPoint.getDataType()){
+            case INT8: 
+            case INT16:
+                return Utility.binToInt(dataContent, dataPoint.isLittleEndian());
+            case UINT8:
+            case UINT16:
+            case UINT32:
+                return Utility.binToUInt(dataContent, dataPoint.isLittleEndian());
+            //TODO: maybe need to replace with separate methods for FLOAT16 and FLOAT32
+            case FLOAT16:
+            case FLOAT32:
+                return Utility.stringToFloat(dataContent, dataPoint.isLittleEndian());
+            case BIT:
+            case BIT3:
+            case BIT10:
+                return Utility.binToInt(dataContent, dataPoint.isLittleEndian());
+            case STRING:
+                return dataContent;
+        }
+        
+        //TODO: replace with throw new DataTypeNotSupportedException();
+        return null;
     }
 }

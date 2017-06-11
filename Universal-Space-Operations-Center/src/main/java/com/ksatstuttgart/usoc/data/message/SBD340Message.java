@@ -41,6 +41,8 @@ public class SBD340Message {
     private ProtocolType protocol;
 
     public SBD340Message() {
+        header = new Header();
+        dataPackage = new DataPackage();
     }
 
     @XmlElement ( name = "header" )

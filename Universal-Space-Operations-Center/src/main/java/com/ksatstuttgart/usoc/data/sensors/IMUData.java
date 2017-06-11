@@ -103,17 +103,17 @@ public class IMUData {
             int o = m == Mode.LOWALT ? tpos / 2 : tpos / 4;
 
             this.rx = Utility.binToInt(content.substring(SensorPos.IMU_Rx.getStart(m) + o * SensorPos.IMU_Rx.getDiff(m)*6
-                    , SensorPos.IMU_Rx.getEnd(m) + o * SensorPos.IMU_Rx.getDiff(m)*6));
+                    , SensorPos.IMU_Rx.getEnd(m) + o * SensorPos.IMU_Rx.getDiff(m)*6), false);
 //                System.out.println(content.substring(SensorPos.IMU_Rx.getStart(m) + o * SensorPos.IMU_Rx.getDiff(m)*3
 //                        , SensorPos.IMU_Rx.getEnd(m) + o * SensorPos.IMU_Rx.getDiff(m)*3));
 //                System.out.println((SensorPos.IMU_Rx.getStart(m) + o * SensorPos.IMU_Rx.getDiff(m)*6)
 //                        +" - "+
 //                        (SensorPos.IMU_Rx.getEnd(m) + o * SensorPos.IMU_Rx.getDiff(m)*6));
             this.ry = Utility.binToInt(content.substring(SensorPos.IMU_Ry.getStart(m) + o * SensorPos.IMU_Ry.getDiff(m)*6
-                    , SensorPos.IMU_Ry.getEnd(m) + o * SensorPos.IMU_Ry.getDiff(m)*6));
+                    , SensorPos.IMU_Ry.getEnd(m) + o * SensorPos.IMU_Ry.getDiff(m)*6), false);
             
             this.rz = Utility.binToInt(content.substring(SensorPos.IMU_Rz.getStart(m) + o * SensorPos.IMU_Rz.getDiff(m)*6
-                    , SensorPos.IMU_Rz.getEnd(m) + o * SensorPos.IMU_Rz.getDiff(m)*6));
+                    , SensorPos.IMU_Rz.getEnd(m) + o * SensorPos.IMU_Rz.getDiff(m)*6), false);
             
             if(rx < 0){
                 rx = rx*(-1)-32767;
@@ -132,13 +132,13 @@ public class IMUData {
         int diff = (SensorPos.IMU_Qw.getDiff(m))*4 + (SensorPos.IMU_C.getDiff(m));
 
         this.qw = Utility.binToInt(content.substring(SensorPos.IMU_Qw.getStart(m) + (tpos - 1) * diff
-                , SensorPos.IMU_Qw.getEnd(m) + (tpos - 1) * diff));
+                , SensorPos.IMU_Qw.getEnd(m) + (tpos - 1) * diff), false);
         this.qx = Utility.binToInt(content.substring(SensorPos.IMU_Qx.getStart(m) + (tpos - 1) * diff
-                , SensorPos.IMU_Qx.getEnd(m) + (tpos - 1) * diff));
+                , SensorPos.IMU_Qx.getEnd(m) + (tpos - 1) * diff), false);
         this.qy = Utility.binToInt(content.substring(SensorPos.IMU_Qy.getStart(m) + (tpos - 1) * diff
-                , SensorPos.IMU_Qy.getEnd(m) + (tpos - 1) * diff));
+                , SensorPos.IMU_Qy.getEnd(m) + (tpos - 1) * diff), false);
         this.qz = Utility.binToInt(content.substring(SensorPos.IMU_Qz.getStart(m) + (tpos - 1) * diff
-                , SensorPos.IMU_Qz.getEnd(m) + (tpos - 1) * diff));
+                , SensorPos.IMU_Qz.getEnd(m) + (tpos - 1) * diff), false);
         
         this.calib = Integer.parseUnsignedInt(content.substring(SensorPos.IMU_C.getStart(m) + (tpos - 1) * diff, SensorPos.IMU_C.getEnd(m) + (tpos - 1) * diff),2);
 
