@@ -21,30 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.controller;
+package com.ksatstuttgart.usoc.controller.communication;
 
-import com.ksatstuttgart.usoc.data.MailEvent;
-
+import com.ksatstuttgart.usoc.data.SerialEvent;
 
 /**
 * <h1>MailUpdateListener</h1>
-* This interface enables classes to listen to mail updates from the Iridium 
-* network via the MailReceiver class.
+* This interface enables classes to listen to events happening on an open serial 
+* port via the SerialComm class.
 *
 * @author  Valentin Starlinger
 * @version 1.0
 */
-public interface MailUpdateListener {
+public interface SerialListener {
     /**
-     * This is called when a new Iridium message was received. 
-     * @param e - MailEvent 
+     * This is called when a new message is received via the specified serial port.
+     * @param e - SerialEvent
      */
-    public abstract void mailUpdated(MailEvent e);
-    
+    public abstract void messageReceived(SerialEvent e);
     /**
-     * This is called if an error concerning the connection to the mail server
-     * occurred. 
-     * @param msg - String; A message describing the error.
+     * This is called when en error occurred regarding the serial communication.
+     * @param msg - String containing a description of the error.
      */
     public abstract void error(String msg);
 }

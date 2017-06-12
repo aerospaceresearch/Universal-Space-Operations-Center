@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.controller;
+package com.ksatstuttgart.usoc.controller.communication;
 
+import com.ksatstuttgart.usoc.controller.Utility;
 import com.ksatstuttgart.usoc.data.MailEvent;
 import java.io.IOException;
 import java.io.InputStream;

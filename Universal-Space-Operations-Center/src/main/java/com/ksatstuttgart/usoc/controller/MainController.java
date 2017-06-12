@@ -23,6 +23,10 @@
  */
 package com.ksatstuttgart.usoc.controller;
 
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
+import com.ksatstuttgart.usoc.controller.communication.MailUpdateListener;
+import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
+import com.ksatstuttgart.usoc.controller.communication.SerialListener;
 import com.ksatstuttgart.usoc.data.MailEvent;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.gui.MainFrame;

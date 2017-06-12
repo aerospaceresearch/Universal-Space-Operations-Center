@@ -24,7 +24,7 @@
 package com.ksatstuttgart.usoc.gui;
 
 import static java.lang.Thread.sleep;
-import com.ksatstuttgart.usoc.controller.MailReceiver;
+import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
       
 /**
 * <h1>IridiumLogPanel</h1>

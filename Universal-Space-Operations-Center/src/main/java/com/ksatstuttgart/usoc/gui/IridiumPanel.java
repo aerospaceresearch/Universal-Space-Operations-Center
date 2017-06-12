@@ -34,7 +34,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.ksatstuttgart.usoc.controller.MailReceiver;
+import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
 
       
 /**
