@@ -24,7 +24,9 @@
 package com.ksatstuttgart.usoc.data.message;
 
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataPackage;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.data.message.header.Header;
+import com.ksatstuttgart.usoc.data.message.header.MetaData;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -90,8 +92,45 @@ public class SBD340Message {
         }
     }
 
+    /**
+     * Returns a String of the data contained in the message that can be used
+     * to visualize it.
+     * @return A String of the data contained in the message that can be used
+     * to visualize it.
+     */
     @Override
     public String toString(){
+        String s = "SBD340Message (Type = "+this.protocol+")\n";
+        for (MetaData metaData : header.getMetaData()) {
+            s+=metaData.getMetaDataName() + " (Type = "+metaData.getType()+")\n";
+            for (DataPoint datapoint : metaData.getDatapoints()) {
+                s+="\t"+datapoint.getDataName()+": "
+                        +datapoint.getValue().toString()+" "
+                        +datapoint.getUnit()+"\n";
+            }
+            
+        }
+        
+        for (Sensor sensor : dataPackage.getSensors()) {
+            s+=sensor.getSensorName()+ " (Type = "+sensor.getType()+")\n";
+            for (DataPoint datapoint : sensor.getDatapoints()) {
+                s+="\t"+datapoint.getDataName()+": "
+                        +datapoint.getValue().toString()+" "
+                        +datapoint.getUnit()+"\n";
+            }
+            
+        }
+        
+        return s;
+    }
+    
+    /**
+     * Returns the message structure as String excluding the values of the different
+     * data points.
+     * @return The message structure as String excluding the values of the different
+     * data points.
+     */
+    public String getMessageStructure(){
         String s = "SBD340Message:\nType: "+this.protocol
                 +"\nHeader:\n"+this.header.toString()
                 +"\nDataPackage\n"+this.dataPackage.toString();
