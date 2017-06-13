@@ -25,6 +25,7 @@ package com.ksatstuttgart.usoc;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.MainFrame;
+import java.io.IOException;
 
 /**
 * <h1>Ground Segment</h1>
@@ -42,8 +43,47 @@ public class GroundSegment {
      * Calls the MainFrame class
      * @param args - does not support any arguments.
      */
-    public static void main(String[] args) {
-        new MainController(new MainFrame());
+    public static void main(String[] args) throws IOException {      
+        //new MainController(new MainFrame());
+        System.out.println("Hi");
+        GetPropertyValues properties = new GetPropertyValues();
+        properties.getPropValues();
     }
     
 }
+
+
+
+/**
+ * 
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+
+public class GroundSegment extends Application {
+
+
+
+    public static void main(String[] args) throws Exception {
+        launch(args);
+
+    }
+
+    public void start(Stage stage) throws Exception {
+
+        String fxmlFile = "/fxml/MainFrame.fxml";
+        FXMLLoader loader = new FXMLLoader();
+        Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
+
+        Scene scene = new Scene(rootNode, 400, 200);
+        scene.getStylesheets().add("/styles/styles.css");
+
+        stage.setScene(scene);
+        stage.show();
+    }
+}
+ * 
+ */
