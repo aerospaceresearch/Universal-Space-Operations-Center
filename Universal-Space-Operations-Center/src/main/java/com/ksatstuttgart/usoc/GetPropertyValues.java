@@ -23,46 +23,52 @@
  */
 package com.ksatstuttgart.usoc;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
+ 
 /**
- *
- * @author Victor
+ * @author Victor Hertel
+ * 
  */
+ 
 public class GetPropertyValues {
-	String result = "";
-	InputStream inputStream;
- 
-	public String getPropValues() throws IOException {
- 
-		try {
-			Properties prop = new Properties();
-			String propFileName = "config.properties";
- 
-			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
- 
-			if (inputStream != null) {
-				prop.load(inputStream);
-			} else {
-				throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-			}
-  
-			// get the property value and print it out
-			String experimentName = prop.getProperty("experimentName");
-			String numberOfCharts = prop.getProperty("numberOfCharts");
-			String serialPanel = prop.getProperty("serialPanel");
-			String iridiumPanel = prop.getProperty("iridiumPanel");
- 
-			result = "Company List = " + experimentName + ", " + numberOfCharts + ", " + serialPanel;
-			System.out.println(result);
-		} catch (Exception e) {
-			System.out.println("Exception: " + e);
-		} finally {
-			inputStream.close();
-		}
-		return result;
-	}
+    
+    String result = "";
+    InputStream inputStream;
+
+    public String getPropValues() throws IOException {
+        try {
+
+            Properties prop = new Properties();
+            String propFileName = "config.properties";
+            String propFilePath = "src/main/resources/config/";
+                inputStream = new FileInputStream(propFilePath + propFileName);
+            if (inputStream != null) {
+                prop.load(inputStream);
+            } else {
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            }
+            
+        String experimentName = prop.getProperty("experimentName");
+	String numberOfCharts = prop.getProperty("numbeOfCharts");
+        String serialPanel = prop.getProperty("serialPanel");
+        String iridiumPanel = prop.getProperty("iridiumPanel");
+        System.out.println("Name of experiment: " + experimentName);
+        System.out.println("Number of charts: " + numberOfCharts);
+        System.out.println("Serial panel requested: " + serialPanel);
+        System.out.println("Iridium panel requested: " + iridiumPanel);
+            
+            
+        } catch (Exception e) {
+                System.out.println("Exception: " + e);
+                
+        } finally {
+                inputStream.close();
+        }
+
+        return result;
+    }
 }

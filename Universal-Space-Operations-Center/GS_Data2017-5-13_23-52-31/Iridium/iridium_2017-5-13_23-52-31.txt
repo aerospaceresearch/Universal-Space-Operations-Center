@@ -1,1 +1,0 @@
-Error: Couldn't connect to e-mail server.

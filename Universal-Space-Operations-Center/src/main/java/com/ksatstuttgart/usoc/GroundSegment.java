@@ -43,11 +43,12 @@ public class GroundSegment {
      * Calls the MainFrame class
      * @param args - does not support any arguments.
      */
-    public static void main(String[] args) throws IOException {      
-        //new MainController(new MainFrame());
-        System.out.println("Hi");
+    public static void main(String[] args) throws IOException {
+        
         GetPropertyValues properties = new GetPropertyValues();
         properties.getPropValues();
+        
+        new MainController(new MainFrame());
     }
     
 }
