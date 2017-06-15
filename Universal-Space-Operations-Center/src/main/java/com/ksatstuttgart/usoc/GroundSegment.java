@@ -45,8 +45,9 @@ public class GroundSegment {
      */
     public static void main(String[] args) throws IOException {
         
-        GetPropertyValues properties = new GetPropertyValues();
-        properties.getPropValues();
+        GetConfigData properties = new GetConfigData();
+        properties.getConfigValues();
+        properties.getLastMod();
         
         new MainController(new MainFrame());
     }
