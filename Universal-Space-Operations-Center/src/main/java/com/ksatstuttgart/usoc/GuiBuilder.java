@@ -29,4 +29,7 @@ package com.ksatstuttgart.usoc;
  */
 public class GuiBuilder {
     
+    public void chartBuilder() {
+
+    }
 }

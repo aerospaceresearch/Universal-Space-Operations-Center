@@ -33,88 +33,150 @@ import java.io.OutputStream;
 import java.util.Properties;
  
 /**
- * @author Victor Hertel
- * 
- */
+* This class communicates with the config.properties file and
+* monitors modifications.
+* 
+*
+* @author  Victor Hertel
+* @version 1.0
+*/
  
 public class GetConfigData {
     
-    String result = "";
+    String lastModDate;
+    boolean fileMod;
+    Properties config;
     InputStream inputStream;
     OutputStream outputStream;
-
-    public String getConfigValues() throws IOException {
+    
+    
+    
+    
+    /**
+    * Method gets values from config.properties.
+    * Output: property object 'config'
+    */
+    public Properties getValues() throws IOException {
+        
         try {
-
-            Properties config = new Properties();
-            String configFileName = "config.properties";
-            String configFilePath = "src/main/resources/config/";
-            inputStream = new FileInputStream(configFilePath + configFileName);
+            // Creates new properties object 'config'
+            config = new Properties();
+            // Creates FileInputStream from config.properties
+            String fileName = "config.properties";
+            String filePath = "src/main/resources/config/";
+            inputStream = new FileInputStream(filePath + fileName);
             
+            // Checks if config.properties exists
             if (inputStream != null) {
                 config.load(inputStream);
             } else {
-                throw new FileNotFoundException("Configuration file '" + configFileName + "' not found");
+                throw new FileNotFoundException("Property file '" + fileName + "' not found.");
             }
             
-             
-            String experimentName = config.getProperty("experimentName");
-            int numberOfCharts = Integer.parseInt(config.getProperty("numbeOfCharts"));
-            boolean serialPanel = Boolean.parseBoolean(config.getProperty("serialPanel"));
-            boolean iridiumPanel = Boolean.parseBoolean(config.getProperty("iridiumPanel"));
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);      
+        } finally {
+            inputStream.close();
+        }
 
-            System.out.println("Name of experiment: " + experimentName);
-            System.out.println("Number of charts: " + numberOfCharts);
-            if (serialPanel == true) {
-                System.out.println("Serial panel required: YES");
-            } else {
-                System.out.println("Serial panel required: NO");
-            }
-            if (iridiumPanel == true) {
-                System.out.println("Iridium panel required: YES");
-            } else {
-                System.out.println("Iridium panel required: NO");
-            }
-
-
-            } catch (Exception e) {
-                    System.out.println("Exception: " + e);
-
-            } finally {
-                    inputStream.close();
-            }
-
-        return result;
+        return config;
     }
     
     
     
     
-    
-    
-    public String getLastMod() throws IOException {
-        try {
+    /**
+    * Method gets date of config.properties's last modification.
+    * Output: String 'lastModDate' with date of last modification
+    */    
+    public String getLastMod() {
 
-            Properties lastMod = new Properties();
+        // Initialize file object
+        String fileName = "config.properties";
+        String filePath = "src/main/resources/config/";
+        File file = new File(filePath + fileName);
+        
+        // Get date of last modification
+        lastModDate = Long.toString(file.lastModified());
+
+        return lastModDate;
+    }
+    
+    
+    
+    
+    /**
+    * Method stores date of config.properties's last modification
+    * into lastConfigMod.properties.
+    * Output: void
+    */  
+    public void setModDate() throws IOException {
+                
+        try {
+            // Stores date of last modification into 'lastModDate'
+            lastModDate = getLastMod();
+            
+            // Creates new properties object 'config'
+            config = new Properties();
+            // Creates FileOutputStream to lastConfigMod.properties
             String fileName = "lastConfigMod.properties";
             String filePath = "src/main/resources/config/";
             outputStream = new FileOutputStream(filePath + fileName);
             
-            // initialize File object
-            File file = new File("src/main/resources/config/config.properties");
-            // get the last modified value
-            String lastModDate = Long.toString(file.lastModified());
-            
-            lastMod.setProperty("lastModDate", lastModDate);
-            lastMod.store(outputStream, null);
+            // Updates date of last modification in lastConfigMod.properties
+            config.setProperty("lastConfigMod", lastModDate);
+            config.store(outputStream, null);
             
         } catch (Exception e) {
-                System.out.println("Exception: " + e);
-                
+            System.out.println("Exception: " + e);      
         } finally {
-                inputStream.close();
+            outputStream.close();
         }
-
-        return result;
+    }
+    
+    
+    
+    
+    /**
+    * Method gets values from config.properties.
+    * Output: property object 'config'
+    */    
+    public boolean fileMod() throws IOException {    
+        
+        try {
+            // Creates new properties object 'config'
+            config = new Properties();
+            // Creates FileInputStream from lastConfigMod.properties
+            String fileName = "lastConfigMod.properties";
+            String filePath = "src/main/resources/config/";
+            inputStream = new FileInputStream(filePath + fileName);
+            
+            // Checks if lastConfigMod.properties exists
+            if (inputStream != null) {
+                config.load(inputStream);
+                // Stores date of last modification into 'lastModDate'
+                lastModDate = getLastMod();
+                // Reads 'lastConfigMod' from lastConfigMod.properties
+                String lastConfigMod = config.getProperty("lastConfigMod");
+        
+                // Checks if config.properties was modified
+                if(lastModDate.equals(lastConfigMod)) {
+                    fileMod = false;
+                } else {
+                    fileMod = true;
+                    setModDate();
+                }               
+                 
+            } else {
+                throw new FileNotFoundException("Property file '" + fileName + "' not found.");
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);      
+        } finally {
+            inputStream.close();
+        }
+        
+        return fileMod;
     }
 }

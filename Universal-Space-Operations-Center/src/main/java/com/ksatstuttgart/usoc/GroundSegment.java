@@ -46,10 +46,16 @@ public class GroundSegment {
     public static void main(String[] args) throws IOException {
         
         GetConfigData properties = new GetConfigData();
-        properties.getConfigValues();
-        properties.getLastMod();
+        boolean fileMod = properties.fileMod();
         
-        new MainController(new MainFrame());
+        if (fileMod) {
+            GuiBuilder guiBuilder = new GuiBuilder();
+            guiBuilder.chartBuilder();
+        }
+        
+
+        
+        //new MainController(new MainFrame());
     }
     
 }
