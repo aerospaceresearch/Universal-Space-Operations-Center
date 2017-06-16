@@ -26,37 +26,40 @@ package com.ksatstuttgart.usoc;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Properties;
  
 /**
-* This class communicates with the config.properties file and
-* monitors modifications.
-* 
-*
-* @author  Victor Hertel
-* @version 1.0
+ * This class communicates with the config.properties file and
+ * monitors modifications to regenerate the GUI.
+ * 
+ *
+ * @author  Victor Hertel
+ * @version 1.0
 */
  
 public class GetConfigData {
     
-    String lastModDate;
-    boolean fileMod;
-    Properties config;
-    InputStream inputStream;
-    OutputStream outputStream;
+    static String value;
+    static String lastModDate;
+    static boolean fileMod;
+    static Properties config;
+    static InputStream inputStream;   
+    static OutputStream outputStream;
     
     
-    
+
     
     /**
-    * Method gets values from config.properties.
-    * Output: property object 'config'
+     * Method gets values from config.properties file.
+     * 
+     * @return 
+     * @throws java.io.IOException
     */
-    public Properties getValues() throws IOException {
+    public static Properties getAllValues() throws IOException {
         
         try {
             // Creates new properties object 'config'
@@ -73,7 +76,7 @@ public class GetConfigData {
                 throw new FileNotFoundException("Property file '" + fileName + "' not found.");
             }
             
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("Exception: " + e);      
         } finally {
             inputStream.close();
@@ -83,13 +86,52 @@ public class GetConfigData {
     }
     
     
+   
+    
+    /**
+     * Method gets value of input keyword from 
+     * conigMod.properties file.
+     * 
+     * @param key
+     * @return 
+     * @throws java.io.IOException
+    */         
+    public static String getConfigModValue( String key ) throws IOException {
+        
+        try {
+            // Creates new properties object 'config'
+            config = new Properties();
+            // Creates FileInputStream from config.properties
+            String fileName = "configMod.properties";
+            String filePath = "src/main/resources/config/";
+            inputStream = new FileInputStream(filePath + fileName);
+            
+            // Checks if config.properties exists
+            if (inputStream != null) {
+                config.load(inputStream);
+                value = config.getProperty(key);
+            } else {
+                throw new FileNotFoundException("Property file '" + fileName + "' not found.");
+            }
+            
+        } catch (IOException e) {
+            System.out.println("Exception: " + e);      
+        } finally {
+            inputStream.close();
+        }
+
+        return value;
+    }
+    
+    
     
     
     /**
-    * Method gets date of config.properties's last modification.
-    * Output: String 'lastModDate' with date of last modification
+     * Method gets date of config.properties's last modification.
+     * 
+     * @return 
     */    
-    public String getLastMod() {
+    public static String getLastModDate() {
 
         // Initialize file object
         String fileName = "config.properties";
@@ -104,79 +146,110 @@ public class GetConfigData {
     
     
     
-    
+
     /**
-    * Method stores date of config.properties's last modification
-    * into lastConfigMod.properties.
-    * Output: void
+     * Method stores values of config.properties file and the date
+     * of it's last modification into configMod.properties file.
+     * 
+     * @throws java.io.IOException
     */  
-    public void setModDate() throws IOException {
-                
+    public static void updateConfigMod() throws IOException {
+        
+         // Stores date of last modification into String 'lastModDate'
+        lastModDate = getLastModDate();
+        // Stores values of config.properties file into properties object 'config'
+        config = getAllValues();
+        
+        // Initialize file object
+        String fileName = "configMod.properties";
+        String filePath = "src/main/resources/config/";
+        
         try {
-            // Stores date of last modification into 'lastModDate'
-            lastModDate = getLastMod();
-            
-            // Creates new properties object 'config'
-            config = new Properties();
-            // Creates FileOutputStream to lastConfigMod.properties
-            String fileName = "lastConfigMod.properties";
-            String filePath = "src/main/resources/config/";
-            outputStream = new FileOutputStream(filePath + fileName);
-            
-            // Updates date of last modification in lastConfigMod.properties
-            config.setProperty("lastConfigMod", lastModDate);
-            config.store(outputStream, null);
-            
-        } catch (Exception e) {
-            System.out.println("Exception: " + e);      
-        } finally {
-            outputStream.close();
-        }
+            // Writes data in configMod.propertes file
+            PrintWriter writer = new PrintWriter(filePath + fileName);
+            writer.println("# This document serves as the basis for comparisons");
+            writer.println("# to determine modified values in the config file.");
+            writer.println("# The structure is fixed and manual interventions");
+            writer.println("# and modifications are not provided!");
+            writer.println("lastModDate="+lastModDate);
+            config.list(writer);
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Exception: " + e);
+        }         
     }
-    
-    
-    
-    
+
+
+
+
     /**
-    * Method gets values from config.properties.
-    * Output: property object 'config'
+     * Method checks if config.properties has been modified.
+     * 
+     * @return
+     * @throws java.io.IOException 
     */    
-    public boolean fileMod() throws IOException {    
+    public static boolean fileMod() throws IOException {    
         
         try {
             // Creates new properties object 'config'
             config = new Properties();
-            // Creates FileInputStream from lastConfigMod.properties
-            String fileName = "lastConfigMod.properties";
+            // Creates FileInputStream from configMod.properties
+            String fileName = "configMod.properties";
             String filePath = "src/main/resources/config/";
             inputStream = new FileInputStream(filePath + fileName);
+            config.load(inputStream);
             
-            // Checks if lastConfigMod.properties exists
-            if (inputStream != null) {
-                config.load(inputStream);
-                // Stores date of last modification into 'lastModDate'
-                lastModDate = getLastMod();
-                // Reads 'lastConfigMod' from lastConfigMod.properties
-                String lastConfigMod = config.getProperty("lastConfigMod");
-        
-                // Checks if config.properties was modified
-                if(lastModDate.equals(lastConfigMod)) {
-                    fileMod = false;
-                } else {
-                    fileMod = true;
-                    setModDate();
-                }               
-                 
+            // Stores date of last modification into 'lastModDate'
+            lastModDate = getLastModDate();
+            // Reads 'lastModDate' from configMod.properties
+            String configModDate = config.getProperty("lastModDate");
+    
+            // Checks if config.properties was modified
+            if(lastModDate.equals(configModDate)) {
+                fileMod = false;
             } else {
-                throw new FileNotFoundException("Property file '" + fileName + "' not found.");
-            }
-            
-        } catch (Exception e) {
+                fileMod = true;
+            }               
+                 
+        } catch (IOException e) {
             System.out.println("Exception: " + e);      
         } finally {
             inputStream.close();
         }
         
         return fileMod;
+    }
+    
+    
+    
+    
+    /**
+     * Method checks for modified parameters and rebuilds
+     * the corresponding GUI structure.
+     * 
+     * @throws java.io.IOException 
+    */    
+    public static void rebuildGui() throws IOException {
+        
+        // Checks if config.properties has been modified since last compilation
+        fileMod = fileMod();
+        // If config.properties has been modified, the FXML structure will be regenerated 
+        if (fileMod) {
+            
+            // Stores values from config.properties file into properties object 'config'
+            config = getAllValues();
+
+            // Checks if 'experimentName' has been modified since last compilation
+            if (! config.getProperty("experimentName").equals(getConfigModValue("experimentName"))) {
+                GuiBuilder.setExperimentName();
+            }
+            // Checks if 'numberOfCharts' has been modified since last compilation
+            if (! config.getProperty("numberOfCharts").equals(getConfigModValue("numberOfCharts"))) {
+                GuiBuilder.chartBuilder();
+            }
+        }
+        
+        // Updates values in configMod.properties file after GUI regeneration
+        updateConfigMod();
     }
 }

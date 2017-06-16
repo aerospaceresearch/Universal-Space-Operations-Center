@@ -1,64 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-    The MIT License
-    Copyright 2017 KSat e.V.
-    
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included in
-    all copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
- -->
-
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" 
-            minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1180.0"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ksatstuttgart.usoc.USOCController">
 
-  <top>
-    <fx:include source = "MenuBar.fxml" BorderPane.alignment="CENTER"/>
-  </top>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="400.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <center>
+        <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <content>
 
-  <center>
-    <fx:include source = "CurrentDataPanel.fxml" BorderPane.alignment="CENTER"/>
-  </center>
-  
-  <right>
-    <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-             minHeight="-Infinity" minWidth="-Infinity" prefWidth="300.0"
-             tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="TOP_CENTER">
-      <tabs>
-        <Tab text="Serial">
-          <content>
-            <fx:include source = "SerialPanel.fxml"/>
-          </content>
-        </Tab>
-        <Tab text="Iridium">
-          <content>
-            <fx:include source = "IridiumPanel.fxml" />
-          </content>
-        </Tab>
-      </tabs>
-    </TabPane>
-  </right>
-
+            </content>
+        </ScrollPane>
+    </center>
 </BorderPane>

@@ -25,7 +25,51 @@ package com.ksatstuttgart.usoc;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.MainFrame;
-import java.io.IOException;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+
+public class GroundSegment extends Application {
+
+    
+    
+    
+    @Override
+    public void start(Stage stage) throws Exception {
+
+        GetConfigData.rebuildGui();        
+        
+        String fxmlFile = "/fxml/MainFrame.fxml";
+        FXMLLoader loader = new FXMLLoader();
+        Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
+
+        Scene scene = new Scene(rootNode);
+        //scene.getStylesheets().add("/styles/styles.css");
+
+        stage.setScene(scene);
+        stage.show();
+    }
+    
+    
+    
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
+
+
+
+
+
+
+
 
 /**
 * <h1>Ground Segment</h1>
@@ -37,61 +81,25 @@ import java.io.IOException;
 * @author  Valentin Starlinger
 * @version 1.0
 */
-public class GroundSegment {
+//public class GroundSegment {
 
     /**
      * Calls the MainFrame class
      * @param args - does not support any arguments.
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) throws IOException {
+    //public static void main(String[] args) throws IOException {
         
-        GetConfigData properties = new GetConfigData();
-        boolean fileMod = properties.fileMod();
+    //    boolean fileMod = GetConfigData.fileMod();
         
-        if (fileMod) {
-            GuiBuilder guiBuilder = new GuiBuilder();
-            guiBuilder.chartBuilder();
-        }
+        //if (fileMod) {
+    //        GuiBuilder guiBuilder = new GuiBuilder();
+    //        guiBuilder.chartBuilder();
+        //}
         
 
         
         //new MainController(new MainFrame());
-    }
+    //}
     
-}
-
-
-
-/**
- * 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-
-public class GroundSegment extends Application {
-
-
-
-    public static void main(String[] args) throws Exception {
-        launch(args);
-
-    }
-
-    public void start(Stage stage) throws Exception {
-
-        String fxmlFile = "/fxml/MainFrame.fxml";
-        FXMLLoader loader = new FXMLLoader();
-        Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
-
-        Scene scene = new Scene(rootNode, 400, 200);
-        scene.getStylesheets().add("/styles/styles.css");
-
-        stage.setScene(scene);
-        stage.show();
-    }
-}
- * 
- */
+//}

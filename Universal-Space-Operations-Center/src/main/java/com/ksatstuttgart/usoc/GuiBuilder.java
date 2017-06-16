@@ -24,12 +24,28 @@
 package com.ksatstuttgart.usoc;
 
 /**
+ * This class builds the GUI FXML structure based on input 
+ * parameters in the config.properties file and rebuilds parts
+ * of it depending on changes.
+ * 
  *
- * @author Victor
- */
-public class GuiBuilder {
-    
-    public void chartBuilder() {
+ * @author  Victor Hertel
+ * @version 1.0
+*/
 
+public class GuiBuilder {
+        
+    public static void setExperimentName() {
+        System.out.println("setExperimentName activeted!");
+    }
+    
+    
+    public static void chartBuilder() {
+        System.out.println("chartBuilder activeted!");
+    }
+    
+
+    public static void logBuilder() {
+        System.out.println("logBuilder activeted!");
     }
 }
