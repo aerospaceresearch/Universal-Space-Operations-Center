@@ -45,10 +45,9 @@ public class GetConfigData {
     
     static String value;
     static String lastModDate;
-    static boolean fileMod;
+    static boolean fileModBool;
     static Properties config;
     static InputStream inputStream;   
-    static OutputStream outputStream;
     
     
 
@@ -100,7 +99,7 @@ public class GetConfigData {
         
         try {
             // Creates new properties object 'config'
-            config = new Properties();
+            Properties getConfigModValue = new Properties();
             // Creates FileInputStream from config.properties
             String fileName = "configMod.properties";
             String filePath = "src/main/resources/config/";
@@ -108,8 +107,8 @@ public class GetConfigData {
             
             // Checks if config.properties exists
             if (inputStream != null) {
-                config.load(inputStream);
-                value = config.getProperty(key);
+                getConfigModValue.load(inputStream);
+                value = getConfigModValue.getProperty(key);
             } else {
                 throw new FileNotFoundException("Property file '" + fileName + "' not found.");
             }
@@ -158,7 +157,7 @@ public class GetConfigData {
          // Stores date of last modification into String 'lastModDate'
         lastModDate = getLastModDate();
         // Stores values of config.properties file into properties object 'config'
-        config = getAllValues();
+        Properties updateConfigMod = getAllValues();
         
         // Initialize file object
         String fileName = "configMod.properties";
@@ -170,9 +169,9 @@ public class GetConfigData {
             writer.println("# This document serves as the basis for comparisons");
             writer.println("# to determine modified values in the config file.");
             writer.println("# The structure is fixed and manual interventions");
-            writer.println("# and modifications are not provided!");
+            writer.println("# and modifications are not intended!");
             writer.println("lastModDate="+lastModDate);
-            config.list(writer);
+            updateConfigMod.list(writer);
             writer.close();
         } catch (IOException e) {
             System.out.println("Exception: " + e);
@@ -192,23 +191,23 @@ public class GetConfigData {
         
         try {
             // Creates new properties object 'config'
-            config = new Properties();
+            Properties fileMod = new Properties();
             // Creates FileInputStream from configMod.properties
             String fileName = "configMod.properties";
             String filePath = "src/main/resources/config/";
             inputStream = new FileInputStream(filePath + fileName);
-            config.load(inputStream);
+            fileMod.load(inputStream);
             
             // Stores date of last modification into 'lastModDate'
             lastModDate = getLastModDate();
             // Reads 'lastModDate' from configMod.properties
-            String configModDate = config.getProperty("lastModDate");
+            String configModDate = fileMod.getProperty("lastModDate");
     
             // Checks if config.properties was modified
             if(lastModDate.equals(configModDate)) {
-                fileMod = false;
+                fileModBool = false;
             } else {
-                fileMod = true;
+                fileModBool = true;
             }               
                  
         } catch (IOException e) {
@@ -217,7 +216,7 @@ public class GetConfigData {
             inputStream.close();
         }
         
-        return fileMod;
+        return fileModBool;
     }
     
     
@@ -232,19 +231,19 @@ public class GetConfigData {
     public static void rebuildGui() throws IOException {
         
         // Checks if config.properties has been modified since last compilation
-        fileMod = fileMod();
+        fileModBool = fileMod();
         // If config.properties has been modified, the FXML structure will be regenerated 
-        if (fileMod) {
+        if (fileModBool) {
             
-            // Stores values from config.properties file into properties object 'config'
-            config = getAllValues();
+            // Stores values from config.properties file into properties object 'configMods'
+            Properties configMods = getAllValues();
 
             // Checks if 'experimentName' has been modified since last compilation
-            if (! config.getProperty("experimentName").equals(getConfigModValue("experimentName"))) {
+            if (! configMods.getProperty("experimentName").equals(getConfigModValue("experimentName"))) {
                 GuiBuilder.setExperimentName();
             }
             // Checks if 'numberOfCharts' has been modified since last compilation
-            if (! config.getProperty("numberOfCharts").equals(getConfigModValue("numberOfCharts"))) {
+            if (! configMods.getProperty("numberOfCharts").equals(getConfigModValue("numberOfCharts"))) {
                 GuiBuilder.chartBuilder();
             }
         }
