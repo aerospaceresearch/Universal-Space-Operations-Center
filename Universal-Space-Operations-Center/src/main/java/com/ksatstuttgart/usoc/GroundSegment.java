@@ -31,7 +31,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
+/**
+ * <h1>Ground Segment</h1>
+ * 
+ * <p>
+ * This is the main Wrapper class initiating the GUI.
+ * 
+ *
+ * @author  Valentin Starlinger
+ * @version 1.0
+*/
 public class GroundSegment extends Application {
 
     
@@ -40,14 +49,24 @@ public class GroundSegment extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        GetConfigData.rebuildGui();        
+        /**
+         * Checks whether a regeneration of the FXML structure is
+         * necessary and carries it out in case it is
+        */ 
+        GetConfigData.rebuildGui();
         
+        
+        // Executes ground station
+        // Java Swing GUI
+        //new MainController(new MainFrame());
+        
+        // JavaFX GUI
         String fxmlFile = "/fxml/MainFrame.fxml";
         FXMLLoader loader = new FXMLLoader();
         Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
 
         Scene scene = new Scene(rootNode);
-        //scene.getStylesheets().add("/styles/styles.css");
+        // scene.getStylesheets().add("/styles/styles.css");
 
         stage.setScene(scene);
         stage.show();
@@ -63,43 +82,3 @@ public class GroundSegment extends Application {
         launch(args);
     }
 }
-
-
-
-
-
-
-
-
-/**
-* <h1>Ground Segment</h1>
-* 
-* <p>
-* This is the main Wrapper class initiating the GUI.
-* 
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
-//public class GroundSegment {
-
-    /**
-     * Calls the MainFrame class
-     * @param args - does not support any arguments.
-     * @throws java.io.IOException
-     */
-    //public static void main(String[] args) throws IOException {
-        
-    //    boolean fileMod = GetConfigData.fileMod();
-        
-        //if (fileMod) {
-    //        GuiBuilder guiBuilder = new GuiBuilder();
-    //        guiBuilder.chartBuilder();
-        //}
-        
-
-        
-        //new MainController(new MainFrame());
-    //}
-    
-//}

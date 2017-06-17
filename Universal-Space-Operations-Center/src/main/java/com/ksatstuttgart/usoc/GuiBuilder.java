@@ -23,6 +23,10 @@
  */
 package com.ksatstuttgart.usoc;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Properties;
+
 /**
  * This class builds the GUI FXML structure based on input 
  * parameters in the config.properties file and rebuilds parts
@@ -35,14 +39,74 @@ package com.ksatstuttgart.usoc;
 
 public class GuiBuilder {
         
+    
+    
+    
     public static void setExperimentName() {
         System.out.println("setExperimentName activeted!");
     }
     
     
-    public static void chartBuilder() {
-        System.out.println("chartBuilder activeted!");
+    
+    
+    /**
+     * Method stores values of config.properties file and the date
+     * of it's last modification into configMod.properties file.
+     * 
+     * @throws java.io.IOException
+    */  
+    public static void chartBuilder() throws IOException {
+ 
+        // Generates GridPane for charts        
+        try {
+            // Stores values of config.properties file into properties object 'config'
+            Properties config = GetConfigData.getAllValues();
+            int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
+            int numberOfRows;
+            
+            // Sets number of rows depending on required number of charts
+            if (numberOfCharts%2 == 0) {
+                numberOfRows = numberOfCharts/2;
+            } else {
+                numberOfRows = (numberOfCharts + 1)/2;
+            }
+            
+            // Initialize file object
+            String fileName = "Charts.fxml";
+            String filePath = "src/main/resources/fxml/";
+            
+            // Writes data in Charts.fxml file
+            PrintWriter writer = new PrintWriter(filePath + fileName);
+            writer.println("<?import javafx.scene.layout.*?> \n");
+            writer.println("<GridPane> \n" +
+                    "  <columnConstraints> \n" +
+                    "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n" +
+                    "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n" +
+                    "  </columnConstraints> \n" +
+                    "  <rowConstraints>");
+            for (int i=1; i<=(numberOfRows); i++) {
+                writer.println("    <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
+            }
+            writer.println("  </rowConstraints> \n" +
+                    "</GridPane>");
+            writer.close();
+            
+            
+            
+            
+            
+            
+            // Generates GridPane for charts        
+
+            
+            System.out.println("Number of charts has been updated!");
+
+        } catch (IOException e) {
+            System.out.println("Exception: " + e);
+        }         
     }
+    
+    
     
 
     public static void logBuilder() {

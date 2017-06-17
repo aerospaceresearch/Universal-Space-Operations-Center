@@ -28,7 +28,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
  
@@ -154,16 +153,17 @@ public class GetConfigData {
     */  
     public static void updateConfigMod() throws IOException {
         
-         // Stores date of last modification into String 'lastModDate'
-        lastModDate = getLastModDate();
-        // Stores values of config.properties file into properties object 'config'
-        Properties updateConfigMod = getAllValues();
-        
-        // Initialize file object
-        String fileName = "configMod.properties";
-        String filePath = "src/main/resources/config/";
-        
         try {
+            
+            // Stores date of last modification into String 'lastModDate'
+            lastModDate = getLastModDate();
+            // Stores values of config.properties file into properties object 'config'
+            Properties updateConfigMod = getAllValues();
+        
+            // Initialize file object
+            String fileName = "configMod.properties";
+            String filePath = "src/main/resources/config/";
+            
             // Writes data in configMod.propertes file
             PrintWriter writer = new PrintWriter(filePath + fileName);
             writer.println("# This document serves as the basis for comparisons");
@@ -246,6 +246,9 @@ public class GetConfigData {
             if (! configMods.getProperty("numberOfCharts").equals(getConfigModValue("numberOfCharts"))) {
                 GuiBuilder.chartBuilder();
             }
+            
+        } else {
+            System.out.println("No FXML regeneration necessary.");
         }
         
         // Updates values in configMod.properties file after GUI regeneration
