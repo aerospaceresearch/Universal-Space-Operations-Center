@@ -39,19 +39,46 @@ import java.util.Properties;
 
 public class GuiBuilder {
         
+
     
     
-    
+    /**
+     * 
+    */  
     public static void setExperimentName() {
         System.out.println("setExperimentName activeted!");
     }
     
     
     
+    /**
+     * Defines array 'position' with two values ​​for a clear positional
+     * representation of the corresponding chart in the Gridpane.
+     * 
+     * @param input
+     * @return 
+    */  
+    public static int[] getGridPosition( int input ) {
+        // column: position[0]
+        // row: position[1]
+        int[] position = new int[2];
+        if (input%2 == 0) {
+            position[0] = 1;
+            position[1] = (input - 2)/2;
+        } else {
+            position[0] = 0;
+            position[1] = (input - 1)/2;
+        }
+
+        return position;
+    }
+    
+    
+    
     
     /**
-     * Method stores values of config.properties file and the date
-     * of it's last modification into configMod.properties file.
+     * This method builds the FXML structure of the diagrams generically
+     * in a scrollable GridPane with two columns
      * 
      * @throws java.io.IOException
     */  
@@ -77,28 +104,39 @@ public class GuiBuilder {
             
             // Writes data in Charts.fxml file
             PrintWriter writer = new PrintWriter(filePath + fileName);
-            writer.println("<?import javafx.scene.layout.*?> \n");
-            writer.println("<GridPane> \n" +
-                    "  <columnConstraints> \n" +
-                    "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n" +
-                    "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n" +
-                    "  </columnConstraints> \n" +
-                    "  <rowConstraints>");
+            writer.println("<?import javafx.scene.chart.*?>\n"
+                    + "<?import javafx.scene.layout.*?> \n");
+            writer.println("<GridPane> \n"
+                    + "  <columnConstraints> \n"
+                    + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                    + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                    + "  </columnConstraints> \n"
+                    + "  <rowConstraints>");
             for (int i=1; i<=(numberOfRows); i++) {
                 writer.println("    <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
             }
-            writer.println("  </rowConstraints> \n" +
-                    "</GridPane>");
-            writer.close();
+            writer.println("  </rowConstraints>");
             
-            
-            
-            
-            
-            
-            // Generates GridPane for charts        
+            // Generates FXML for charts
+            writer.println("  <children>");
+            for (int counter=1; counter<=numberOfCharts; counter++) {
+                int[] position = getGridPosition(counter);
+                writer.println("    <LineChart title=\"" + config.getProperty("title[" + counter + "]")
+                        + "\" GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\""
+                        + position[1] + "\">");  
+                writer.println("      <xAxis> \n"
+                        + "        <CategoryAxis label=\"" + config.getProperty("x[" + counter + "]") + "\" side=\"BOTTOM\" /> \n"
+                        + "      </xAxis> \n"
+                        + "      <yAxis> \n"
+                        + "        <NumberAxis label=\"" + config.getProperty("y[" + counter + "]") + "\" side=\"LEFT\" /> \n"
+                        + "      </yAxis> \n"
+                        + "    </LineChart>");
+            }
+            writer.println("  </children> \n"
+                    + "</GridPane>");
+            writer.close();      
 
-            
+            // Prints status update
             System.out.println("Number of charts has been updated!");
 
         } catch (IOException e) {
@@ -108,7 +146,9 @@ public class GuiBuilder {
     
     
     
-
+    /**
+     *  
+    */  
     public static void logBuilder() {
         System.out.println("logBuilder activeted!");
     }
