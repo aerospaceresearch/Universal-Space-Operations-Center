@@ -113,7 +113,7 @@ public class GetConfigData {
             }
             
         } catch (IOException e) {
-            System.out.println("Exception: " + e);      
+            System.out.println("Exception: " + e);
         } finally {
             inputStream.close();
         }
@@ -246,6 +246,13 @@ public class GetConfigData {
             if (! configMods.getProperty("numberOfCharts").equals(getConfigModValue("numberOfCharts"))) {
                 GuiBuilder.chartBuilder();
             }
+            // Checks if log panel properties has been modified since last compilation
+            if ((! configMods.getProperty("serialPanel").equals(getConfigModValue("serialPanel"))) ||
+                    (! configMods.getProperty("iridiumPanel").equals(getConfigModValue("iridiumPanel"))) ||
+                    (! configMods.getProperty("numberOfAddTabs").equals(getConfigModValue("numberOfAddTabs")))) {
+                GuiBuilder.logBuilder();
+            }
+
             
         } else {
             System.out.println("No FXML regeneration necessary.");

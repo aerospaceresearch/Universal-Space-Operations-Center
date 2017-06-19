@@ -1,0 +1,22 @@
+<?import javafx.scene.control.*?> 
+<?import javafx.scene.layout.*?> 
+
+<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
+   <tabs>
+    <Tab text="Serial"> 
+      <content> 
+        <fx:include source = "logTabs/SerialPanel.fxml"/> 
+      </content> 
+    </Tab>
+    <Tab text="TabTitle1"> 
+      <content> 
+        <fx:include source = "logTabs/TestTab1.fxml"/> 
+      </content> 
+    </Tab>
+    <Tab text="TabTitle2"> 
+      <content> 
+        <fx:include source = "logTabs/TestTab2.fxml"/> 
+      </content> 
+    </Tab>
+  </tabs> 
+</TabPane>

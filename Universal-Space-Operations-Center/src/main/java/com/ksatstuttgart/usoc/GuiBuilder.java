@@ -77,79 +77,121 @@ public class GuiBuilder {
     
     
     /**
-     * This method builds the FXML structure of the diagrams generically
+     * This method builds the FXML structure of the charts generically
      * in a scrollable GridPane with two columns
      * 
      * @throws java.io.IOException
     */  
     public static void chartBuilder() throws IOException {
- 
-        // Generates GridPane for charts        
-        try {
-            // Stores values of config.properties file into properties object 'config'
-            Properties config = GetConfigData.getAllValues();
-            int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
-            int numberOfRows;
-            
-            // Sets number of rows depending on required number of charts
-            if (numberOfCharts%2 == 0) {
-                numberOfRows = numberOfCharts/2;
-            } else {
-                numberOfRows = (numberOfCharts + 1)/2;
-            }
-            
-            // Initialize file object
-            String fileName = "Charts.fxml";
-            String filePath = "src/main/resources/fxml/";
-            
-            // Writes data in Charts.fxml file
-            PrintWriter writer = new PrintWriter(filePath + fileName);
-            writer.println("<?import javafx.scene.chart.*?>\n"
-                    + "<?import javafx.scene.layout.*?> \n");
-            writer.println("<GridPane> \n"
-                    + "  <columnConstraints> \n"
-                    + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                    + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                    + "  </columnConstraints> \n"
-                    + "  <rowConstraints>");
-            for (int i=1; i<=(numberOfRows); i++) {
-                writer.println("    <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
-            }
-            writer.println("  </rowConstraints>");
-            
-            // Generates FXML for charts
-            writer.println("  <children>");
-            for (int counter=1; counter<=numberOfCharts; counter++) {
-                int[] position = getGridPosition(counter);
-                writer.println("    <LineChart title=\"" + config.getProperty("title[" + counter + "]")
-                        + "\" GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\""
-                        + position[1] + "\">");  
-                writer.println("      <xAxis> \n"
-                        + "        <CategoryAxis label=\"" + config.getProperty("x[" + counter + "]") + "\" side=\"BOTTOM\" /> \n"
-                        + "      </xAxis> \n"
-                        + "      <yAxis> \n"
-                        + "        <NumberAxis label=\"" + config.getProperty("y[" + counter + "]") + "\" side=\"LEFT\" /> \n"
-                        + "      </yAxis> \n"
-                        + "    </LineChart>");
-            }
-            writer.println("  </children> \n"
-                    + "</GridPane>");
-            writer.close();      
+        
+        // Generates GridPane for charts   
+        
+        // Stores values of config.properties file into properties object 'config'
+        Properties config = GetConfigData.getAllValues();
+        int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
+        int numberOfRows;
+        
+        // Sets number of rows depending on required number of charts
+        if (numberOfCharts%2 == 0) {
+            numberOfRows = numberOfCharts/2;
+        } else {
+            numberOfRows = (numberOfCharts + 1)/2;
+        }
+        
+        // Initialize file object
+        String fileName = "Charts.fxml";
+        String filePath = "src/main/resources/fxml/";
+        
+        // Writes data in Charts.fxml file
+        PrintWriter writer = new PrintWriter(filePath + fileName);
+        writer.println("<?import javafx.scene.chart.*?>\n"
+                + "<?import javafx.scene.layout.*?> \n");
+        writer.println("<GridPane> \n"
+                + "  <columnConstraints> \n"
+                + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                + "  </columnConstraints> \n"
+                + "  <rowConstraints>");
+        for (int i=1; i<=(numberOfRows); i++) {
+            writer.println("    <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
+        }
+        writer.println("  </rowConstraints>");
+        
+        // Generates FXML for charts
+        writer.println("  <children>");
+        for (int counter=1; counter<=numberOfCharts; counter++) {
+            int[] position = getGridPosition(counter);
+            writer.println("    <LineChart title=\"" + config.getProperty("title[" + counter + "]")
+                    + "\" GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\""
+                    + position[1] + "\">");  
+            writer.println("      <xAxis> \n"
+                    + "        <CategoryAxis label=\"" + config.getProperty("x[" + counter + "]") + "\" side=\"BOTTOM\" /> \n"
+                    + "      </xAxis> \n"
+                    + "      <yAxis> \n"
+                    + "        <NumberAxis label=\"" + config.getProperty("y[" + counter + "]") + "\" side=\"LEFT\" /> \n"
+                    + "      </yAxis> \n"
+                    + "    </LineChart>");
+        }
+        writer.println("  </children> \n"
+                + "</GridPane>");
+        writer.close();      
 
-            // Prints status update
-            System.out.println("Number of charts has been updated!");
-
-        } catch (IOException e) {
-            System.out.println("Exception: " + e);
-        }         
+        // Prints status update
+        System.out.println("Number of charts has been updated!");     
     }
     
     
     
     /**
      *  
+     * @throws java.io.IOException
     */  
-    public static void logBuilder() {
-        System.out.println("logBuilder activeted!");
+    public static void logBuilder() throws IOException {
+        
+        // Stores values of config.properties file into properties object 'config'
+        Properties config = GetConfigData.getAllValues();  
+        int numberOfAddTabs = Integer.parseInt(config.getProperty("numberOfAddTabs"));
+        
+        // Initialize file object
+        String fileName = "Log.fxml";
+        String filePath = "src/main/resources/fxml/";
+        
+        // Writes data in Charts.fxml file
+        PrintWriter writer = new PrintWriter(filePath + fileName);
+        
+        writer.println("<?import javafx.scene.control.*?> \n"
+                + "<?import javafx.scene.layout.*?> \n");
+        writer.println("<TabPane prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
+                + "  <tabs>");
+        
+        if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
+            writer.println("    <Tab text=\"Serial\"> \n"
+                    + "      <content> \n"
+                    + "        <fx:include source = \"logTabs/SerialPanel.fxml\"/> \n"
+                    + "      </content> \n"
+                    + "    </Tab>");
+        }
+        if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
+            writer.println("    <Tab text=\"Iridium\"> \n"
+                    + "      <content> \n"
+                    + "        <fx:include source = \"logTabs/IridiumPanel.fxml\"/> \n"
+                    + "      </content> \n"
+                    + "    </Tab>");        
+        }
+
+        for (int counter=1; counter<=numberOfAddTabs; counter++) {
+            writer.println("    <Tab text=\"" + config.getProperty("tabTitle[" + counter + "]") + "\"> \n"
+                    + "      <content> \n"
+                    + "        <fx:include source = \"logTabs/" + config.getProperty("tabFileName[" + counter + "]") + "\"/> \n"
+                    + "      </content> \n"
+                    + "    </Tab>");             
+        }
+        
+        writer.println("  </tabs> \n"
+                + "</TabPane>");
+        writer.close();  
+        
+        // Prints status update
+        System.out.println("Log panel has been updated!"); 
     }
 }

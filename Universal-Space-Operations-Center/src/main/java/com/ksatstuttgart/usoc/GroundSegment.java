@@ -25,6 +25,7 @@ package com.ksatstuttgart.usoc;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.MainFrame;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,33 +44,32 @@ import javafx.stage.Stage;
 */
 public class GroundSegment extends Application {
 
-    
-    
-    
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
 
-        /**
-         * Checks whether a regeneration of the FXML structure is
-         * necessary and carries it out in case it is
-        */ 
-        GetConfigData.rebuildGui();
-        
-        
-        // Executes ground station
-        // Java Swing GUI
-        //new MainController(new MainFrame());
-        
-        // JavaFX GUI
-        String fxmlFile = "/fxml/MainFrame.fxml";
-        FXMLLoader loader = new FXMLLoader();
-        Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
+        try {
+            /**
+             * Checks whether a regeneration of the FXML structure is
+             * necessary and carries it out in case it is
+            */ 
+            GetConfigData.rebuildGui();
 
-        Scene scene = new Scene(rootNode);
-        // scene.getStylesheets().add("/styles/styles.css");
+            // Java Swing GUI
+            //new MainController(new MainFrame());
 
-        stage.setScene(scene);
-        stage.show();
+            // JavaFX GUI
+            String fxmlFile = "/fxml/MainFrame.fxml";
+            FXMLLoader loader = new FXMLLoader();
+            Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
+            Scene scene = new Scene(rootNode);
+            // scene.getStylesheets().add("/styles/styles.css");
+
+            stage.setScene(scene);
+            stage.show();
+        
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
     
     
