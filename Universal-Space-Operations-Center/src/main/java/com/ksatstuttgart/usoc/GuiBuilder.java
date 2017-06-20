@@ -53,7 +53,7 @@ public class GuiBuilder {
     
     /**
      * Defines array 'position' with two values ​​for a clear positional
-     * representation of the corresponding chart in the Gridpane.
+     * representation of the corresponding chart in the GridPane.
      * 
      * @param input
      * @return 
@@ -87,7 +87,7 @@ public class GuiBuilder {
         // Generates GridPane for charts   
         
         // Stores values of config.properties file into properties object 'config'
-        Properties config = GetConfigData.getAllValues();
+        Properties config = ConfigHandling.getAllValues();
         int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
         int numberOfRows;
         
@@ -149,11 +149,11 @@ public class GuiBuilder {
     public static void logBuilder() throws IOException {
         
         // Stores values of config.properties file into properties object 'config'
-        Properties config = GetConfigData.getAllValues();  
+        Properties config = ConfigHandling.getAllValues();  
         int numberOfAddTabs = Integer.parseInt(config.getProperty("numberOfAddTabs"));
         
         // Initialize file object
-        String fileName = "Log.fxml";
+        String fileName = "LogPanel.fxml";
         String filePath = "src/main/resources/fxml/";
         
         // Writes data in Charts.fxml file

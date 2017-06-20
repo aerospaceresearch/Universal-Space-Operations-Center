@@ -13,10 +13,5 @@
         <fx:include source = "logTabs/TestTab1.fxml"/> 
       </content> 
     </Tab>
-    <Tab text="TabTitle2"> 
-      <content> 
-        <fx:include source = "logTabs/TestTab2.fxml"/> 
-      </content> 
-    </Tab>
   </tabs> 
 </TabPane>
