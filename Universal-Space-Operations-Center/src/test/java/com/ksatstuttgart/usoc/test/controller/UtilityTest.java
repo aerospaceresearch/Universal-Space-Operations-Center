@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
  * @version 1.0
  */
 public class UtilityTest {
-    
+
     /**
      * Test of binToUInt method, of class Utility.
      */
@@ -42,21 +42,9 @@ public class UtilityTest {
         System.out.println("binToUInt");
         String binaryString = "1111000010101010";
         int expResult = 43760;
-        int result = Utility.binToUInt(binaryString, false);
+        int result = Utility.binToUInt(binaryString, true);
         assertEquals(expResult, result);
-        
-    }
 
-    /**
-     * Test of switchIntEndian method, of class Utility.
-     */
-    @Test
-    public void testSwitchIntEndian() {
-        System.out.println("switchIntEndian");
-        String i = "1111000010101010";
-        String expResult = "1010101011110000";
-        String result = Utility.switchIntEndian(i);
-        assertEquals(expResult, result);
     }
 
     /**
@@ -67,8 +55,14 @@ public class UtilityTest {
         System.out.println("binToInt");
         String binaryString = "00010101";
         int expResult = 21;
-        int result = Utility.binToInt(binaryString, false);
+        int result = Utility.binToInt(binaryString, true);
         assertEquals(expResult, result);
+        
+        binaryString = "1001110011111111";
+        expResult = -100;
+        result = Utility.binToInt(binaryString, true);
+        assertEquals(expResult, result);
+        
     }
 
     /**
@@ -77,19 +71,19 @@ public class UtilityTest {
     @Test
     public void testIntToBits() {
         System.out.println("intToBits");
-        
+
         //text exceeding
         int b = 1000;
         String expResult = "1111101000";
         String result = Utility.intToBits(b);
         assertEquals(expResult, result);
-        
+
         //test maximum
         b = 255;
         expResult = "11111111";
         result = Utility.intToBits(b);
         assertEquals(expResult, result);
-        
+
         //test normal
         b = 200;
         expResult = "11001000";
@@ -113,23 +107,48 @@ public class UtilityTest {
      * Test of floatEndianess method, of class Utility.
      */
     @Test
-    public void testFloatEndianess() {
+    public void testChangeEndianess() {
         System.out.println("floatEndianess");
         String s = "10101010111100000000111101010101";
         String expResult = "01010101000011111111000010101010";
-        String result = Utility.floatEndianess(s);
+        String result = Utility.changeEndianess(s);
+        assertEquals(expResult, result);
+
+        System.out.println("switchIntEndian");
+        s = "1111000010101010";
+        expResult = "1010101011110000";
+        result = Utility.changeEndianess(s);
+        assertEquals(expResult, result);
+
+        System.out.println("switchIntEndian");
+        s = "11110000";
+        expResult = "11110000";
+        result = Utility.changeEndianess(s);
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of stringToFloat method, of class Utility.
+     * Test of binToFloat method, of class Utility.
      */
     @Test
     public void testStringToFloat() {
         System.out.println("stringToFloat");
         String binaryString = "10101010111100000000111101010101";
         float expResult = 9.891487940608E12F;
-        float result = Utility.stringToFloat(binaryString, false);
+        float result = Utility.binToFloat(binaryString, true);
         assertEquals(expResult, result, 0.0);
+    }
+
+    /**
+     *
+     * Test of binToULong method, of class Utility.
+     */
+    @Test
+    public void testBinToLong() {
+        System.out.println("binToLong");
+        String binaryString = "00111001000001010000000000000000";
+        long expResult = 1337;
+        long result = Utility.binToULong(binaryString, true);
+        assertEquals(expResult, result);
     }
 }

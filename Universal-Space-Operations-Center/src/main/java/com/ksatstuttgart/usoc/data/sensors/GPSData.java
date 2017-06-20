@@ -62,12 +62,12 @@ public class GPSData {
         int diff = SensorPos.GPS.getDiff(m) * 4;
         
         //System.out.println((SensorPos.GPS.getStart(m)+ (tpos-1)*diff)+" - "+(SensorPos.GPS.getStart(m))+" - "+(diff));
-        this.lat = Utility.stringToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff, SensorPos.GPS.getEnd(m) + (tpos-1)*diff), false);
-        this.lon = Utility.stringToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff + 32 * 1, SensorPos.GPS.getEnd(m) + (tpos-1)*diff + 32 * 1), false);
+        this.lat = Utility.binToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff, SensorPos.GPS.getEnd(m) + (tpos-1)*diff), false);
+        this.lon = Utility.binToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff + 32 * 1, SensorPos.GPS.getEnd(m) + (tpos-1)*diff + 32 * 1), false);
         
         //!!!nicht nach protokol wurde evt. bei OBC vertauscht
-        this.heading = Utility.stringToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff + 32 * 2, SensorPos.GPS.getEnd(m) + (tpos-1)*diff + 32 * 2), false);
-        this.speed = Utility.stringToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff + 32 * 3, SensorPos.GPS.getEnd(m) + (tpos-1)*diff + 32 * 3), false);
+        this.heading = Utility.binToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff + 32 * 2, SensorPos.GPS.getEnd(m) + (tpos-1)*diff + 32 * 2), false);
+        this.speed = Utility.binToFloat(content.substring(SensorPos.GPS.getStart(m)+ (tpos-1)*diff + 32 * 3, SensorPos.GPS.getEnd(m) + (tpos-1)*diff + 32 * 3), false);
         
     }
     

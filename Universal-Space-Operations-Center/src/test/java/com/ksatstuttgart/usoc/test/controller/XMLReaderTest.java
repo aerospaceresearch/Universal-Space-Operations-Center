@@ -24,10 +24,10 @@
 package com.ksatstuttgart.usoc.test.controller;
 
 import com.ksatstuttgart.usoc.controller.xml.XMLReader;
-import com.ksatstuttgart.usoc.data.message.dataPackage.DataPackage;
-import com.ksatstuttgart.usoc.data.message.DataPoint;
 import com.ksatstuttgart.usoc.data.message.ProtocolType;
-import com.ksatstuttgart.usoc.data.message.SBD340Message;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Data;
+import com.ksatstuttgart.usoc.data.message.Var;
+import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.data.message.dataPackage.SensorType;
@@ -73,30 +73,31 @@ public class XMLReaderTest {
     public void testReadingDatapackage() {
         System.out.println("testing Reading Data Structure");
 
-        SBD340Message result = XMLReader.getInstance().getMessageStructure("protocols/testProtocol.xml");
+        SBD340 result = XMLReader.getInstance().getMessageStructure("protocols/testProtocol.xml");
 
-        SBD340Message sbd = new SBD340Message();
+        SBD340 sbd = new SBD340();
+        sbd.setProtocol(ProtocolType.NONE);
 
-        DataPackage dp = new DataPackage();
+        Data dp = new Data();
         Sensor s = new Sensor();
         s.setSensorName("testName");
         s.setType(SensorType.PRESSURE);
 
-        DataPoint datapoint = new DataPoint();
+        Var datapoint = new Var();
         datapoint.setDataName("testSensorData");
         datapoint.setDataType(DataType.FLOAT32);
         datapoint.setStartPosition(40);
 
-        s.addDataPoint(datapoint);
+        s.addVariable(datapoint);
         dp.addSensor(s);
 
-        sbd.setDataPackage(dp);
+        sbd.setData(dp);
 
         Header h = new Header();
 
         MetaData m = new MetaData();
         m.setType(MetaDataType.TIME);
-        DataPoint newDataPoint = new DataPoint();
+        Var newDataPoint = new Var();
 
         newDataPoint.setDataName("testMetaData");
         newDataPoint.setDataType(DataType.FLOAT32);
@@ -106,7 +107,6 @@ public class XMLReaderTest {
         h.addMetaData(m);
 
         sbd.setHeader(h);
-
         assertEquals(sbd, result);
     }
 

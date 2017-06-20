@@ -23,7 +23,7 @@
  */
 package com.ksatstuttgart.usoc.controller.xml;
 
-import com.ksatstuttgart.usoc.data.message.SBD340Message;
+import com.ksatstuttgart.usoc.data.message.SBD340;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.bind.JAXB;
@@ -43,14 +43,18 @@ public class XMLWriter {
         return instance;
     }
 
-    public void saveMessageStructure(SBD340Message message) throws IOException {
+    public void saveMessageStructure(SBD340 message) throws IOException {
         XMLWriter.this.saveMessageStructure(message, getDefaultFileName());
     }
 
-    public void saveMessageStructure(SBD340Message message, String filename) throws IOException {
+    public void saveMessageStructure(SBD340 message, String filename) throws IOException {
         writeXML(message,new File("protocols",filename));
     }
     
+    /**
+     * TODO implement default file name
+     * @return 
+     */
     private String getDefaultFileName(){
         return "";
     }

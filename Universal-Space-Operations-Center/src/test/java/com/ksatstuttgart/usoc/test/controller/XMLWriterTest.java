@@ -24,9 +24,9 @@
 package com.ksatstuttgart.usoc.test.controller;
 
 import com.ksatstuttgart.usoc.controller.xml.XMLWriter;
-import com.ksatstuttgart.usoc.data.message.dataPackage.DataPackage;
-import com.ksatstuttgart.usoc.data.message.DataPoint;
-import com.ksatstuttgart.usoc.data.message.SBD340Message;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Data;
+import com.ksatstuttgart.usoc.data.message.Var;
+import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.data.message.dataPackage.SensorType;
@@ -80,28 +80,28 @@ public class XMLWriterTest {
         try {
             System.out.println("test write to XML file");
             
-            SBD340Message sbd = new SBD340Message();
+            SBD340 sbd = new SBD340();
             
-            DataPackage dp = new DataPackage();
+            Data dp = new Data();
             Sensor s = new Sensor();
             s.setSensorName("testName");
             s.setType(SensorType.PRESSURE);
             
-            DataPoint datapoint = new DataPoint();
+            Var datapoint = new Var();
             datapoint.setDataName("testSensorData");
             datapoint.setDataType(DataType.FLOAT32);
             datapoint.setStartPosition(40);
             
-            s.addDataPoint(datapoint);
+            s.addVariable(datapoint);
             dp.addSensor(s);
             
-            sbd.setDataPackage(dp);
+            sbd.setData(dp);
             
             Header h = new Header();
             
             MetaData m = new MetaData();
             m.setType(MetaDataType.TIME);
-            DataPoint newDataPoint = new DataPoint();
+            Var newDataPoint = new Var();
             
             newDataPoint.setDataName("testMetaData");
             newDataPoint.setDataType(DataType.FLOAT32);
@@ -126,20 +126,14 @@ public class XMLWriterTest {
             }
             
             String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"
-                    + "<ns2:sbd340Message xmlns:ns2=\"usoc/\">    "
-                        + "<datapackage>        "
-                            + "<sensor sensorname=\"testName\" sensortype=\"PRESSURE\">            "
-                                + "<datapoint dataName=\"testSensorData\" dataType=\"FLOAT32\" "
-                                + "frequency=\"0.0\" isLittleEndian=\"false\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
-                        + "</sensor>    "
-                        + "</datapackage>    "
-                        + "<header>        "
-                            + "<metadata metadataname=\"\" metadatatype=\"TIME\">            "
-                                + "<datapoint dataName=\"testMetaData\" dataType=\"FLOAT32\" "
-                                + "frequency=\"0.0\" isLittleEndian=\"false\" numPoints=\"0\" startPosition=\"40\" unit=\"\"/>        "
-                            + "</metadata>    "
-                        + "</header>"
-                    + "</ns2:sbd340Message>";
+                    + "<ns2:sbd340 xmlns:ns2=\"usoc/\" protocol=\"NONE\">    <data>        "
+                    + "<sensor name=\"testName\" type=\"PRESSURE\">            "
+                    + "<var dataname=\"testSensorData\" datatype=\"FLOAT32\" frequency=\"1.0\" "
+                    + "isLittleEndian=\"false\" numpoints=\"1\" start=\"40\" unit=\"\"/>        "
+                    + "</sensor>    </data>    <header>        <metadata name=\"\" type=\"TIME\">            "
+                    + "<var dataname=\"testMetaData\" datatype=\"FLOAT32\" frequency=\"1.0\" "
+                    + "isLittleEndian=\"false\" numpoints=\"1\" start=\"40\" unit=\"\"/>        "
+                    + "</metadata>    </header></ns2:sbd340>";
             
             assertEquals(expResult, result);
         } catch (IOException ex) {

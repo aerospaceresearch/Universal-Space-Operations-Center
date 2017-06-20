@@ -34,6 +34,9 @@ import com.ksatstuttgart.usoc.gui.SerialPanel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
+import static java.lang.Thread.sleep;
 
 /**
  *

@@ -23,10 +23,10 @@
  */
 package com.ksatstuttgart.usoc.controller.xml;
 
-import com.ksatstuttgart.usoc.data.message.dataPackage.DataPackage;
-import com.ksatstuttgart.usoc.data.message.DataPoint;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Data;
+import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.ProtocolType;
-import com.ksatstuttgart.usoc.data.message.SBD340Message;
+import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.data.message.dataPackage.SensorType;
@@ -43,6 +43,10 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  *
+ * TODO: add validation of XML file e.g. vars with numpoints > 1 must contain 
+ * a frequency value as well.
+ * 
+ * 
  * @author valentinstarlinger
  */
 public class XMLReader {
@@ -56,7 +60,7 @@ public class XMLReader {
         return instance;
     }
 
-    public SBD340Message getMessageStructure(String filename) {
+    public SBD340 getMessageStructure(String filename) {
         InputStream file;
         try {
             file = new FileInputStream(filename);
@@ -65,19 +69,19 @@ public class XMLReader {
             System.err.println(ex.getMessage());
         }
 
-        return new SBD340Message();
+        return new SBD340();
     }
 
-    public SBD340Message stax(InputStream file) {
-        SBD340Message sbd = new SBD340Message();
-        DataPackage dataPackage = new DataPackage();
+    public SBD340 stax(InputStream file) {
+        SBD340 sbd = new SBD340();
+        Data dataPackage = new Data();
         Header header = new Header();
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader parser = factory.createXMLStreamReader(file);
 
             Sensor lastSensor = new Sensor();
-            DataPoint lastDataPoint = new DataPoint();
+            Var lastVariable = new Var();
             MetaData lastMetaData = new MetaData();
             while (parser.hasNext()) {
 
@@ -93,7 +97,7 @@ public class XMLReader {
                         break;
 
                     case XMLStreamConstants.START_ELEMENT:
-                        System.out.println("START_ELEMENT: " + parser.getLocalName());
+//                        System.out.println("START_ELEMENT: " + parser.getLocalName());
                         switch (parser.getLocalName()) {
                             case "sensor":
                                 lastSensor = new Sensor();
@@ -101,55 +105,59 @@ public class XMLReader {
                             case "metadata":
                                 lastMetaData = new MetaData();
                                 break;
-                            case "datapoint":
-                                lastDataPoint = new DataPoint();
+                            case "var":
+                                lastVariable = new Var();
                                 break;
                         }
                         
                         for (int i = 0; i < parser.getAttributeCount(); i++) {
                             String value = parser.getAttributeValue(i);
-                            System.out.println("  Attribut: "
-                                    + parser.getAttributeLocalName(i)
-                                    + " Wert: " + parser.getAttributeValue(i));
+//                            System.out.println("  Attribut: "
+//                                    + parser.getAttributeLocalName(i)
+//                                    + " Wert: " + parser.getAttributeValue(i));
                             switch (parser.getAttributeLocalName(i)) {
                                 case "protocol":
                                     sbd.setProtocol(ProtocolType.valueOf(value));
                                     break;
-                                case "metadatatype":
-                                    lastMetaData.setType(MetaDataType.valueOf(value));
-                                    break;
-                                case "metadataname":
+                                case "name":
                                     lastMetaData.setMetaDataName(value);
-                                    break;
-                                case "sensortype":
-                                    lastSensor.setType(SensorType.valueOf(value));
-                                    break;
-                                case "sensorname":
                                     lastSensor.setSensorName(value);
                                     break;
+                                case "type":
+                                    //two tries are needed otherwise one value would
+                                    //never be set as the other .valueOf would
+                                    //trigger the exception.
+                                    try{
+                                        lastSensor.setType(SensorType.valueOf(value));
+                                    } catch(IllegalArgumentException e){
+                                        //do nothing (one of the two will always throw)
+                                    }
+                                    try{
+                                        lastMetaData.setType(MetaDataType.valueOf(value));
+                                    } catch(IllegalArgumentException e){
+                                        //do nothing (one of the two will always throw)
+                                    }
+                                    break;
                                 case "start":
-                                    lastDataPoint.setStartPosition(Integer.parseInt(value));
+                                    lastVariable.setStartPosition(Integer.parseInt(value));
                                     break;
-                                case "dataName":
-                                    lastDataPoint.setDataName(value);
+                                case "dataname":
+                                    lastVariable.setDataName(value);
                                     break;
-                                case "dataType":
-                                    lastDataPoint.setDataType(DataType.valueOf(value));
+                                case "datatype":
+                                    lastVariable.setDataType(DataType.valueOf(value));
                                     break;
-                                case "numPoints":
-                                    lastDataPoint.setNumPoints(Integer.parseInt(value));
-                                    break;
-                                case "startPosition":
-                                    lastDataPoint.setStartPosition(Integer.parseInt(value));
+                                case "numpoints":
+                                    lastVariable.setNumPoints(Integer.parseInt(value));
                                     break;
                                 case "frequency":
-                                    lastDataPoint.setFrequency(Double.parseDouble(value));
+                                    lastVariable.setFrequency(Double.parseDouble(value));
                                     break;
                                 case "unit":
-                                    lastDataPoint.setUnit(value);
+                                    lastVariable.setUnit(value);
                                     break;
                                 case "isLittleEndian":
-                                    lastDataPoint.setIsLittleEndian(Boolean.parseBoolean(value));
+                                    lastVariable.setIsLittleEndian(Boolean.parseBoolean(value));
                                     break;
                             }
                         }
@@ -165,9 +173,9 @@ public class XMLReader {
                                 dataPackage.addSensor(lastSensor);
                                 lastSensor = new Sensor();
                                 break;
-                            case "datapoint":
-                                lastSensor.addDataPoint(lastDataPoint);
-                                lastMetaData.addDataPoint(lastDataPoint);
+                            case "var":
+                                lastSensor.addVariable(lastVariable);
+                                lastMetaData.addDataPoint(lastVariable);
                                 break;
                             case "metadata":
                                 header.addMetaData(lastMetaData);
@@ -176,8 +184,8 @@ public class XMLReader {
                             case "header":
                                 sbd.setHeader(header);
                                 break;
-                            case "datapackage":
-                                sbd.setDataPackage(dataPackage);
+                            case "data":
+                                sbd.setData(dataPackage);
                                 break;
                         }
                         break;

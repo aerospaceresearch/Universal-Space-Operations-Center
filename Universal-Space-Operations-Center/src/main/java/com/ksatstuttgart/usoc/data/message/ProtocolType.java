@@ -29,5 +29,6 @@ package com.ksatstuttgart.usoc.data.message;
  */
 public enum ProtocolType {
     SEQUENTIAL,
-    BISECTION;
+    BISECTION,
+    NONE;
 }

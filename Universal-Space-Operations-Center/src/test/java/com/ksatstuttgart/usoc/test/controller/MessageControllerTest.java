@@ -24,8 +24,16 @@
 package com.ksatstuttgart.usoc.test.controller;
 
 import com.ksatstuttgart.usoc.controller.MessageController;
+import com.ksatstuttgart.usoc.controller.Utility;
 import com.ksatstuttgart.usoc.controller.xml.XMLReader;
-import com.ksatstuttgart.usoc.data.message.SBD340Message;
+import com.ksatstuttgart.usoc.data.message.SBD340;
+import com.ksatstuttgart.usoc.data.message.Var;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -34,25 +42,54 @@ import static org.junit.Assert.*;
  * @author valentinstarlinger
  */
 public class MessageControllerTest {
-    
 
     /**
      * Test of addSBD340Message method, of class MessageController.
      */
     @Test
-    public void testAddSBD340Message() {
+    public void testAddSBD340Message() throws IOException {
         System.out.println("test add and parse of Iridium message");
-        SBD340Message structure = XMLReader.getInstance()
-                .getMessageStructure("protocols/defaultProtocol.xml");
+        SBD340 structure = XMLReader.getInstance()
+                .getMessageStructure("protocols/messageProtocol.xml");
         MessageController controller = new MessageController(structure);
+
+        FileInputStream fs = new FileInputStream("protocols" + File.separator + "msg_0");
+
+        //System.out.println("");
+        //System.out.println("- binary message - ");
+        StringBuilder message = new StringBuilder();
+        int nextByte;
+        while ((nextByte = fs.read()) != -1) {
+            String t = Utility.intToBits(nextByte);
+            //System.out.println(t);
+            message.append(t);
+        }
         
-        String testMessage = "";
-        controller.addSBD340Message(testMessage);
-        
+        controller.addSBD340Message(message.toString());
+
+        BufferedReader br = new BufferedReader(new FileReader("protocols" + File.separator + "logfile.txt"));
+
         String expected = "";
-        String result = controller.getLastMessage().toString();
+        String nextLine;
+        while ((nextLine = br.readLine()) != null) {
+            expected += nextLine;
+        }
+        String prettyResults = controller.getData().toString();
+        System.out.println("");
+        System.out.println("- results - ");
+        System.out.println(prettyResults);
         
-        assertEquals(expected, result);
+        String result = "";
+        for (Sensor sensor : controller.getData().getData().getSensors()) {
+            for (Var variable : sensor.getVars()) {
+                for (Object value : variable.getValues().values()) {
+                    result+=(value)+"\r\n";
+                }
+            }
+        }
+
+        //replace all whitespaces, otherwise difficult with comparison
+        assertEquals(result.replaceAll("\\s", ""), expected.replaceAll("\\s", ""));
     }
-    
+
 }
