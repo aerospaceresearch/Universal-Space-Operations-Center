@@ -23,6 +23,9 @@
  */
 package com.ksatstuttgart.usoc;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
@@ -51,8 +54,9 @@ public class GuiBuilder {
     
     
     
+    
     /**
-     * Defines array 'position' with two values ​​for a clear positional
+     * Method defines array 'position' with two values ​​for a clear positional
      * representation of the corresponding chart in the GridPane.
      * 
      * @param input
@@ -72,12 +76,12 @@ public class GuiBuilder {
 
         return position;
     }
-    
+
     
     
     
     /**
-     * This method builds the FXML structure of the charts generically
+     * Method builds the FXML structure of the charts generically
      * in a scrollable GridPane with two columns
      * 
      * @throws java.io.IOException
@@ -87,7 +91,7 @@ public class GuiBuilder {
         // Generates GridPane for charts   
         
         // Stores values of config.properties file into properties object 'config'
-        Properties config = ConfigHandling.getAllValues();
+        Properties config = ConfigHandler.getAllValues();
         int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
         int numberOfRows;
         
@@ -142,41 +146,74 @@ public class GuiBuilder {
     
     
     
+    
     /**
-     *  
+     * Method builds the FXML structure of the log panel generically
+     * in a TabPane with an optional number of additional tabs.
+     * 
+     * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
     */  
-    public static void logBuilder() throws IOException {
-        
+    public static void logBuilder() throws FileNotFoundException, IOException {
+                
         // Stores values of config.properties file into properties object 'config'
-        Properties config = ConfigHandling.getAllValues();  
+        Properties config = ConfigHandler.getAllValues();  
         int numberOfAddTabs = Integer.parseInt(config.getProperty("numberOfAddTabs"));
         
         // Initialize file object
         String fileName = "LogPanel.fxml";
         String filePath = "src/main/resources/fxml/";
         
-        // Writes data in Charts.fxml file
+        // Writes data in LogPanel.fxml file
         PrintWriter writer = new PrintWriter(filePath + fileName);
         
-        writer.println("<?import javafx.scene.control.*?> \n"
+        writer.println("<?import javafx.geometry.*?>\n"
+                + "<?import javafx.scene.*?>\n"
+                + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
         writer.println("<TabPane prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
                 + "  <tabs>");
         
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
+                       
+            FileReader fileReader = new FileReader(filePath + "logTabs/SerialPanel.fxml");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            // systemeigenes Zeilenumbruchszeichen ermitteln
+            String separator = System.getProperty("line.separator");
+            
             writer.println("    <Tab text=\"Serial\"> \n"
-                    + "      <content> \n"
-                    + "        <fx:include source = \"logTabs/SerialPanel.fxml\"/> \n"
-                    + "      </content> \n"
-                    + "    </Tab>");
+                    + "      <content> \n");
+
+            while( (line=bufferedReader.readLine()) != null ) {
+                stringBuilder.append(line).append(separator) ;
+            }
+            writer.println(stringBuilder);
+
+            writer.println("      </content> \n"
+                    + "    </Tab>"); 
         }
+        
         if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
+            
+            FileReader fileReader = new FileReader(filePath + "logTabs/IridiumPanel.fxml");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+            // systemeigenes Zeilenumbruchszeichen ermitteln
+            String separator = System.getProperty("line.separator");
+            
             writer.println("    <Tab text=\"Iridium\"> \n"
-                    + "      <content> \n"
-                    + "        <fx:include source = \"logTabs/IridiumPanel.fxml\"/> \n"
-                    + "      </content> \n"
-                    + "    </Tab>");        
+                    + "      <content> \n");
+
+            while( (line=bufferedReader.readLine()) != null ) {
+                stringBuilder.append(line).append(separator) ;
+            }
+            writer.println(stringBuilder);
+
+            writer.println("      </content> \n"
+                    + "    </Tab>"); 
         }
 
         for (int counter=1; counter<=numberOfAddTabs; counter++) {

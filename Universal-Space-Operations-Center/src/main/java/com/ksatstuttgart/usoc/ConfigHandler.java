@@ -38,16 +38,16 @@ import java.util.Properties;
  * @author  Victor Hertel
  * @version 1.0
 */
-public class ConfigHandling {
+public class ConfigHandler {
     
     
     /**
      * Method gets values from config.properties file.
      * 
-     * @return 
-     * @throws java.io.IOException
+     * @return
+     * @throws java.io.FileNotFoundException
     */
-    public static Properties getAllValues() throws IOException {
+    public static Properties getAllValues() throws FileNotFoundException, IOException {
         
         // Creates new properties object 'config'
         Properties config = new Properties();
@@ -55,7 +55,7 @@ public class ConfigHandling {
         String fileName = "config.properties";
         String filePath = "src/main/resources/config/";
         InputStream inputStream = new FileInputStream(filePath + fileName);
-        
+       
         // Checks if config.properties exists
         if (inputStream != null) {
             config.load(inputStream);
@@ -65,6 +65,7 @@ public class ConfigHandling {
         inputStream.close();
         
         return config;
+        
     }
     
     
@@ -76,9 +77,10 @@ public class ConfigHandling {
      * 
      * @param key
      * @return 
+     * @throws java.io.FileNotFoundException 
      * @throws java.io.IOException
     */         
-    public static String getConfigModValue( String key ) throws IOException {
+    public static String getConfigModValue( String key ) throws FileNotFoundException, IOException {
         
         // Declares output variable 'value'
         String value;
@@ -242,19 +244,14 @@ public class ConfigHandling {
     
     
     /**
-     * Method checks if config.properties has been modified.
+     * Method checks syntax of config.properties file.
      * 
      * @return
      * @throws java.io.IOException 
     */    
     public static boolean syntaxCheck() throws IOException {
-        
-        // Stores values from config.properties file into properties object 'configMods'
-        Properties config = getAllValues();
-        int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
-        boolean syntaxCheck;    
-        
-        syntaxCheck = true;
+    
+        boolean syntaxCheck = true;
         
         return syntaxCheck;
     }
@@ -275,8 +272,6 @@ public class ConfigHandling {
         // is accurate, the FXML structure will be regenerated 
         if ( fileMod() && syntaxCheck() ) {
             
-            System.out.println("rebuildGUI");
-
             // Checks if 'experimentName' has been modified since last compilation
             if ( experimentNameMod() ) {
                 GuiBuilder.setExperimentName();

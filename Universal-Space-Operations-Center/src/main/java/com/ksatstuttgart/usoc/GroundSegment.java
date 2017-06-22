@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.MainFrame;
 import java.io.IOException;
+import java.net.URL;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -52,19 +53,20 @@ public class GroundSegment extends Application {
              * Checks whether a regeneration of the FXML structure is
              * necessary and carries it out in case it is
             */ 
-            ConfigHandling.rebuildGui();
-
+            ConfigHandler.rebuildGui();     
             
             // Java Swing GUI
             //new MainController(new MainFrame());
 
             // JavaFX GUI
             String fxmlFile = "/fxml/MainFrame.fxml";
-            FXMLLoader loader = new FXMLLoader();
-            Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
-            Scene scene = new Scene(rootNode);
-            // scene.getStylesheets().add("/styles/styles.css");
+            URL location = getClass().getResource(fxmlFile);
 
+            FXMLLoader loader = new FXMLLoader( );
+            loader.setLocation( location );
+            Parent root = (Parent) loader.load();
+
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         
