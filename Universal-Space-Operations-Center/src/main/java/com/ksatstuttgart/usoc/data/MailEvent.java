@@ -23,7 +23,8 @@
  */
 package com.ksatstuttgart.usoc.data;
 
-import com.ksatstuttgart.usoc.controller.DataController;
+import com.ksatstuttgart.usoc.controller.MessageController;
+import java.util.Arrays;
 import javax.mail.Address;
 
 /**
@@ -34,7 +35,6 @@ public class MailEvent {
     
     private Address[] from;
     private String subject, filename, text;
-    private DataController iridiumPackage;
     private long timeStampGmail;
     private long timeStamp;
 
@@ -43,7 +43,6 @@ public class MailEvent {
         this.subject = subject;
         this.filename = filename;
         this.text = text;
-        this.iridiumPackage = new DataController(text);
         this.timeStampGmail = timeStampGmail;
         this.timeStamp = timeStamp;
     }
@@ -84,21 +83,13 @@ public class MailEvent {
         this.filename = filename;
     }
 
-    public DataController getDataController() {
-        return iridiumPackage;
-    }
-
-    public void setIridiumPackage(DataController iridiumPackage) {
-        this.iridiumPackage = iridiumPackage;
-    }
-    
     public String getText(){
         return text;
     }
 
     @Override
     public String toString(){
-        return timeStamp+"\n"+from.toString()+"\n"+subject+"\n"+filename+"\n"+text.toString()+"\n"+"\n";
+        return timeStamp+"\n"+Arrays.toString(from)+"\n"+subject+"\n"+filename+"\n"+text+"\n"+"\n";
     }
     
     

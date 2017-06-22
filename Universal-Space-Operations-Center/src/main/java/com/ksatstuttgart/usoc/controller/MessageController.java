@@ -41,7 +41,9 @@ import com.ksatstuttgart.usoc.data.message.header.MetaDataType;
 public class MessageController {
 
     private final SBD340 data;
-
+    
+    private MessageController instance;
+    
     /**
      * Creates a new MessageController instance from a predefined message
      * structure.

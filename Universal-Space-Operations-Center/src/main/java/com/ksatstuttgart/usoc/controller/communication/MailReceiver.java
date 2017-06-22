@@ -108,9 +108,12 @@ public class MailReceiver {
             @Override
             public void run() {
                 try {
-                    if (folder.getMessageCount() > 65) {
-                        for (int i = 0; i < 65; i++) {
-                            getMessage(folder, folder.getMessageCount() - (65 -i));
+                    //get the last x messages. note that this does not skip 
+                    //invalid messages so if the last x messages are all invalid
+                    //no messages will be shown
+                    if (folder.getMessageCount() > 5) {
+                        for (int i = 0; i < 5; i++) {
+                            getMessage(folder, folder.getMessageCount() - (5 -i));
                             Thread.sleep(500);
                         }
                     }
@@ -188,6 +191,8 @@ public class MailReceiver {
                 } else if (message[i].getContent() instanceof String) {
                     //System.out.println("message as string: " + message[i].getContent());
                 }
+            } else {
+                System.out.println("message not valid: "+message[i].getSubject());
             }
         } catch (MessagingException | IOException ex) {
             error("Error: Error while parsing message.");
