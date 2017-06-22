@@ -23,20 +23,12 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
-import com.ksatstuttgart.usoc.data.sensors.chartData.ChartSensor;
-import com.ksatstuttgart.usoc.data.sensors.GPSData;
+import com.ksatstuttgart.usoc.data.message.Var;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 /**
 * <h1>GPSPanel</h1>
@@ -47,8 +39,7 @@ import javax.swing.JTextField;
 */
 
 public class GPSPanel extends JPanel{
-    JTextField lastRec, predictedImpact, jlA, jlB, jlPhi;
-    JButton export,exportpredicted;
+    JLabel longitude, latitude, altitude, groundSpeed, heading, time;
     
     public GPSPanel(){
         
@@ -60,92 +51,61 @@ public class GPSPanel extends JPanel{
         
         this.setLayout(gl);
         
-        this.add(new JLabel("Last Recoreded Pos: "));
-        lastRec = new JTextField();
-        this.add(lastRec);
+        this.add(new JLabel("Longitude: "));
+        longitude = new JLabel();
+        this.add(longitude);
         
-        this.add(new JLabel("Predicted Impact: "));
-        predictedImpact = new JTextField();
-        this.add(predictedImpact);
+        this.add(new JLabel("Latitude: "));
+        latitude = new JLabel();
+        this.add(latitude);
         
-        this.add(new JLabel("A: "));
-        jlA = new JTextField();
-        this.add(jlA);
+        this.add(new JLabel("Altitude: "));
+        altitude = new JLabel();
+        this.add(altitude);
         
-        this.add(new JLabel("B: "));
-        jlB = new JTextField();
-        this.add(jlB);
+        this.add(new JLabel("Ground Speed: "));
+        groundSpeed = new JLabel();
+        this.add(groundSpeed);
         
-        this.add(new JLabel("Phi: "));
-        jlPhi = new JTextField();
-        this.add(jlPhi);
+        this.add(new JLabel("Heading: "));
+        heading = new JLabel();
+        this.add(heading);
         
-        export = new JButton("export raw GPS");
-        export.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    File f = new File("export_gps.csv");
-                    
-                    if(f.exists()){
-                        f.delete();
-                    }
-                    f.createNewFile();
-                    FileWriter fw = new FileWriter(f);
-                    
-                    
-                    fw.flush();
-                    fw.close();
-                } catch (IOException ex) {
-                }
-                
-            }
-            
-        });
-        this.add(export);
-             
-        exportpredicted = new JButton("export predicted GPS");
-        exportpredicted.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    File f = new File("export_predicted.csv");
-                    
-                    if(f.exists()){
-                        f.delete();
-                    }
-                    f.createNewFile();
-                    FileWriter fw = new FileWriter(f);
-                    
-                    
-                    fw.flush();
-                    fw.close();
-                } catch (IOException ex) {
-                }
-                
-            }
-            
-        });
-        this.add(exportpredicted);
+        this.add(new JLabel("Time: "));
+        time = new JLabel();
+        this.add(time);
         
         this.setMaximumSize(new java.awt.Dimension(400,this.getHeight()));
         
     }
     
-    public ArrayList<ChartSensor> updateGPS(GPSData gps){
-        
-        if(gps.getLat()<40||gps.getLat()>90){
-            return new ArrayList<>();
+    public void updateGPS(Sensor gpsSensor){
+        //go through gps sensor and set the respective label texts with the latest
+        //values
+        for (Var var : gpsSensor.getVars()) {
+            Object[] entrySet = var.getValues().entrySet().toArray();
+            String s = entrySet[entrySet.length-1].toString();
+            
+            switch(var.getDataName()){
+                case "Longitude": 
+                    longitude.setText(s);
+                    break;
+                case "Latitude": 
+                    latitude.setText(s);
+                    break;
+                case "Altitude": 
+                    altitude.setText(s);
+                    break;
+                case "Ground Speed": 
+                    groundSpeed.setText(s);
+                    break;
+                case "Heading": 
+                    heading.setText(s);
+                    break;
+                case "Time": 
+                    time.setText(s);
+                    break;
+            }
         }
-        
-        if(gps.getLon()<10||gps.getLon()>40){
-            return new ArrayList<>();
-        }
-        
-        
-        lastRec.setText("lat: "+gps.getLat()+", lon: "+gps.getLon());
-        
-        ArrayList<ChartSensor> al = new ArrayList<>();
-        return al;
     }
 }

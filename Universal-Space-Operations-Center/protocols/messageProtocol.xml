@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Iridium SBD 340B sequential message prototype
+Used conventions: 
+	First bit is 0, not 1
+	System event numbers are uint8, list of event descriptors is stored in a separate xml file. System events can be: Iridium FSM freeze, TC has detected open circuit, GPS sees no satellite, etc. The 4 event with the highest priority are sent, this number can increase in later iterations.
+	As the default endianness for AVR MCUs is little endian, this is the default for datapoints.
+-->
+<sbd340message protocol = "SEQUENTIAL">
+	<header>
+		<metadata type = "MSGNUMBER">
+			<var start="0" datatype="UINT8" numpoints="1" unit="NONE" isLittleEndian="TRUE"/>
+		</metadata>
+		<metadata type="TIME">
+				<var start="7" datatype="UINT32" numpoints="1" unit="ms" isLittleEndian="TRUE"/>
+		</metadata>
+	</header>
+	<data>
+		<sensor type="PRESSURE" name="MS5607 Digital Pressure Sensor PCB" isLittleEndian="TRUE">
+			<var dataname = "Pressure" start="39" 
+                   datatype="UINT16" numpoints="6" frequency="0.5" unit="0.1mbar" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="PRESSURE" name="MS5607 Digital Pressure Sensor Front">
+			<var dataname = "Pressure" start="135" 
+                   datatype="UINT16" numpoints="6" frequency="0.5" unit="0.1mbar" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="Thermocouple_1">
+			<var start="231" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="Thermocouple_2">
+			<var start="327" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="Thermocouple_3">
+			<var start="423" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="Thermocouple_4">
+			<var start="519" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="Thermocouple_5">
+			<var start="615" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="Thermocouple_6">
+			<var start="711" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="ColdJunction_1">
+			<var start="807" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="ColdJunction_2">
+			<var start="903" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="ColdJunction_3">
+			<var start="999" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="ColdJunction_4">
+			<var start="1095" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="ColdJunction_5">
+			<var start="1191" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="TEMPERATURE" name="ColdJunction_6">
+			<var start="1287" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="ORIENTATION" name="BNO055 IMU">
+			<var dataname = "Quaternion_W" start="1383" 
+                   datatype="INT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+			<var dataname = "Quaternion_X" start="1575" 
+                   datatype="INT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+			<var dataname = "Quaternion_Y" start="1767" 
+                   datatype="INT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+			<var dataname = "Quaternion_Z" start="1959" 
+                   datatype="INT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+			<var dataname = "Calibration" start="2151" 
+                   datatype="UINT8" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="GNSS" name="UBLOX M8">
+			<var dataname = "Longitude" start="2247" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="deg" isLittleEndian="TRUE"/>
+			<var dataname = "Latitude" start="2279" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="deg" isLittleEndian="TRUE"/>
+			<var dataname = "Altitude" start="2311" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="m" isLittleEndian="TRUE"/>
+			<var dataname = "Ground Speed" start="2343" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="m/s" isLittleEndian="TRUE"/>
+			<var dataname = "Heading" start="2375" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="deg" isLittleEndian="TRUE"/>
+			<var dataname = "Time" start="2407" 
+                   datatype="UINT32" numpoints="1" frequency="0.083333" unit="NONE" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor name="System Events" type = "SYSTEMEVENTS">
+			<var dataname = "Event Descriptor" start="2439" datatype="UINT8" numpoints="6" unit="NONE" isLittleEndian="TRUE"/>
+			<var dataname = "Event Time" start="2487" datatype="UINT16" numpoints="6" unit="s" isLittleEndian="TRUE"/>
+		</sensor>
+		<sensor type="VOLTAGE" name="Battery Voltage Divider">
+			<var start="2583" datatype="BIT10" numpoints="1" unit="V" isLittleEndian="FALSE"/>
+		</sensor>
+		<sensor type="VOLTAGE" name="MP3H6115A Analog Pressure Sensor">
+			<var dataname = "Voltage" start="2593" 
+                   datatype="BIT10" numpoints="6" frequency="0.5" unit="V" isLittleEndian="FALSE"/>
+		</sensor>
+		<sensor type = "CARRIER_CURRENT" name="Carrier Current">
+			<var start="2653" datatype="BIT3" numpoints="1" unit="NONE" isLittleEndian="FALSE"/>
+		</sensor>
+		<sensor type = "CARRIER_MAX" name="Carrier Max">
+			<var start="2656" datatype="BIT3" numpoints="1" unit="NONE" isLittleEndian="FALSE"/>
+		</sensor>
+	</data>
+</sbd340message>

@@ -23,7 +23,7 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
-import com.ksatstuttgart.usoc.controller.SerialComm;
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
       
 /**
 * <h1>SerialLogPanel</h1>

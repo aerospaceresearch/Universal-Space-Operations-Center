@@ -23,6 +23,7 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
+import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.MailEvent;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -34,7 +35,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.ksatstuttgart.usoc.controller.MailReceiver;
+import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
 
       
 /**
@@ -91,7 +92,7 @@ public class IridiumPanel extends JPanel {
 
     }
 
-    public void updateData(MailEvent e) {
+    public void updateData(MailEvent e, MessageController mc) {
         String s = "";
         for (Address from : e.getFrom()) {
             s += "," + from.toString();
@@ -101,7 +102,7 @@ public class IridiumPanel extends JPanel {
         lastFilename.setText(e.getFilename());
         lastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());
         
-        lp.updateData(e.getDataController().toString(), e.getTimeStamp());
+        lp.updateData(mc.getData().toString(), e.getTimeStamp());
     }
 
     public void updateError(String msg) {

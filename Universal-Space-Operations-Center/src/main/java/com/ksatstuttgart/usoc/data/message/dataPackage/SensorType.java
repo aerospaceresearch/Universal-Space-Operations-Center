@@ -21,41 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.data.sensors;
-
-import java.awt.Color;
+package com.ksatstuttgart.usoc.data.message.dataPackage;
 
 /**
-* <h1>State</h1>
-* This enum 
-* <p>
-* 
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
-
-public enum State {
-    OK (Color.green.darker()),
-    ERROR(Color.red.darker());
-    
-    private Color c;
-    
-    private State (Color c){
-        this.c = c;
-    }
-    
-    public Color getColor(){
-        return c;
-    }
-    
-    public static State getState(int i){
-        switch (i){
-            case 1:
-                return OK;
-            case 0:
-            default:
-                return ERROR;
-        }
-    }
+ *
+ * @author Valentin Starlinger
+ */
+public enum SensorType {
+    PRESSURE,
+    TEMPERATURE,
+    ORIENTATION,
+    GNSS,
+    VOLTAGE;
 }

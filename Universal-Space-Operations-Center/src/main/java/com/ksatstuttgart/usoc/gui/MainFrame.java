@@ -23,13 +23,14 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
-import com.ksatstuttgart.usoc.controller.DataController;
+import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.MailEvent;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
       
@@ -63,6 +64,10 @@ public class MainFrame extends JFrame {
 
         dp = new CurrentDataPanel();//true,1600,900);
         dp.setMinimumSize(new java.awt.Dimension(500,dp.getHeight()));
+        JScrollPane jsp = new JScrollPane(dp,
+                                          JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                                          JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        
         ip = new IridiumPanel();
         sp = new SerialPanel();
         
@@ -71,8 +76,9 @@ public class MainFrame extends JFrame {
         bottomPanel.addTab("Serial", sp);
         
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(dp, BorderLayout.WEST);
+        mainPanel.add(jsp, BorderLayout.WEST);
         mainPanel.add(bottomPanel, BorderLayout.CENTER);
+        mainPanel.add(new JPanel(), BorderLayout.SOUTH);
 
         this.getContentPane().add(mainPanel);
         this.setResizable(true);
@@ -81,12 +87,12 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
     }
     
-    public void updateData(DataController dc){
-        dp.updateData(dc);
+    public void updateData(MessageController mc){
+        dp.updateData(mc);
     }
 
-    public void updateIridiumLog(MailEvent e) {
-        ip.updateData(e);
+    public void updateIridiumLog(MailEvent e, MessageController mc) {
+        ip.updateData(e, mc);
     }
 
     public void updateSerialLog(SerialEvent e) {

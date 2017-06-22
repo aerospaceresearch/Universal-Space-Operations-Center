@@ -21,18 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.controller;
+package com.ksatstuttgart.usoc.controller.communication;
 
+import com.ksatstuttgart.usoc.controller.Utility;
 import com.ksatstuttgart.usoc.data.MailEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -112,9 +108,12 @@ public class MailReceiver {
             @Override
             public void run() {
                 try {
-                    if (folder.getMessageCount() > 65) {
-                        for (int i = 0; i < 65; i++) {
-                            getMessage(folder, folder.getMessageCount() - (65 -i));
+                    //get the last x messages. note that this does not skip 
+                    //invalid messages so if the last x messages are all invalid
+                    //no messages will be shown
+                    if (folder.getMessageCount() > 5) {
+                        for (int i = 0; i < 5; i++) {
+                            getMessage(folder, folder.getMessageCount() - (5 -i));
                             Thread.sleep(500);
                         }
                     }
@@ -192,6 +191,8 @@ public class MailReceiver {
                 } else if (message[i].getContent() instanceof String) {
                     //System.out.println("message as string: " + message[i].getContent());
                 }
+            } else {
+                System.out.println("message not valid: "+message[i].getSubject());
             }
         } catch (MessagingException | IOException ex) {
             error("Error: Error while parsing message.");

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 KSat e.V.
+ * Copyright 2017 KSat Stuttgart e.V..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,36 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.data.sensors;
+package com.ksatstuttgart.usoc.data.message.header;
 
 /**
  *
  * @author valentinstarlinger
  */
-public class SDHealth {
-
-    private State state;
-    private Mode m;
-
-    public SDHealth(State state) {
-        this.state = state;
-    }
-
-    public SDHealth(String content, Mode m) {
-        this.m = m;
-        parseContent(content);
-    }
-
-    private void parseContent(String content) {
-        this.state = State.getState(Integer.parseUnsignedInt(content.substring(SensorPos.SD.getStart(m), SensorPos.SD.getEnd(m)),2));
-    }
-
-    @Override
-    public String toString() {
-        return "SD card: " + state;
-    }
-
-    public State getState() {
-        return state;
-    }
+public enum MetaDataType {
+    MSGNUMBER,
+    CARRIER_CURRENT,
+    CARRIER_MAX,
+    NUM_VALIDEVENTS,
+    SYSTEMEVENTS,
+    TIME;
 }

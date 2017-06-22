@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.controller;
+package com.ksatstuttgart.usoc.controller.communication;
 
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import java.awt.event.ActionEvent;

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 KSat e.V.
+ * Copyright 2017 KSat Stuttgart e.V..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,28 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.data.sensors.chartData;
-
-import com.ksatstuttgart.usoc.data.sensors.State;
+package com.ksatstuttgart.usoc.data.message;
 
 /**
-* <h1>ChartSensor</h1>
-* This is an abstract class that allows subclasses to be plotted on a x,y plane.
-* 
-* <p>
-* 
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
-public abstract class ChartSensor {
-    
-    public ChartPoint getData(){
-        return new ChartPoint(getTime(),getYValue());
-    }
-    
-    public abstract Double getTime();
-    public abstract Double getYValue(); 
-    public abstract State getState();
-    
+ *
+ * @author valentinstarlinger
+ */
+public enum ProtocolType {
+    SEQUENTIAL,
+    BISECTION,
+    NONE;
 }

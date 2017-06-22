@@ -23,6 +23,8 @@
  */
 package com.ksatstuttgart.usoc.controller;
 
+import com.ksatstuttgart.usoc.data.message.Var;
+
 /**
 * <h1>Util</h1>
 * This class provides Utility methods that are used all over the program
@@ -35,38 +37,126 @@ package com.ksatstuttgart.usoc.controller;
 
 public class Utility {
      
-    
-    public static int binToUInt(String t){
+    /**
+     * converts a String of 1's and 0's to an unsigned integer
+     * 
+     * @param binString : String - binary String
+     * @param isLittleEndian : boolean - TRUE if the UINT value is in little endian.
+     * @return unsigned integer 
+     */
+    public static int binToUInt(String binString, boolean isLittleEndian){
         int num = 0;
         
-        String b = switchIntEndian(t);
-        for (int i = 0; i < b.length(); i++) {
-            if(b.charAt(i)=='1'){
-                num+=Math.pow(2, b.length()-(i+1));
+        //necessary due to different conversion between MIRKA2-RX microcontrollers 
+        //and Java
+        if(isLittleEndian){
+            binString = changeEndianess(binString);
+        }
+        for (int i = 0; i < binString.length(); i++) {
+            if(binString.charAt(i)=='1'){
+                num+=Math.pow(2, binString.length()-(i+1));
             }
         }
         
         return num;
     }
     
-    public static String switchIntEndian(String i){
-        return i.substring(8) + i.substring(0, 8);
-    }
-    
-    public static int binToInt(String t){
+    /**
+     * converts a binary String to a signed integer.
+     * 
+     * @param binString - 
+     * @param isLittleEndian - 
+     * @return 
+     */
+    public static int binToInt(String binString, boolean isLittleEndian){
         int num = 0;
-        //System.out.println("bintoint: "+t);
-        String b = (t.length()==16) ? switchIntEndian(t) : t;
-        //System.out.println("aftercon: "+b);
-        for (int i = 1; i < b.length(); i++) {
-            if(b.charAt(i)=='1'){
-                num+=Math.pow(2, b.length()-(i+1));
+        if(isLittleEndian){
+            binString = changeEndianess(binString);
+        }
+        for (int i = 1; i < binString.length(); i++) {
+            if(binString.charAt(i)=='1'){
+                num+=Math.pow(2, binString.length()-(i+1));
             }
         }
-        //System.out.println("result: "+(b.charAt(0) == '1' ? num*(-1):num));
-        return b.charAt(0) == '1' ? num*(-1):num;
+        
+        if(binString.charAt(0) == '1'){
+            //using two's complement to get the negative value.
+            int max = (int) Math.pow(2, binString.length()-1);
+            return num - max;
+        }else{
+            return num;
+        }
     }
     
+    /**
+     * Converts a String of 1's and 0's to an "unsigned" Long
+     * @param binString : String - binary String
+     * @param isLittleEndian : boolean - TRUE if the UINT value is in little endian.
+     * @return a variable of time long
+     */
+    public static long binToULong(String binString, boolean isLittleEndian) {
+        long num = 0;
+        
+        //necessary due to different conversion between MIRKA2-RX microcontrollers 
+        //and Java
+        if(isLittleEndian){
+            binString = changeEndianess(binString);
+        }
+        for (int i = 0; i < binString.length(); i++) {
+            if(binString.charAt(i)=='1'){
+                num+=Math.pow(2, binString.length()-(i+1));
+            }
+        }
+        
+        return num;
+    }
+    
+    
+    /**
+     * Converts a binary String into a float value
+     * @param binaryString : String 
+     * @param isLittleEndian 
+     * @return 
+     */
+    public static float binToFloat(String binaryString, boolean isLittleEndian){
+        
+        //necessary due to different conversion between MIRKA2-RX microcontrollers 
+        //and Java
+        if(isLittleEndian){
+            binaryString = changeEndianess(binaryString);
+        }
+        
+        //false because endianess already switched!
+        int ii = Utility.binToInt(binaryString, false);
+        float f = Float.intBitsToFloat(ii);
+        return f;
+    }
+    
+    /**
+     * Changes the endianess of a binary String
+     * 
+     * @param binaryString : String
+     * @return A binary String with a changed endianess
+     */
+    public static String changeEndianess(String binaryString){
+        switch (binaryString.length()){
+            case 16:
+                return binaryString.substring(8) + binaryString.substring(0, 8);
+            case 32:
+                return binaryString.substring(24)+binaryString.substring(16,24)
+                        +binaryString.substring(8, 16)+binaryString.substring(0, 8);
+            default:
+                //changing endianess not supported for this String length 
+                return binaryString;
+        }
+    }
+    
+    /**
+     * converts an integer value to a String with 1's and 0's of length 8
+     * 
+     * @param b
+     * @return 
+     */
     public static String intToBits(int b){
         String s = Integer.toBinaryString(b);
         while(s.length()<8){
@@ -75,6 +165,14 @@ public class Utility {
         return s;
     }
     
+    /**
+     * Converts a String into a String of 1's and 0's using the String.getBytes()
+     * method. 
+     * 
+     * @param s : String 
+     * @return A String of 1's and 0's representing the binary values of the input 
+     * String
+     */
     public static String bytesToBinString(String s) {
         String text = "";
         for (byte b : s.getBytes()) {
@@ -82,30 +180,30 @@ public class Utility {
         }
         return text;
     }
-    
-    public static String floatEndianess(String s){
-        
-        return s.substring(24)+s.substring(16,24)+s.substring(8, 16)+s.substring(0, 8);
-    }
-    
-    public static float stringToFloat(String s){
-        String b = floatEndianess(s);
-        int ii = Utility.binToInt(b);
-        float f = Float.intBitsToFloat(ii);
-        return f;
-    }
-    
-    public static float stringToUFloat(String s){
-        return Float.intBitsToFloat(Integer.parseInt(s,2));
-    }
-    
-    public static byte[] getContentFromPos(int x, int y, byte[] content){
-        byte[] msg = new byte[y-x+1];
-        for (int i = 0; i < msg.length; i++) {
-            msg[i] = content[x+i];
-        }
-        return msg;
-    }
-    
 
+    static Object getVariableValue(Var dataPoint, String dataContent) {
+        switch(dataPoint.getDataType()){
+            case INT8: 
+            case INT16:
+                return Utility.binToInt(dataContent, dataPoint.isLittleEndian());
+            case UINT8:
+            case UINT16:
+                return Utility.binToUInt(dataContent, dataPoint.isLittleEndian());
+            case UINT32:
+                return Utility.binToULong(dataContent, dataPoint.isLittleEndian());
+            //TODO: maybe need to replace with separate methods for FLOAT16 and FLOAT32
+            case FLOAT16:
+            case FLOAT32:
+                return Utility.binToFloat(dataContent, dataPoint.isLittleEndian());
+            case BIT:
+            case BIT3:
+            case BIT10:
+                return Utility.binToUInt(dataContent, false);
+            case STRING:
+                return dataContent;
+        }
+        
+        //TODO: replace with throw new DataTypeNotSupportedException();
+        return null;
+    }
 }

@@ -21,41 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.data.sensors.chartData;
+package com.ksatstuttgart.usoc.controller.communication;
+
+import com.ksatstuttgart.usoc.data.MailEvent;
+
 
 /**
-* <h1>ChartPoint</h1>
-* This class represents a point on a x,y plot.
-* 
-* <p>
-* 
+* <h1>MailUpdateListener</h1>
+* This interface enables classes to listen to mail updates from the Iridium 
+* network via the MailReceiver class.
 *
 * @author  Valentin Starlinger
 * @version 1.0
 */
-public class ChartPoint {
-    private double x,y;
-
-    public ChartPoint(double x, double y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
+public interface MailUpdateListener {
+    /**
+     * This is called when a new Iridium message was received. 
+     * @param e - MailEvent 
+     */
+    public abstract void mailUpdated(MailEvent e);
     
-    
+    /**
+     * This is called if an error concerning the connection to the mail server
+     * occurred. 
+     * @param msg - String; A message describing the error.
+     */
+    public abstract void error(String msg);
 }

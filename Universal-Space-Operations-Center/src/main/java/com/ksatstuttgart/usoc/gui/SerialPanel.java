@@ -36,7 +36,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import com.ksatstuttgart.usoc.controller.SerialComm;
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
 
 /**
 * <h1>SerialPanel</h1>
