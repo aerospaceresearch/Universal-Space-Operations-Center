@@ -65,6 +65,7 @@
    </center>
    
    <right>
+      <fx:include source = "/fxml/LogPanel.fxml" />
    </right>
 
 </BorderPane>

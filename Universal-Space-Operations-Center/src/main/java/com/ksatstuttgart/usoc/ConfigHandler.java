@@ -23,8 +23,10 @@
  */
 package com.ksatstuttgart.usoc;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -250,8 +252,36 @@ public class ConfigHandler {
      * @throws java.io.IOException 
     */    
     public static boolean syntaxCheck() throws IOException {
-    
-        boolean syntaxCheck = true;
+        
+        // Stores values from config.properties file into properties object 'configMods'
+        Properties config = getAllValues();
+        boolean syntaxCheck;
+        int chartCounter = 1;
+        int tabCounter = 1;
+        
+        // Checks if number of charts does match the number of defined chart labels
+        while( (config.getProperty("title[" + chartCounter + "]")) != null ) {
+            chartCounter++;
+        }
+        chartCounter = chartCounter - 1;
+        if (chartCounter == Integer.parseInt(config.getProperty("numberOfCharts"))) {
+            syntaxCheck = true;
+        } else {
+            syntaxCheck = false;
+            System.out.println("The number of charts does not match the number of defined chart labels.");
+        }
+        
+        // Checks if number of additional tabs does match the number of defined tab properties
+        while( (config.getProperty("tabTitle[" + tabCounter + "]")) != null ) {
+            tabCounter++;
+        }
+        tabCounter = tabCounter - 1;
+        if (tabCounter == Integer.parseInt(config.getProperty("numberOfAddTabs"))) {
+            syntaxCheck = true;
+        } else {
+            syntaxCheck = false;
+            System.out.println("The number of additional tabs does not match the number of defined tab properties.");
+        }
         
         return syntaxCheck;
     }

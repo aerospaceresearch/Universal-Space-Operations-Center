@@ -5,11 +5,6 @@
 
 <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
    <tabs>
-    <Tab text="Serial"> 
-      <content> 
-
-      </content> 
-    </Tab>
     <Tab text="Iridium"> 
       <content> 
 

@@ -180,7 +180,6 @@ public class GuiBuilder {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
-            // systemeigenes Zeilenumbruchszeichen ermitteln
             String separator = System.getProperty("line.separator");
             
             writer.println("    <Tab text=\"Serial\"> \n"
@@ -201,7 +200,6 @@ public class GuiBuilder {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
-            // systemeigenes Zeilenumbruchszeichen ermitteln
             String separator = System.getProperty("line.separator");
             
             writer.println("    <Tab text=\"Iridium\"> \n"
