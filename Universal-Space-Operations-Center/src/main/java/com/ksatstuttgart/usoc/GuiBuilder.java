@@ -57,7 +57,7 @@ public class GuiBuilder {
     
     /**
      * Method defines array 'position' with two values ​​for a clear positional
-     * representation of the corresponding chart in the GridPane.
+     * representation of the corresponding item in the GridPane.
      * 
      * @param input
      * @return 
@@ -90,21 +90,19 @@ public class GuiBuilder {
         
         // Generates GridPane for charts   
         
-        // Stores values of config.properties file into properties object 'config'
+        // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues();
         int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
         int numberOfRows;
+        String fileName = "Charts.fxml";
+        String filePath = "src/main/resources/fxml/";
         
-        // Sets number of rows depending on required number of charts
+        // Initializes number of rows depending on required number of charts
         if (numberOfCharts%2 == 0) {
             numberOfRows = numberOfCharts/2;
         } else {
             numberOfRows = (numberOfCharts + 1)/2;
         }
-        
-        // Initialize file object
-        String fileName = "Charts.fxml";
-        String filePath = "src/main/resources/fxml/";
         
         // Writes data in Charts.fxml file
         PrintWriter writer = new PrintWriter(filePath + fileName);
@@ -125,7 +123,7 @@ public class GuiBuilder {
         writer.println("  <children>");
         for (int counter=1; counter<=numberOfCharts; counter++) {
             int[] position = getGridPosition(counter);
-            writer.println("    <LineChart title=\"" + config.getProperty("title[" + counter + "]")
+            writer.println("    <LineChart title=\"" + config.getProperty("chartTitle[" + counter + "]")
                     + "\" GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\""
                     + position[1] + "\">");  
             writer.println("      <xAxis> \n"
@@ -156,17 +154,14 @@ public class GuiBuilder {
     */  
     public static void logBuilder() throws FileNotFoundException, IOException {
                 
-        // Stores values of config.properties file into properties object 'config'
-        Properties config = ConfigHandler.getAllValues();  
-        int numberOfAddTabs = Integer.parseInt(config.getProperty("numberOfAddTabs"));
-        
-        // Initialize file object
+        // Declares necessary parameters
+        Properties config = ConfigHandler.getAllValues();
+        int numberOfAddTabs = Integer.parseInt(config.getProperty("numberOfAddTabs"));        
         String fileName = "LogPanel.fxml";
         String filePath = "src/main/resources/fxml/";
         
         // Writes data in LogPanel.fxml file
         PrintWriter writer = new PrintWriter(filePath + fileName);
-        
         writer.println("<?import javafx.geometry.*?>\n"
                 + "<?import javafx.scene.*?>\n"
                 + "<?import javafx.scene.control.*?> \n"
@@ -174,6 +169,7 @@ public class GuiBuilder {
         writer.println("<TabPane prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
                 + "  <tabs>");
         
+        // Writes FXML structure if the serial panel is required
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
                        
             FileReader fileReader = new FileReader(filePath + "logTabs/SerialPanel.fxml");
@@ -194,6 +190,7 @@ public class GuiBuilder {
                     + "    </Tab>"); 
         }
         
+        // Writes FXML structure if the iridium panel is required
         if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
             
             FileReader fileReader = new FileReader(filePath + "logTabs/IridiumPanel.fxml");
@@ -213,13 +210,75 @@ public class GuiBuilder {
             writer.println("      </content> \n"
                     + "    </Tab>"); 
         }
-
+        
+        // Generates addiditional tabs
         for (int counter=1; counter<=numberOfAddTabs; counter++) {
             writer.println("    <Tab text=\"" + config.getProperty("tabTitle[" + counter + "]") + "\"> \n"
                     + "      <content> \n"
-                    + "        <fx:include source = \"logTabs/" + config.getProperty("tabFileName[" + counter + "]") + "\"/> \n"
+                    + "<BorderPane> \n"
+                    + "<padding><Insets top=\"5\" right=\"5\" bottom=\"5\" left=\"5\"/></padding> \n"
+                    + "  <top> \n"
+                    + "    <GridPane> \n"
+                    + "      <columnConstraints> \n"
+                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                    + "      </columnConstraints> \n"
+                    + "      <rowConstraints>");
+            
+            // Declares necessary parameters
+            int numberOfControlItems = Integer.parseInt(config.getProperty("numberOfControlItems[" + counter + "]"));
+            int numberOfRows;
+            
+            // Sets number of rows depending on required number of control items
+            if (numberOfControlItems%2 == 0) {
+                numberOfRows = numberOfControlItems/2;
+            } else {
+                numberOfRows = (numberOfControlItems + 1)/2;
+            } 
+        
+            // Writes FXML data
+            for (int i=1; i<=numberOfRows; i++) {
+                writer.println("        <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
+            }
+            writer.println("     </rowConstraints> \n"
+                    + "      <children>");
+            
+            // Writes FXML data of tab content
+            for (int j=1; j<=numberOfControlItems; j++) {
+                
+                // Gets grid position for control item
+                int[] position = getGridPosition(j);
+                String control = config.getProperty("control[" + counter + "][" + j + "]");
+                
+                // Checks for type of entered control item
+                switch (control) {
+                    case "button":
+                        writer.println("        <Button mnemonicParsing=\"false\" text=\"" + config.getProperty("bText[" + counter + "][" + j + "]")
+                                + "\" " + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
+                        break;
+                    case "textField":
+                        writer.println("        <TextField promptText=\"" + config.getProperty("promptText[" + counter + "][" + j + "]")
+                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
+                        break;
+                    case "label":
+                        writer.println("        <Label text=\"" + config.getProperty("lText[" + counter + "][" + j + "]")
+                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
+                        break;
+                }
+            }
+            
+            // Writes FXML data
+            writer.println("      </children> \n"
+                    + "    </GridPane> \n"
+                    + "  </top>");
+            if (Boolean.parseBoolean(config.getProperty("textArea[" + counter + "]"))) {
+                writer.println("  <center> \n"
+                        + "    <TextArea prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\" /> \n"
+                        + "  </center>");
+            }
+            writer.println("</BorderPane> \n"
                     + "      </content> \n"
-                    + "    </Tab>");             
+                    + "    </Tab>");          
         }
         
         writer.println("  </tabs> \n"

@@ -1,5 +1,5 @@
 <BorderPane>
-    
+<padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
   <top>
     <GridPane alignment="TOP_CENTER" BorderPane.alignment="CENTER">
     <padding><Insets bottom="5" /></padding>
@@ -21,9 +21,7 @@
       </children>
     </GridPane>
   </top>
-  
   <center>
     <TextArea prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
   </center>
-  
 </BorderPane>

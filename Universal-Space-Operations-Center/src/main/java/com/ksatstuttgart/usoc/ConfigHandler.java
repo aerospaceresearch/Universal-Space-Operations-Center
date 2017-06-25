@@ -23,10 +23,8 @@
  */
 package com.ksatstuttgart.usoc;
 
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -179,13 +177,13 @@ public class ConfigHandler {
         }
         
         for (int counter=1; counter<=numberOfCharts; counter++) {
-            if ((! config.getProperty("title[" + counter + "]").equals(getConfigModValue("title[" + counter + "]"))) ||
+            if ((! config.getProperty("chartTitle[" + counter + "]").equals(getConfigModValue("chartTitle[" + counter + "]"))) ||
                     (! config.getProperty("x[" + counter + "]").equals(getConfigModValue("x[" + counter + "]"))) ||
                     (! config.getProperty("y[" + counter + "]").equals(getConfigModValue("y[" + counter + "]")))) {
                 chartMod = true;
             }
         }
-     
+             
         return chartMod;
     }
     
@@ -238,7 +236,7 @@ public class ConfigHandler {
         } else {
             fileMod = true;
         }
-        
+                
         return fileMod;
     }
     
@@ -260,7 +258,7 @@ public class ConfigHandler {
         int tabCounter = 1;
         
         // Checks if number of charts does match the number of defined chart labels
-        while( (config.getProperty("title[" + chartCounter + "]")) != null ) {
+        while( (config.getProperty("chartTitle[" + chartCounter + "]")) != null ) {
             chartCounter++;
         }
         chartCounter = chartCounter - 1;
