@@ -53,15 +53,11 @@
    </top>
    
    <left>
-      <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <content>
-          <VBox prefHeight="200.0" prefWidth="100.0" />
-        </content>
-      </ScrollPane>
+      <fx:include source = "/fxml/CurrentStatePanel.fxml" />
    </left>
    
    <center>
-      <fx:include source = "/fxml/Charts.fxml" />
+      <fx:include source = "/fxml/ChartPanel.fxml" />
    </center>
    
    <right>

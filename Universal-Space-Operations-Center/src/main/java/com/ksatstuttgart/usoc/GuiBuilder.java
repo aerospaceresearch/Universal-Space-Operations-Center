@@ -94,7 +94,7 @@ public class GuiBuilder {
         Properties config = ConfigHandler.getAllValues();
         int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
         int numberOfRows;
-        String fileName = "Charts.fxml";
+        String fileName = "ChartPanel.fxml";
         String filePath = "src/main/resources/fxml/";
         
         // Initializes number of rows depending on required number of charts
@@ -104,7 +104,7 @@ public class GuiBuilder {
             numberOfRows = (numberOfCharts + 1)/2;
         }
         
-        // Writes data in Charts.fxml file
+        // Writes data in ChartPanel.fxml file
         PrintWriter writer = new PrintWriter(filePath + fileName);
         writer.println("<?import javafx.scene.chart.*?>\n"
                 + "<?import javafx.scene.layout.*?> \n");
@@ -287,5 +287,35 @@ public class GuiBuilder {
         
         // Prints status update
         System.out.println("Log panel has been updated!"); 
+    }
+    
+    
+    
+    
+    /**
+     * Method builds the FXML structure of the current state panel generically
+     * in a Scrollpane with an optional number of vertical boxes.
+     * 
+     * @throws java.io.IOException
+    */  
+    public static void currentStateBuilder() throws IOException {
+        
+        String fileName = "CurrentStatePanel.fxml";
+        String filePath = "src/main/resources/fxml/";
+        // Writes data in CurrentStatePanel.fxml file
+        PrintWriter writer = new PrintWriter(filePath + fileName);
+
+        writer.println("<?import javafx.scene.control.*?> \n"
+                + "<?import javafx.scene.layout.*?> \n");
+        writer.println("<ScrollPane prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\"> \n"
+                + "  <content>");
+        
+        /**
+         * Method is not complete yet
+        */  
+        
+        writer.println("  </content> \n"
+                + "</ScrollPane>");
+        writer.close();
     }
 }

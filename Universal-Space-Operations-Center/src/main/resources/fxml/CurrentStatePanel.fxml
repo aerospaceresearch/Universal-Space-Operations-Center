@@ -1,0 +1,7 @@
+<?import javafx.scene.control.*?> 
+<?import javafx.scene.layout.*?> 
+
+<ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"> 
+  <content>
+  </content> 
+</ScrollPane>

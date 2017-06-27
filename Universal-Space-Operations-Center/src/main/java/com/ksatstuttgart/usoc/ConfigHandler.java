@@ -210,8 +210,7 @@ public class ConfigHandler {
         }
         
         for (int counter=1; counter<=numberOfAddTabs; counter++) {
-            if ((! config.getProperty("tabTitle[" + counter + "]").equals(getConfigModValue("tabTitle[" + counter + "]"))) ||
-                    (! config.getProperty("tabFileName[" + counter + "]").equals(getConfigModValue("tabFileName[" + counter + "]")))) {
+            if ((! config.getProperty("tabTitle[" + counter + "]").equals(getConfigModValue("tabTitle[" + counter + "]")))) {
                 logMod = true;
             }
         }
@@ -295,7 +294,6 @@ public class ConfigHandler {
     */    
     public static void rebuildGui() throws IOException {
         
-
         // If config.properties has been modified and syntax of config.properties file
         // is accurate, the FXML structure will be regenerated 
         if ( fileMod() && syntaxCheck() ) {
