@@ -213,9 +213,82 @@ public class ConfigHandler {
             if ((! config.getProperty("tabTitle[" + counter + "]").equals(getConfigModValue("tabTitle[" + counter + "]")))) {
                 logMod = true;
             }
+            if ((! config.getProperty("numberOfControlItems[" + counter + "]").equals(getConfigModValue("numberOfControlItems[" + counter + "]")))) {
+                logMod = true;
+            }
+            if ((! config.getProperty("textArea[" + counter + "]").equals(getConfigModValue("textArea[" + counter + "]")))) {
+                logMod = true;
+            }
+            
+            // Declares necessary parameters
+            int numberOfControlItems = Integer.parseInt(config.getProperty("numberOfControlItems[" + counter + "]"));
+            for (int j=1; j<=numberOfControlItems; j++) {
+                String control = config.getProperty("control[" + counter + "][" + j + "]");
+                
+                // Checks for type of entered control item
+                switch (control) {
+                    case "button":
+                        if ((! config.getProperty("bText[" + counter + "][" + j + "]").equals(getConfigModValue("bText[" + counter + "][" + j + "]")))) {
+                            logMod = true;
+                        }
+                        break;
+                    case "textField":
+                        if ((! config.getProperty("promptText[" + counter + "][" + j + "]").equals(getConfigModValue("promptText[" + counter + "][" + j + "]")))) {
+                            logMod = true;
+                        }
+                        break;
+                    case "label":
+                        if ((! config.getProperty("lText[" + counter + "][" + j + "]").equals(getConfigModValue("lText[" + counter + "][" + j + "]")))) {
+                            logMod = true;
+                        }
+                        break;
+                }
+            }
+        }
+
+        return logMod;
+    }
+    
+    
+    
+    
+    /**
+     * Method checks if properties of the state panel has been modified.
+     * 
+     * @return 
+     * @throws java.io.IOException 
+    */   
+    public static boolean stateMod() throws IOException {
+        
+        // Stores values from config.properties file into properties object 'configMods'
+        Properties config = getAllValues();
+        int numberOfBoxes = Integer.parseInt(config.getProperty("numberOfBoxes"));
+        boolean stateMod = false;
+        
+        if (! config.getProperty("numberOfBoxes").equals(getConfigModValue("numberOfBoxes"))) {
+            stateMod = true;
         }
         
-        return logMod;
+        for (int counter=1; counter<=numberOfBoxes; counter++) {
+            if ((! config.getProperty("boxTitle[" + counter + "]").equals(getConfigModValue("boxTitle[" + counter + "]")))) {
+                stateMod = true;
+            }
+            if ((! config.getProperty("numberOfValues[" + counter + "]").equals(getConfigModValue("numberOfValues[" + counter + "]")))) {
+                stateMod = true;
+            }
+            
+            // Declares necessary parameters
+            int numberOfValues = Integer.parseInt(config.getProperty("numberOfValues[" + counter + "]"));
+            for (int j=1; j<=numberOfValues; j++) {
+                if ((! config.getProperty("keyword[" + counter + "][" + j + "]").equals(getConfigModValue("keyword[" + counter + "][" + j + "]")))) {
+                    stateMod = true;
+                }
+            }
+            
+        }
+        
+        System.out.println(stateMod);
+        return stateMod;
     }
     
     
@@ -230,7 +303,7 @@ public class ConfigHandler {
     public static boolean fileMod() throws IOException {
         boolean fileMod;
         
-        if( !experimentNameMod() && !chartMod() && !logMod() ) {
+        if( !experimentNameMod() && !chartMod() && !logMod() && !stateMod() ) {
             fileMod = false;
         } else {
             fileMod = true;
@@ -309,6 +382,10 @@ public class ConfigHandler {
             // Checks if log panel properties has been modified since last compilation
             if ( logMod() ) {
                 GuiBuilder.logBuilder();
+            }
+            // Checks if log panel properties has been modified since last compilation
+            if ( stateMod() ) {
+                GuiBuilder.currentStateBuilder();
             }
             
         } else {

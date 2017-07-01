@@ -53,7 +53,9 @@ public class GroundSegment extends Application {
              * Checks whether a regeneration of the FXML structure is
              * necessary and carries it out in case it is
             */ 
-            ConfigHandler.rebuildGui();     
+            //ConfigHandler.rebuildGui();     
+            ConfigHandler.stateMod();
+            ConfigHandler.updateConfigMod();
             
             // Java Swing GUI
             //new MainController(new MainFrame());
