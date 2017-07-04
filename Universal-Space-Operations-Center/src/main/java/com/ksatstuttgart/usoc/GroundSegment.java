@@ -23,8 +23,7 @@
  */
 package com.ksatstuttgart.usoc;
 
-import com.ksatstuttgart.usoc.controller.MainController;
-import com.ksatstuttgart.usoc.gui.MainFrame;
+import static com.ksatstuttgart.usoc.ConfigHandler.*;
 import java.io.IOException;
 import java.net.URL;
 import javafx.application.Application;
@@ -52,13 +51,8 @@ public class GroundSegment extends Application {
             /**
              * Checks whether a regeneration of the FXML structure is
              * necessary and carries it out in case it is
-            */ 
-            //ConfigHandler.rebuildGui();     
-            ConfigHandler.stateMod();
-            ConfigHandler.updateConfigMod();
-            
-            // Java Swing GUI
-            //new MainController(new MainFrame());
+            */
+            ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
 
             // JavaFX GUI
             String fxmlFile = "/fxml/MainFrame.fxml";

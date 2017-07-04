@@ -47,9 +47,12 @@ public class GuiBuilder {
     
     /**
      * 
+     * @return 
     */  
-    public static void setExperimentName() {
+    public static int setExperimentName() {
         System.out.println("setExperimentName activeted!");
+        
+        return 0;
     }
     
     
@@ -62,7 +65,7 @@ public class GuiBuilder {
      * @param input
      * @return 
     */  
-    public static int[] getGridPosition( int input ) {
+    public static int[] getGridPosition(int input) {
         // column: position[0]
         // row: position[1]
         int[] position = new int[2];
@@ -84,16 +87,17 @@ public class GuiBuilder {
      * Method builds the FXML structure of the charts generically
      * in a scrollable GridPane with two columns
      * 
+     * @param filePath
+     * @param configPath
      * @throws java.io.IOException
     */  
-    public static void chartBuilder() throws IOException {
+    public static void chartBuilder(String filePath, String configPath) throws IOException {
                 
         // Declares necessary parameters
-        Properties config = ConfigHandler.getAllValues();
+        Properties config = ConfigHandler.getAllValues(configPath);
         int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
         int numberOfRows;
-        String fileName = "ChartPanel.fxml";
-        String filePath = "src/main/resources/fxml/";
+        String path = "src/main/resources/";
         
         // Initializes number of rows depending on required number of charts
         if (numberOfCharts%2 == 0) {
@@ -103,8 +107,8 @@ public class GuiBuilder {
         }
         
         // Writes data in ChartPanel.fxml file
-        PrintWriter writer = new PrintWriter(filePath + fileName);
-        writer.println("<?import javafx.scene.chart.*?>\n"
+        PrintWriter writer = new PrintWriter(path + filePath);
+        writer.println("<?import javafx.scene.chart.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
         writer.println("<GridPane> \n"
                 + "  <columnConstraints> \n"
@@ -147,19 +151,20 @@ public class GuiBuilder {
      * Method builds the FXML structure of the log panel generically
      * in a TabPane with an optional number of additional tabs.
      * 
+     * @param filePath
+     * @param configPath
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
     */  
-    public static void logBuilder() throws FileNotFoundException, IOException {
+    public static void logBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
                 
         // Declares necessary parameters
-        Properties config = ConfigHandler.getAllValues();
+        Properties config = ConfigHandler.getAllValues(configPath);
         int numberOfAddTabs = Integer.parseInt(config.getProperty("numberOfAddTabs"));        
-        String fileName = "LogPanel.fxml";
-        String filePath = "src/main/resources/fxml/";
+        String path = "src/main/resources/";
         
         // Writes data in LogPanel.fxml file
-        PrintWriter writer = new PrintWriter(filePath + fileName);
+        PrintWriter writer = new PrintWriter(path + filePath);
         writer.println("<?import javafx.geometry.*?>\n"
                 + "<?import javafx.scene.*?>\n"
                 + "<?import javafx.scene.control.*?> \n"
@@ -170,7 +175,7 @@ public class GuiBuilder {
         // Writes FXML structure if the serial panel is required
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
                        
-            FileReader fileReader = new FileReader(filePath + "logTabs/SerialPanel.fxml");
+            FileReader fileReader = new FileReader(path + filePath + "logTabs/SerialPanel.fxml");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
@@ -191,7 +196,7 @@ public class GuiBuilder {
         // Writes FXML structure if the iridium panel is required
         if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
             
-            FileReader fileReader = new FileReader(filePath + "logTabs/IridiumPanel.fxml");
+            FileReader fileReader = new FileReader(path + filePath + "logTabs/IridiumPanel.fxml");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
@@ -294,18 +299,19 @@ public class GuiBuilder {
      * Method builds the FXML structure of the current state panel generically
      * in a Scrollpane with an optional number of vertical boxes.
      * 
+     * @param filePath
+     * @param configPath
      * @throws java.io.IOException
     */  
-    public static void currentStateBuilder() throws IOException {
+    public static void currentStateBuilder(String filePath, String configPath) throws IOException {
         
         // Declares necessary parameters
-        Properties config = ConfigHandler.getAllValues();
+        Properties config = ConfigHandler.getAllValues(configPath);
         int numberOfBoxes = Integer.parseInt(config.getProperty("numberOfBoxes")); 
-        String fileName = "CurrentStatePanel.fxml";
-        String filePath = "src/main/resources/fxml/";
+        String path = "src/main/resources/";
         
         // Writes data in CurrentStatePanel.fxml file
-        PrintWriter writer = new PrintWriter(filePath + fileName);
+        PrintWriter writer = new PrintWriter(path + filePath);
         writer.println("<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
         writer.println("<ScrollPane prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\"> \n"
