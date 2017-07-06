@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 KSat e.V.
+ * Copyright 2017 KSat Stuttgart e.V..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.controller;
+package com.ksatstuttgart.usoc.controller.xml;
 
-import com.ksatstuttgart.usoc.data.SerialEvent;
+import com.ksatstuttgart.usoc.data.message.SBD340;
+import java.io.File;
+import java.io.IOException;
+import javax.xml.bind.JAXB;
 
 /**
-* <h1>MailUpdateListener</h1>
-* This interface enables classes to listen to events happening on an open serial 
-* port via the SerialComm class.
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
-public interface SerialListener {
+ *
+ * @author valentinstarlinger
+ */
+public class XMLWriter {
+
+    private static XMLWriter instance;
+
+    public static XMLWriter getInstance() {
+        if(instance == null){
+            instance = new XMLWriter();
+        }
+        return instance;
+    }
+
+    public void saveMessageStructure(SBD340 message) throws IOException {
+        XMLWriter.this.saveMessageStructure(message, getDefaultFileName());
+    }
+
+    public void saveMessageStructure(SBD340 message, String filename) throws IOException {
+        writeXML(message,new File("protocols",filename));
+    }
+    
     /**
-     * This is called when a new message is received via the specified serial port.
-     * @param e - SerialEvent
+     * TODO implement default file name
+     * @return 
      */
-    public abstract void messageReceived(SerialEvent e);
-    /**
-     * This is called when en error occurred regarding the serial communication.
-     * @param msg - String containing a description of the error.
-     */
-    public abstract void error(String msg);
+    private String getDefaultFileName(){
+        return "";
+    }
+    
+    private void writeXML(Object o, File f) throws IOException {
+        
+        if (!f.exists()) {
+            f.createNewFile();
+        }
+        
+        JAXB.marshal(o, f);
+    }
+
 }

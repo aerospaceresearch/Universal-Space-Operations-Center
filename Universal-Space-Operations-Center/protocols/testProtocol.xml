@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:sbd340 xmlns:ns2="usoc/" protocol="NONE">
+    <data>
+        <sensor name="testName" type="PRESSURE">
+            <var dataname="testSensorData" datatype="FLOAT32" frequency="1.0" isLittleEndian="false" numpoints="1" start="40" unit=""/>
+        </sensor>
+    </data>
+    <header>
+        <metadata name="" type="TIME">
+            <var dataname="testMetaData" datatype="FLOAT32" frequency="1.0" isLittleEndian="false" numpoints="1" start="40" unit=""/>
+        </metadata>
+    </header>
+</ns2:sbd340>

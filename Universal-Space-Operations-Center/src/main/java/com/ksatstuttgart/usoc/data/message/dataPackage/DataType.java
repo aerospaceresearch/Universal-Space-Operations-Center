@@ -21,30 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.controller;
-
-import com.ksatstuttgart.usoc.data.MailEvent;
-
+package com.ksatstuttgart.usoc.data.message.dataPackage;
 
 /**
-* <h1>MailUpdateListener</h1>
-* This interface enables classes to listen to mail updates from the Iridium 
-* network via the MailReceiver class.
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
-public interface MailUpdateListener {
-    /**
-     * This is called when a new Iridium message was received. 
-     * @param e - MailEvent 
-     */
-    public abstract void mailUpdated(MailEvent e);
+ * This enum shows the different data types that can occur in the Iridium message.
+ * The length of the DataType is used to determine what part of the message needs
+ * to be parsed. 
+ * The length attribute is used in the MessageController and Utility classes to
+ * parse the data in the messages.
+ * 
+ * @author Valentin Starlinger
+ */
+public enum DataType {
+    STRING (0),
+    FLOAT16 (16),
+    FLOAT32 (32),
+    UINT8 (8),
+    UINT16 (16),
+    UINT32 (32),
+    INT8 (8),
+    INT16 (16),
+    BIT (1),
+    BIT3 (3),
+    BIT10 (10);
     
-    /**
-     * This is called if an error concerning the connection to the mail server
-     * occurred. 
-     * @param msg - String; A message describing the error.
-     */
-    public abstract void error(String msg);
+    
+    private final int length;
+    private DataType(int length){
+        this.length = length;
+    }
+
+    public int getLength() {
+        return length;
+    }
 }

@@ -21,38 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.data.sensors.chartData;
+package com.ksatstuttgart.usoc.controller.communication;
 
-import com.ksatstuttgart.usoc.data.sensors.State;
+import com.ksatstuttgart.usoc.data.SerialEvent;
 
 /**
- *
- * @author valentinstarlinger
- */
-public class TransceiverChart extends ChartSensor {
-
-    private double time, yvalue;
-    private State state;
-
-    public TransceiverChart(double time, double yvalue, State state) {
-        this.time = time;
-        this.yvalue = yvalue;
-        this.state = state;
-    }
-
-    @Override
-    public Double getTime() {
-        return time;
-    }
-
-    @Override
-    public Double getYValue() {
-        return yvalue;
-    }
-
-    @Override
-    public State getState() {
-        return state;
-    }
-
+* <h1>MailUpdateListener</h1>
+* This interface enables classes to listen to events happening on an open serial 
+* port via the SerialComm class.
+*
+* @author  Valentin Starlinger
+* @version 1.0
+*/
+public interface SerialListener {
+    /**
+     * This is called when a new message is received via the specified serial port.
+     * @param e - SerialEvent
+     */
+    public abstract void messageReceived(SerialEvent e);
+    /**
+     * This is called when en error occurred regarding the serial communication.
+     * @param msg - String containing a description of the error.
+     */
+    public abstract void error(String msg);
 }

@@ -23,9 +23,9 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
-import com.ksatstuttgart.usoc.data.sensors.chartData.ChartSensor;
+import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
@@ -36,6 +36,7 @@ import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.UnknownKeyException;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -70,42 +71,44 @@ public class LineChart extends JPanel {
         this.add(chartPanel);
     }
 
-    public LineChart(String chartname, String x, String y, String seriesname, ArrayList<ChartSensor> data) {
+    public LineChart(String chartname, String x, String y, String seriesname, HashMap<Long,Object> data, DataType dt) {
         dataset = new XYSeriesCollection();
-        addNewSeries(seriesname, data);
+        addSeries(seriesname, data, dt);
         chart = createChart(chartname, x, y, dataset);
         final ChartPanel chartPanel = new ChartPanel(chart);
         this.add(chartPanel);
     }
 
-    private void addNewSeries(String name, ArrayList<ChartSensor> data) {
-
-        final XYSeries s = new XYSeries(name);
-
-        for (ChartSensor sensor : data) {
-            s.add(sensor.getData().getX(), sensor.getData().getY());
+    public void addSeries(String name, HashMap<Long,Object> data, DataType dt){
+        XYSeries s;
+        try{
+            s = dataset.getSeries(name);
+            dataset.removeSeries(s);
+            s = new XYSeries(name);
+        }catch (UnknownKeyException ex){
+            s = new XYSeries(name);
         }
-
-        dataset.addSeries(s);
-    }
-
-    private void addToExisting(String name, ArrayList<ChartSensor> data) {
-
-        XYSeries s = dataset.getSeries(name);
-        for (ChartSensor sensor : data) {
-            s.add(sensor.getData().getX(), sensor.getData().getY());
-        }
-    }
-
-    public void addSeries(String name, ArrayList<ChartSensor> data) {
-        for (Object s : dataset.getSeries()) {
-            if (((XYSeries) s).getKey().equals(name)) {
-                addToExisting(name, data);
-                return;
+        
+        for (Long time : data.keySet()) {
+            switch(dt){
+                case UINT8:
+                case UINT16:
+                case INT8:
+                case INT16:
+                case BIT3:
+                case BIT10:
+                    s.add((long)time, (int) data.get(time));
+                    break;
+                case UINT32:
+                    s.add((long)time, (long) data.get(time));
+                    break;
+                case FLOAT32:
+                    s.add((long)time, (double) data.get(time));
+                    break;
             }
         }
 
-        addNewSeries(name, data);
+        dataset.addSeries(s);
     }
     
     private int getSeriesNumber(String name){
