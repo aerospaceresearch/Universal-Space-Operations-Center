@@ -23,7 +23,6 @@
  */
 package com.ksatstuttgart.usoc;
 
-import static com.ksatstuttgart.usoc.ConfigHandler.*;
 import java.io.IOException;
 import java.net.URL;
 import javafx.application.Application;

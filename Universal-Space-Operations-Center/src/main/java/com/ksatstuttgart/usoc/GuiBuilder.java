@@ -165,8 +165,8 @@ public class GuiBuilder {
         
         // Writes data in LogPanel.fxml file
         PrintWriter writer = new PrintWriter(path + filePath);
-        writer.println("<?import javafx.geometry.*?>\n"
-                + "<?import javafx.scene.*?>\n"
+        writer.println("<?import javafx.geometry.*?> \n"
+                + "<?import javafx.scene.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
         writer.println("<TabPane prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
@@ -175,7 +175,7 @@ public class GuiBuilder {
         // Writes FXML structure if the serial panel is required
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
                        
-            FileReader fileReader = new FileReader(path + filePath + "logTabs/SerialPanel.fxml");
+            FileReader fileReader = new FileReader(path + "logTabs/SerialPanel.fxml");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
@@ -196,7 +196,7 @@ public class GuiBuilder {
         // Writes FXML structure if the iridium panel is required
         if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
             
-            FileReader fileReader = new FileReader(path + filePath + "logTabs/IridiumPanel.fxml");
+            FileReader fileReader = new FileReader(path + "logTabs/IridiumPanel.fxml");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
