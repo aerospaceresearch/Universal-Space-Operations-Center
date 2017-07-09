@@ -13,12 +13,16 @@
           <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints> 
           <children> 
-            <Label text="test" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <Label text="button" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <Label text="label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <Label text="textField" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label text="MODE" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label text="Safe" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="Idle" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <Label text="Preparation" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Label text="Execution" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <Label text="Observation" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Label text="Diagnosis" GridPane.columnIndex="0" GridPane.rowIndex="6" />
           </children> 
         </GridPane>
         <GridPane> 
@@ -28,16 +32,11 @@
           </columnConstraints> 
           <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints> 
           <children> 
-            <Label text="Nr. 5" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <Label text="button" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <Label text="label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <Label text="textField" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <Label text="label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-            <Label text="textField" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Label text="Test" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <Label text="test" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="test" GridPane.columnIndex="0" GridPane.rowIndex="2" />
           </children> 
         </GridPane>
       </children> 

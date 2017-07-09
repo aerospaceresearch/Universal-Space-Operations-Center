@@ -50,7 +50,7 @@ public class GuiBuilder {
      * @return 
     */  
     public static int setExperimentName() {
-        System.out.println("setExperimentName activeted!");
+        System.out.println("setExperimentName activated!");
         
         return 0;
     }
@@ -95,7 +95,7 @@ public class GuiBuilder {
                 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
-        int numberOfCharts = Integer.parseInt(config.getProperty("numberOfCharts"));
+        int numberOfCharts = ConfigHandler.countItems("chartTitle", configPath);
         int numberOfRows;
         String path = "src/main/resources/";
         
@@ -141,7 +141,7 @@ public class GuiBuilder {
         writer.close();      
 
         // Prints status update
-        System.out.println("Number of charts has been updated!");     
+        System.out.println("Chart panel has been updated!");     
     }
     
     
@@ -160,7 +160,7 @@ public class GuiBuilder {
                 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
-        int numberOfAddTabs = Integer.parseInt(config.getProperty("numberOfAddTabs"));        
+        int numberOfAddTabs = ConfigHandler.countItems("tabTitle", configPath);     
         String path = "src/main/resources/";
         
         // Writes data in LogPanel.fxml file
@@ -175,7 +175,7 @@ public class GuiBuilder {
         // Writes FXML structure if the serial panel is required
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
                        
-            FileReader fileReader = new FileReader(path + "logTabs/SerialPanel.fxml");
+            FileReader fileReader = new FileReader(path + "fxml/logTabs/SerialPanel.fxml");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
@@ -196,7 +196,7 @@ public class GuiBuilder {
         // Writes FXML structure if the iridium panel is required
         if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
             
-            FileReader fileReader = new FileReader(path + "logTabs/IridiumPanel.fxml");
+            FileReader fileReader = new FileReader(path + "fxml/logTabs/IridiumPanel.fxml");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String line;
             StringBuilder stringBuilder = new StringBuilder();
@@ -229,7 +229,7 @@ public class GuiBuilder {
                     + "      <rowConstraints>");
             
             // Declares necessary parameters
-            int numberOfControlItems = Integer.parseInt(config.getProperty("numberOfControlItems[" + counter + "]"));
+            int numberOfControlItems = ConfigHandler.countItems("control[" + counter + "]", configPath);
             int numberOfRows;
             
             // Sets number of rows depending on required number of control items
@@ -307,7 +307,7 @@ public class GuiBuilder {
         
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
-        int numberOfBoxes = Integer.parseInt(config.getProperty("numberOfBoxes")); 
+        int numberOfBoxes = ConfigHandler.countItems("boxTitle", configPath);
         String path = "src/main/resources/";
         
         // Writes data in CurrentStatePanel.fxml file
@@ -329,7 +329,7 @@ public class GuiBuilder {
                     + "          <rowConstraints>");
             
             // Declares necessary parameters
-            int numberOfValues = Integer.parseInt(config.getProperty("numberOfValues[" + counter + "]"));
+            int numberOfValues = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
             int numberOfRows;
             
             // Sets number of rows depending on required number of control items

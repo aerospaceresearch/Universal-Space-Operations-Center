@@ -56,7 +56,7 @@ public class ConfigHandlerTest {
     @After
     public void tearDown() {
     }
-
+    
     /**
      * Test of getAllValues method, of class ConfigHandler.
      * @throws java.lang.Exception
@@ -67,6 +67,18 @@ public class ConfigHandlerTest {
         String expResult = "experimentTestName";
         Properties config = ConfigHandler.getAllValues( "testData/test.properties" );
         String result = config.getProperty("experimentName");
+        assertEquals(expResult, result);
+    }
+    
+    /**
+     * Test of getAllValues method, of class ConfigHandler.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void countItems() throws Exception {
+        System.out.println("countItems() has been tested");
+        int expResult = 2;
+        int result = ConfigHandler.countItems("chartTitle", "testData/test.properties");
         assertEquals(expResult, result);
     }
 
@@ -161,6 +173,18 @@ public class ConfigHandlerTest {
         assertEquals(expResult, result);
     }
 
+    /**
+     * Test of syntaxCheck method, of class ConfigHandler.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testSyntaxCheck() throws Exception {
+        System.out.println("syntaxCheck() has been tested");
+        boolean result = ConfigHandler.syntaxCheck("testData/test.properties");
+        boolean expResult = true;
+        assertEquals(expResult, result);
+    }
+    
     /**
      * Test of rebuildGui method, of class ConfigHandler.
      * @throws java.lang.Exception

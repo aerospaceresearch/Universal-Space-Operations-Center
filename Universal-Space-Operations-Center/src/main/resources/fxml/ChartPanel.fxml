@@ -1,4 +1,4 @@
-<?import javafx.scene.chart.*?>
+<?import javafx.scene.chart.*?> 
 <?import javafx.scene.layout.*?> 
 
 <GridPane> 
@@ -12,44 +12,52 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
   <children>
-    <LineChart title="Diagram 1" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <LineChart title="Chart 1" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <xAxis> 
-        <CategoryAxis label="x-Achse 1" side="BOTTOM" /> 
+        <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
       <yAxis> 
-        <NumberAxis label="y-Achse 1" side="LEFT" /> 
+        <NumberAxis label="Current [A]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Diagram 2" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <LineChart title="Chart 2" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <xAxis> 
-        <CategoryAxis label="x-Achse 2" side="BOTTOM" /> 
+        <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
       <yAxis> 
-        <NumberAxis label="y-Achse 2" side="LEFT" /> 
+        <NumberAxis label="Power [W]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Diagram 3" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    <LineChart title="Chart 3" GridPane.columnIndex="0" GridPane.rowIndex="1">
       <xAxis> 
-        <CategoryAxis label="x-Achse 3" side="BOTTOM" /> 
+        <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
       <yAxis> 
-        <NumberAxis label="y-Achse 3" side="LEFT" /> 
+        <NumberAxis label="Height [m]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Diagram 4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <LineChart title="Chart 4" GridPane.columnIndex="1" GridPane.rowIndex="1">
       <xAxis> 
-        <CategoryAxis label="x-Achse 4" side="BOTTOM" /> 
+        <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
       <yAxis> 
-        <NumberAxis label="y-Achse 4" side="LEFT" /> 
+        <NumberAxis label="Current [A]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Diagram 5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+    <LineChart title="Chart 5" GridPane.columnIndex="0" GridPane.rowIndex="2">
       <xAxis> 
-        <CategoryAxis label="x-Achse 5" side="BOTTOM" /> 
+        <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
       <yAxis> 
-        <NumberAxis label="y-Achse 5" side="LEFT" /> 
+        <NumberAxis label="Power [W]" side="LEFT" /> 
+      </yAxis> 
+    </LineChart>
+    <LineChart title="Chart 6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <xAxis> 
+        <CategoryAxis label="Time [s]" side="BOTTOM" /> 
+      </xAxis> 
+      <yAxis> 
+        <NumberAxis label="Height [m]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
   </children> 
