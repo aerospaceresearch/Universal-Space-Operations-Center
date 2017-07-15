@@ -31,7 +31,7 @@ import java.io.PrintWriter;
 import java.util.Properties;
  
 /**
- * This class communicates with the config.properties file and
+ * This class communicates with the properties file and
  * monitors modifications to regenerate the GUI.
  * 
  *
@@ -66,7 +66,7 @@ public class ConfigHandler {
     
     
     /**
-     * Method gets values from config.properties file.
+     * Method gets values from properties file.
      * 
      * @param path
      * @return
@@ -75,11 +75,11 @@ public class ConfigHandler {
     public static Properties getAllValues(String path) throws FileNotFoundException, IOException {
         
         Properties config = new Properties();
-        // Creates FileInputStream from config.properties
+        // Creates FileInputStream from properties
         String filePath = "src/main/resources/";
         InputStream inputStream = new FileInputStream(filePath + path);
        
-        // Checks if config.properties exists
+        // Checks if property file exists
         if (inputStream != null) {
             config.load(inputStream);
         } else {
@@ -94,7 +94,7 @@ public class ConfigHandler {
         
 
     /**
-     * Method stores values of config.properties file and the date
+     * Method stores values of properties file and the date
      * of it's last modification into configMod.properties file.
      * 
      * @param origin
@@ -121,7 +121,7 @@ public class ConfigHandler {
     
     
     /**
-     * Method checks if value of property files are the same.
+     * Method checks if value of properties files are the same.
      * 
      * @param keyword
      * @param path
@@ -284,7 +284,7 @@ public class ConfigHandler {
     
     
     /**
-     * Method checks if config.properties has been modified.
+     * Method checks if properties file has been modified.
      * 
      * @param experimentNameMod
      * @param chartMod
@@ -308,7 +308,7 @@ public class ConfigHandler {
     
     
     /**
-     * Method checks if syntax of config.properties is accurate.
+     * Method checks if syntax of properties file is accurate.
      * 
      * @param path
      * @return
@@ -316,7 +316,7 @@ public class ConfigHandler {
     */    
     public static boolean syntaxCheck(String path) throws IOException {
         
-        Properties config = getAllValues("config/config.properties");
+        Properties config = getAllValues(path);
         boolean syntaxCheck = true;
 
         // Checks syntax of CHART PROPERTIES
@@ -343,7 +343,7 @@ public class ConfigHandler {
             int numberOfControlItems = countItems("control[" + counter + "]", path);
 
             if ( !(textArea.equals("true") || textArea.equals("false")) ) {
-            System.out.println("Syntax of textArea property is not accurate.");
+                System.out.println("Syntax of textArea property is not accurate.");
                 syntaxCheck = false;
             }
             
@@ -372,13 +372,27 @@ public class ConfigHandler {
     */    
     public static boolean rebuildGui(String path, String pathMod) throws IOException {
             
+        Properties config = getAllValues(path);
         boolean experimentNameMod = experimentNameMod(path, pathMod);
         boolean chartMod = chartMod(path, pathMod);
         boolean logMod = logMod(path, pathMod);
         boolean stateMod = stateMod(path, pathMod);
         boolean rebuildGui;
                 
-        // If config.properties has been modified and syntax of config.properties file
+        // Regenerats the entire GUI if RESET is set to true
+        if (Boolean.parseBoolean(config.getProperty("RESET"))) {
+            GuiBuilder.setExperimentName();
+            GuiBuilder.chartBuilder("fxml/ChartPanel.fxml", path);
+            GuiBuilder.logBuilder("fxml/LogPanel.fxml", path);
+            GuiBuilder.logControlBuilder("gui/controller/LogController.java", path);
+            GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
+            
+            System.out.println("FXML has been reseted and regenerated completely.");
+            
+            return true;
+        }
+        
+        // If properties has been modified and syntax of properties file
         // is accurate, the FXML structure will be regenerated 
         if ( fileMod(experimentNameMod, chartMod, logMod, stateMod) && syntaxCheck(path) ) {
             
@@ -388,20 +402,21 @@ public class ConfigHandler {
             }
             // Checks if CHART PROPERTIES has been modified since last compilation
             if (chartMod) {
-                GuiBuilder.chartBuilder("fxml/ChartPanel.fxml", "config/config.properties");
+                GuiBuilder.chartBuilder("fxml/ChartPanel.fxml", path);
             }
             // Checks if LOG PROPERTIES has been modified since last compilation
             if (logMod) {
-                GuiBuilder.logBuilder("fxml/LogPanel.fxml", "config/config.properties");
+                GuiBuilder.logBuilder("fxml/LogPanel.fxml", path);
+                GuiBuilder.logControlBuilder("gui/controller/LogController.java", path);
             }
             // Checks if STATE PROPERTIES has been modified since last compilation
             if (stateMod) {
-                GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", "config/config.properties");
+                GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             }
             rebuildGui = true;
             
         } else {
-            // Checks if config.properties file has been modified
+            // Checks if config file has been modified
             if ( !fileMod(experimentNameMod, chartMod, logMod, stateMod) ) {
                 System.out.println("No FXML regeneration necessary.");
             }
@@ -410,7 +425,7 @@ public class ConfigHandler {
         }
         
         // Updates values in configMod.properties file after GUI regeneration
-        updateConfigMod("config/config.properties", "config/configMod.properties");
+        updateConfigMod(path, pathMod);
         
         return rebuildGui;
     }

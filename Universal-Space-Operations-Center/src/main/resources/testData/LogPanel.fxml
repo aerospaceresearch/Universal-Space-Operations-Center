@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?> 
 <?import javafx.scene.layout.*?> 
 
-<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.LogController" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
    <tabs>
     <Tab text="testTab"> 
       <content> 
@@ -20,10 +20,10 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
      </rowConstraints> 
       <children>
-        <Button mnemonicParsing="false" text="Button 1"  GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Button text="Button 1" onAction="#button11" mnemonicParsing="false" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="0" />
         <TextField promptText="Prompt Text" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Button mnemonicParsing="false" text="Button 2"  GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button text="Button 2" onAction="#button14" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       </children> 
     </GridPane> 
   </top>

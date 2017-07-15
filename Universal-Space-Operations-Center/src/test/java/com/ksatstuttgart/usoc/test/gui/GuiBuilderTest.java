@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc;
+package com.ksatstuttgart.usoc.test.gui;
 
+import com.ksatstuttgart.usoc.GuiBuilder;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

@@ -23,7 +23,7 @@
         <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
         <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Button text="Reconnect" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Button text="Reconnect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="4" />
       </children>
     </GridPane>
   </top>

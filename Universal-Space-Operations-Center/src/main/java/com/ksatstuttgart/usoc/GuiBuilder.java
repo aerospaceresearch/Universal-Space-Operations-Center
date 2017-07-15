@@ -32,7 +32,7 @@ import java.util.Properties;
 
 /**
  * This class builds the GUI FXML structure based on input 
- * parameters in the config.properties file and rebuilds parts
+ * parameters in the properties file and rebuilds parts
  * of it depending on changes.
  * 
  *
@@ -169,7 +169,7 @@ public class GuiBuilder {
                 + "<?import javafx.scene.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
-        writer.println("<TabPane prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
+        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
                 + "  <tabs>");
         
         // Writes FXML structure if the serial panel is required
@@ -256,8 +256,8 @@ public class GuiBuilder {
                 // Checks for type of entered control item
                 switch (control) {
                     case "button":
-                        writer.println("        <Button mnemonicParsing=\"false\" text=\"" + config.getProperty("bText[" + counter + "][" + j + "]")
-                                + "\" " + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
+                        writer.println("        <Button text=\"" + config.getProperty("bText[" + counter + "][" + j + "]") + "\" onAction=\"#button" + counter + j + "\" "
+                                + "mnemonicParsing=\"false\"" + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
                         break;
                     case "textField":
                         writer.println("        <TextField promptText=\"" + config.getProperty("promptText[" + counter + "][" + j + "]")
@@ -293,6 +293,76 @@ public class GuiBuilder {
     }
     
     
+    
+    
+    /**
+     * Method writes the controller of the log panel generically
+     * depending on input in the properties file
+     * 
+     * @param filePath
+     * @param configPath
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+    */  
+    public static void logControlBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
+
+        // Declares necessary parameters
+        Properties config = ConfigHandler.getAllValues(configPath);
+        int numberOfAddTabs = ConfigHandler.countItems("tabTitle", configPath);     
+        String path = "src/main/java/com/ksatstuttgart/usoc/";
+        
+        // Writes data in LogController.java file
+        PrintWriter writer = new PrintWriter(path + filePath);
+        writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
+        writer.println("import java.net.URL; \n"
+                + "import java.util.ResourceBundle; \n"
+                + "import javafx.event.ActionEvent; \n"
+                + "import javafx.fxml.FXML; \n"
+                + "import javafx.fxml.Initializable; \n");
+        writer.println("/** \n"
+                + " * \n"
+                + " * @author Victor \n"
+                + " */ \n");
+        writer.println("public class LogController implements Initializable { \n");
+        
+        if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
+            writer.println("    @FXML \n"
+                    + "    private void serialConnect(ActionEvent event) { \n"
+                    + "        System.out.println(\"Connect button in serial log has been pressed!\"); \n"
+                    + "    } \n\n"
+                    + "    @FXML \n"
+                    + "    private void serialSendCommand(ActionEvent event) { \n"
+                    + "        System.out.println(\"Send Command button in serial log has been pressed!\"); \n"
+                    + "    } \n");
+        }
+        
+        if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
+            writer.println("    @FXML \n"
+                    + "    private void iridiumReconnect(ActionEvent event) { \n"
+                    + "        System.out.println(\"Reconnect button in iridium log has been pressed!\"); \n"
+                    + "    } \n");
+        }
+        
+        for (int counter=1; counter<=numberOfAddTabs; counter++) {
+            int numberOfControlItems = ConfigHandler.countItems("control[" + counter + "]", configPath);
+            for (int j=1; j<=numberOfControlItems; j++) {
+                String control = config.getProperty("control[" + counter + "][" + j + "]");
+                if (control.equals("button")) {
+                    writer.println("    @FXML \n"
+                            + "    private void button" + counter + j + "(ActionEvent event) { \n"
+                            + "        System.out.println(\"Button was pressed!\"); \n"
+                            + "    } \n");
+                }
+            }
+        }
+
+        writer.println("    @Override \n"
+                + "    public void initialize(URL url, ResourceBundle rb) { \n"
+                + "        // TODO \n"
+                + "    } \n"
+                + "}");
+        writer.close();  
+    }
     
     
     /**

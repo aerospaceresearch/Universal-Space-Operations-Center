@@ -52,7 +52,7 @@ public class GroundSegment extends Application {
              * necessary and carries it out in case it is
              */
             ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
-
+            
             // JavaFX GUI
             String fxmlFile = "/fxml/MainFrame.fxml";
             URL location = getClass().getResource(fxmlFile);
