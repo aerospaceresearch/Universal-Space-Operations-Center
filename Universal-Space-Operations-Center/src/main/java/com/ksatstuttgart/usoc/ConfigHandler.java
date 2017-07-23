@@ -107,7 +107,7 @@ public class ConfigHandler {
         // Initialize file object
         String filePath = "src/main/resources/";
         
-        // Writes data in configMod.propertes file
+        // Writes data in propertes file
         PrintWriter writer = new PrintWriter(filePath + destination);
         writer.println("# This document serves as the basis for comparisons");
         writer.println("# to determine modified values in the config file.");

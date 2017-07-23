@@ -79,6 +79,67 @@ public class GuiBuilder {
 
         return position;
     }
+    
+    
+    
+    
+    /**
+     * Method defines array 'position' with two values ​​for a clear positional
+     * representation of the corresponding item in the GridPane.
+     * 
+     * @param fileReader
+     * @param writer
+     * @param counter
+     * @param j
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+    */  
+    public static void writeMethod(FileReader fileReader, PrintWriter writer, int counter, int j) throws FileNotFoundException, IOException {
+                
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        String separator = System.getProperty("line.separator");
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        String line = bufferedReader.readLine();
+        System.out.println(line);
+        
+        boolean tokenFound = false;
+        boolean newMethod = true;
+        stringBuilder.append("    @FXML \n");
+        stringBuilder.append("    private void button").append(counter).append(j).append("(ActionEvent event) { \n");
+        
+        while ( (line=bufferedReader.readLine()) != null ) {
+            
+            System.out.println("Zeilen...");
+            
+            if (line.contains("private void button" + counter + j + "(ActionEvent event) {")) {
+                line = bufferedReader.readLine();
+                
+                if (line.contains("// Automatically generated method button" + counter + j + "()")) {                 
+                    tokenFound = false;
+                    newMethod = true;
+                } else {
+                    tokenFound = true;
+                    newMethod = false;
+                }
+
+            } else if (line.equals("    } ")) {
+                tokenFound = false;
+            }
+
+            if (tokenFound) {
+                stringBuilder.append(line).append(separator) ;
+            }
+        }
+                
+        if (newMethod) {
+            stringBuilder.append("        // Automatically generated method button").append(counter).append(j).append("() \n");
+            stringBuilder.append("        System.out.println(\"Button").append(counter).append(j).append(" was pressed!\"); \n");
+        }
+        
+        stringBuilder.append("    } \n");
+        writer.println(stringBuilder);
+    }
 
     
     
@@ -313,6 +374,7 @@ public class GuiBuilder {
         
         // Writes data in LogController.java file
         PrintWriter writer = new PrintWriter(path + filePath);
+        FileReader fileReader = new FileReader(path + filePath);
         writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
         writer.println("import java.net.URL; \n"
                 + "import java.util.ResourceBundle; \n"
@@ -348,10 +410,20 @@ public class GuiBuilder {
             for (int j=1; j<=numberOfControlItems; j++) {
                 String control = config.getProperty("control[" + counter + "][" + j + "]");
                 if (control.equals("button")) {
-                    writer.println("    @FXML \n"
-                            + "    private void button" + counter + j + "(ActionEvent event) { \n"
-                            + "        System.out.println(\"Button was pressed!\"); \n"
-                            + "    } \n");
+                    
+                    
+                    writeMethod(fileReader, writer, counter, j);
+                    
+                    
+                    
+                    
+                    
+                    
+                    //writer.println("    @FXML \n"
+                    //        + "    private void button" + counter + j + "(ActionEvent event) { \n"
+                    //        + "        // Automatically generated method button" + counter + j + "() \n"
+                    //        + "        System.out.println(\"Button" + counter + j + " was pressed!\"); \n"
+                    //        + "    } \n");
                 }
             }
         }

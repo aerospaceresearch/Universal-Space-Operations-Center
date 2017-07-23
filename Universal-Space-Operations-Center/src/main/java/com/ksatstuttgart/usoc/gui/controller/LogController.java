@@ -30,17 +30,26 @@ public class LogController implements Initializable {
 
     @FXML 
     private void button11(ActionEvent event) { 
-        System.out.println("Button was pressed!"); 
+        // Automatically generated method button11() 
+        System.out.println("Button11 was pressed!"); 
     } 
 
     @FXML 
     private void button14(ActionEvent event) { 
-        System.out.println("Button was pressed!"); 
+        // Automatically generated method button14() 
+        System.out.println("Button14 was pressed!"); 
     } 
 
     @FXML 
     private void button21(ActionEvent event) { 
-        System.out.println("Button was pressed!"); 
+        // Automatically generated method button21() 
+        System.out.println("Button21 was pressed!"); 
+    } 
+
+    @FXML 
+    private void button26(ActionEvent event) { 
+        // Automatically generated method button26() 
+        System.out.println("Button26 was pressed!"); 
     } 
 
     @Override 
