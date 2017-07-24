@@ -51,8 +51,7 @@ public class GroundSegment extends Application {
              * Checks whether a regeneration of the FXML structure is
              * necessary and carries it out in case it is
              */
-            //ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
-            GuiBuilder.logControlBuilder("gui/controller/LogController.java", "config/config.properties");
+            ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
             
             // JavaFX GUI
             String fxmlFile = "/fxml/MainFrame.fxml";

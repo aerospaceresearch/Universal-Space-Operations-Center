@@ -87,34 +87,30 @@ public class GuiBuilder {
      * Method defines array 'position' with two values ​​for a clear positional
      * representation of the corresponding item in the GridPane.
      * 
-     * @param fileReader
-     * @param writer
+     * @param bufferedReader
      * @param counter
      * @param j
+     * @return 
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
     */  
-    public static void writeMethod(FileReader fileReader, PrintWriter writer, int counter, int j) throws FileNotFoundException, IOException {
+    public static StringBuilder writeMethod(BufferedReader bufferedReader, int counter, int j) throws FileNotFoundException, IOException {
                 
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
         String separator = System.getProperty("line.separator");
-        StringBuilder stringBuilder = new StringBuilder();
-        
-        String line = bufferedReader.readLine();
-        System.out.println(line);
+        StringBuilder stringBuilder = new StringBuilder();        
+        String line;
+        // set the mark at the beginning of the buffer
+        bufferedReader.mark(100000000);
         
         boolean tokenFound = false;
         boolean newMethod = true;
         stringBuilder.append("    @FXML \n");
         stringBuilder.append("    private void button").append(counter).append(j).append("(ActionEvent event) { \n");
-        
+                
         while ( (line=bufferedReader.readLine()) != null ) {
-            
-            System.out.println("Zeilen...");
-            
+                        
             if (line.contains("private void button" + counter + j + "(ActionEvent event) {")) {
                 line = bufferedReader.readLine();
-                
                 if (line.contains("// Automatically generated method button" + counter + j + "()")) {                 
                     tokenFound = false;
                     newMethod = true;
@@ -130,15 +126,18 @@ public class GuiBuilder {
             if (tokenFound) {
                 stringBuilder.append(line).append(separator) ;
             }
-        }
+        }        
+
+        // reset to the last mark; in this case, it's the beginning of the buffer
+        bufferedReader.reset();
                 
         if (newMethod) {
             stringBuilder.append("        // Automatically generated method button").append(counter).append(j).append("() \n");
             stringBuilder.append("        System.out.println(\"Button").append(counter).append(j).append(" was pressed!\"); \n");
         }
-        
         stringBuilder.append("    } \n");
-        writer.println(stringBuilder);
+        
+        return stringBuilder;        
     }
 
     
@@ -372,9 +371,22 @@ public class GuiBuilder {
         int numberOfAddTabs = ConfigHandler.countItems("tabTitle", configPath);     
         String path = "src/main/java/com/ksatstuttgart/usoc/";
         
+        StringBuilder[][] stringBuilder = new StringBuilder[numberOfAddTabs][20];
+        FileReader fileReader = new FileReader(path + filePath);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        for (int counter=1; counter<=numberOfAddTabs; counter++) {
+            int numberOfControlItems = ConfigHandler.countItems("control[" + counter + "]", configPath);
+            for (int j=1; j<=numberOfControlItems; j++) {
+                String control = config.getProperty("control[" + counter + "][" + j + "]");
+                if (control.equals("button")) {
+                    stringBuilder[counter-1][j-1] = writeMethod(bufferedReader, counter, j);
+                }
+            }
+        }
+        
         // Writes data in LogController.java file
         PrintWriter writer = new PrintWriter(path + filePath);
-        FileReader fileReader = new FileReader(path + filePath);
         writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
         writer.println("import java.net.URL; \n"
                 + "import java.util.ResourceBundle; \n"
@@ -410,24 +422,11 @@ public class GuiBuilder {
             for (int j=1; j<=numberOfControlItems; j++) {
                 String control = config.getProperty("control[" + counter + "][" + j + "]");
                 if (control.equals("button")) {
-                    
-                    
-                    writeMethod(fileReader, writer, counter, j);
-                    
-                    
-                    
-                    
-                    
-                    
-                    //writer.println("    @FXML \n"
-                    //        + "    private void button" + counter + j + "(ActionEvent event) { \n"
-                    //        + "        // Automatically generated method button" + counter + j + "() \n"
-                    //        + "        System.out.println(\"Button" + counter + j + " was pressed!\"); \n"
-                    //        + "    } \n");
+                    writer.println(stringBuilder[counter-1][j-1]);
                 }
             }
         }
-
+        
         writer.println("    @Override \n"
                 + "    public void initialize(URL url, ResourceBundle rb) { \n"
                 + "        // TODO \n"
