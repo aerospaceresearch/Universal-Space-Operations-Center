@@ -25,6 +25,7 @@ package com.ksatstuttgart.usoc.controller;
 
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.SBD340;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Data;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.data.message.header.MetaData;
 import com.ksatstuttgart.usoc.data.message.header.MetaDataType;
@@ -40,10 +41,9 @@ import com.ksatstuttgart.usoc.data.message.header.MetaDataType;
  */
 public class MessageController {
 
-    private final SBD340 data;
-    
-    private MessageController instance;
-    
+    private SBD340 data;
+    private final SBD340 structure;
+
     /**
      * Creates a new MessageController instance from a predefined message
      * structure.
@@ -58,6 +58,7 @@ public class MessageController {
      */
     public MessageController(SBD340 messageStructure) {
         this.data = new SBD340(messageStructure);
+        this.structure = messageStructure;
     }
 
     /**
@@ -88,6 +89,7 @@ public class MessageController {
                 //parse the message using a String that represents the bit values
                 //of the content with 1's and 0's 
                 parseSequential(content);
+                break;
             case BISECTION: //not supported yet
         }
 
@@ -102,6 +104,8 @@ public class MessageController {
      * communication link with 1's and 0's
      */
     private void parseSequential(String content) {
+        System.out.println("parsing content:");
+        System.out.println(content);
 
         long time = -1;
 
@@ -118,10 +122,13 @@ public class MessageController {
                 }
                 Var v = metaData.getVars().get(0);
 
-                int start = v.getStartPosition() + 1;
+                int start = v.getStartPosition();
                 int end = start + v.getDataType().getLength();
 
                 time = (long) Utility.getVariableValue(v, content.substring(start, end));
+                System.out.println("time for this message is: " + time + " from: " + start + " to: " + end);
+                System.out.println(content.substring(start, end));
+                System.out.println("");
             } else {
                 //for other metadata save the messages with the corresponding time.
             }
@@ -129,34 +136,85 @@ public class MessageController {
         //TODO: get other metadata
 
         for (Sensor sensor : this.data.getData().getSensors()) {
-            for (Var var : sensor.getVars()) {
 
-                int start, end = 0;
-                long timeStamp;
-                for (int i = 0; i < var.getNumPoints(); i++) {
+            System.out.println("sensor " + sensor.getSensorName() + " has " + sensor.getNumPoints() + " datapoints.");
+            if (sensor.getNumPoints() > 1) {
+                for (int k = 0; k < sensor.getNumPoints(); k++) {
+                    for (Var var : sensor.getVars()) {
+                        System.out.println("variable: " + var.getDataName());
+                        int start, end = 0;
+                        long timeStamp;
+                        for (int i = 0; i < var.getNumPoints(); i++) {
 
-                    //check if first datapoint
-                    if (i == 0) {
-                        //starting position of the relevant point
-                        timeStamp = time;
-                        start = var.getStartPosition() + 1;
-                    } else {
-                        //if the structure represents more than one data value, the others
-                        //are located behind when using the sequential protocol type
-                        start = end;
-                        //if more than one data value is added then calculate 
-                        //the next time values using the vars frequency value
-                        //the value must be multiplied by 1000 as the time 
-                        //value is represented in milliseconds.
-                        timeStamp = (long) (time + i * (1 / var.getFrequency()) * 1000);
+                            //check if first datapoint
+                            if (i == 0) {
+                                //starting position of the relevant point
+                                timeStamp = time;
+                                start = var.getStartPosition() + 1;
+                            } else {
+                                //if the structure represents more than one data value, the others
+                                //are located behind when using the sequential protocol type
+                                start = end;
+                                //if more than one data value is added then calculate 
+                                //the next time values using the vars frequency value
+                                //the value must be multiplied by 1000 as the time 
+                                //value is represented in milliseconds.
+                                timeStamp = (long) (time + i * (1 / var.getFrequency()) * 1000);
+                            }
+
+                            if (k == 0) {
+                                //do nothing, first point
+                            } else {
+                                //if more than one sensor value add the values of all 
+                                //datatypes in the sensor 
+                                start += sensor.getTotalDataLength() * k;
+                                timeStamp += (long) (k * (1 / sensor.getFrequency()) * 1000);
+                            }
+                            System.out.println("looking for " + k + ". point at " + start + " at timestamp: " + timeStamp);
+
+                            end = start + var.getDataType().getLength();
+
+                            //get the value of the variable and store it in its HashMap
+                            Object value = Utility.getVariableValue(var, content.substring(start, end));
+                            System.out.println("with value: " + value + " from: " + start + " to: " + end);
+                            System.out.println(content.substring(start, end));
+                            var.addValue(timeStamp, value);
+                        }
                     }
-                    end = start + var.getDataType().getLength();
+                }
+            } else {
+                for (Var var : sensor.getVars()) {
+                    System.out.println("variable: " + var.getDataName());
+                    int start, end = 0;
+                    long timeStamp;
+                    for (int i = 0; i < var.getNumPoints(); i++) {
 
-                    //get the value of the variable and store it in its HashMap
-                    Object value = Utility.getVariableValue(var, content.substring(start, end));
-                    var.addValue(timeStamp, value);
+                        //check if first datapoint
+                        if (i == 0) {
+                            //starting position of the relevant point
+                            timeStamp = time;
+                            start = var.getStartPosition() + 1;
+                        } else {
+                            //if the structure represents more than one data value, the others
+                            //are located behind when using the sequential protocol type
+                            start = end;
+                            //if more than one data value is added then calculate 
+                            //the next time values using the vars frequency value
+                            //the value must be multiplied by 1000 as the time 
+                            //value is represented in milliseconds.
+                            timeStamp = (long) (time + i * (1 / var.getFrequency()) * 1000);
+                        }
+                        end = start + var.getDataType().getLength();
+
+                        //get the value of the variable and store it in its HashMap
+                        Object value = Utility.getVariableValue(var, content.substring(start, end));
+                        System.out.println("value: " + value + " from: " + start + " to: " + end);
+                        System.out.println(content.substring(start, end));
+                        var.addValue(timeStamp, value);
+                    }
                 }
             }
+
         }
     }
 
@@ -181,7 +239,11 @@ public class MessageController {
         return null;
     }
 
-    public SBD340 getData() {
-        return data;
+    public Data getData() {
+        return data.getData();
+    }
+
+    void clearData() {
+        this.data = new SBD340(this.structure);
     }
 }

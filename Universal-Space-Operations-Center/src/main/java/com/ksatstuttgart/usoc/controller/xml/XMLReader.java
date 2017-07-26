@@ -153,6 +153,12 @@ public class XMLReader {
                                 case "frequency":
                                     lastVariable.setFrequency(Double.parseDouble(value));
                                     break;
+                                case "sensorpoints":
+                                    lastSensor.setNumPoints(Integer.parseInt(value));
+                                    break;
+                                case "sensorfrequency":
+                                    lastSensor.setFrequency(Double.parseDouble(value));
+                                    break;
                                 case "unit":
                                     lastVariable.setUnit(value);
                                     break;
