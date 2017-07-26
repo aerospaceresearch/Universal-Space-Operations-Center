@@ -368,10 +368,20 @@ public class GuiBuilder {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
-        int numberOfAddTabs = ConfigHandler.countItems("tabTitle", configPath);     
+        int numberOfAddTabs = ConfigHandler.countItems("tabTitle", configPath); 
+        int maxNumberOfItems = 0;
         String path = "src/main/java/com/ksatstuttgart/usoc/";
         
-        StringBuilder[][] stringBuilder = new StringBuilder[numberOfAddTabs][20];
+        for (int counter=1; counter<=numberOfAddTabs; counter++) {
+            int numberOfControlItems = ConfigHandler.countItems("control[" + counter + "]", configPath);
+            for (int j=1; j<=numberOfControlItems; j++) {
+                if (j > maxNumberOfItems) {
+                    maxNumberOfItems = j;
+                }
+            }
+        }
+        
+        StringBuilder[][] stringBuilder = new StringBuilder[numberOfAddTabs][maxNumberOfItems];
         FileReader fileReader = new FileReader(path + filePath);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
 

@@ -140,7 +140,7 @@ public class ConfigHandler {
         } else {
             valueMod = true;
         }
-        
+
         return valueMod;
     }
     
@@ -177,6 +177,10 @@ public class ConfigHandler {
         int numberOfCharts = countItems("chartTitle", path);
         boolean chartMod = false;
         
+        if (countItems("chartTitle", path) != countItems("chartTitle", pathMod)) {
+            chartMod = true;
+        }
+        
         for (int counter=1; counter<=numberOfCharts; counter++) {
             if ( valueMod("chartTitle[" + counter + "]", path, pathMod) ||
                     valueMod("x[" + counter + "]", path, pathMod) ||
@@ -205,16 +209,23 @@ public class ConfigHandler {
         int numberOfAddTabs = countItems("tabTitle", path);
         boolean logMod = false;
         
-        if ( valueMod("serialPanel", path, pathMod) ||
-                valueMod("iridiumPanel", path, pathMod) ) {
+        if ( valueMod("serialPanel", path, pathMod) || valueMod("iridiumPanel", path, pathMod) ) {
+            logMod = true;
+        }
+        
+        if (countItems("tabTitle", path) != countItems("tabTitle", pathMod) ||
+                countItems("textArea", path) != countItems("textArea", pathMod)) {
             logMod = true;
         }
         
         for (int counter=1; counter<=numberOfAddTabs; counter++) {
-            if ( valueMod("tabTitle[" + counter + "]", path, pathMod) ) {
+            
+            if ( valueMod("tabTitle[" + counter + "]", path, pathMod) ||
+                    valueMod("textArea[" + counter + "]", path, pathMod) ) {
                 logMod = true;
             }
-            if ( valueMod("textArea[" + counter + "]", path, pathMod) ) {  
+
+            if (countItems("control[" + counter + "]", path) != countItems("control[" + counter + "]", pathMod)) {
                 logMod = true;
             }
             
@@ -263,8 +274,17 @@ public class ConfigHandler {
         int numberOfBoxes = countItems("boxTitle", path);
         boolean stateMod = false;
         
+        if (countItems("boxTitle", path) != countItems("boxTitle", pathMod)) {
+            stateMod = true;
+        }
+        
         for (int counter=1; counter<=numberOfBoxes; counter++) {
-            if ( valueMod("boxTitle[" + counter + "]", path, pathMod) ) {
+            
+            if (valueMod("boxTitle[" + counter + "]", path, pathMod)) {
+                stateMod = true;
+            }
+            
+            if (countItems("keyword[" + counter + "]", path) != countItems("keyword[" + counter + "]", pathMod)) {
                 stateMod = true;
             }
             
