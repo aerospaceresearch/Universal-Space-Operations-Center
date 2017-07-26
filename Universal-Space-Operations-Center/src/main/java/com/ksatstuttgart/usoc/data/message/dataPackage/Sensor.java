@@ -38,6 +38,9 @@ public class Sensor {
     private SensorType type;
     private String sensorName;
     private ArrayList<Var> vars;
+    
+    private int numPoints;
+    private double frequency;
 
     public Sensor() {
         vars = new ArrayList<>();
@@ -46,10 +49,12 @@ public class Sensor {
     public Sensor(Sensor s) {
         this.type = s.getType();
         this.sensorName = s.getSensorName();
+        this.numPoints = s.getNumPoints();
+        this.frequency = s.getFrequency();
 
         vars = new ArrayList<>();
-        for (Var datapoint : s.getVars()) {
-            vars.add(new Var(datapoint));
+        for (Var variable : s.getVars()) {
+            vars.add(new Var(variable));
         }
     }
 
@@ -90,10 +95,38 @@ public class Sensor {
     @Override
     public String toString() {
         String s = "Sensor name: " + this.getSensorName() + " (Type: " + this.type + ")\n";
-        for (Var datapoint : this.getVars()) {
-            s += "\t"+datapoint.toString()+"\n";
+        for (Var var : this.getVars()) {
+            s += "\t"+var.toString()+"\n";
         }
         return s;
+    }
+    
+    public int getTotalDataLength(){
+        int length = 0;
+        for (Var var : vars) {
+            length += var.getDataType().getLength();
+        }
+        return length;
+    }
+    
+    @XmlAttribute (name = "sensorpoints")
+    public int getNumPoints() {
+        //return number of numpoints. miminum numPoints is 1
+        return numPoints == 0 ? 1 : numPoints;
+    }
+
+    public void setNumPoints(int numPoints) {
+        this.numPoints = numPoints;
+    }
+
+    @XmlAttribute (name = "sensorfrequency")
+    public double getFrequency() {
+        //if frequency is zero but is required, this will default to 1Hz
+        return frequency == 0 ? 1 : frequency;
+    }
+
+    public void setFrequency(double frequency) {
+        this.frequency = frequency;
     }
     
     /*
