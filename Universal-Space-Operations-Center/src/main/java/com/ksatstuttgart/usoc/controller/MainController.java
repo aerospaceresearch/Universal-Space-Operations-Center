@@ -50,14 +50,19 @@ import javax.swing.JFileChooser;
  */
 public class MainController {
 
-    private final MainFrame frame;
+    private MainFrame frame;
     private final MessageController messageController;
 
     public static MainController instance;
+    
+    public static MainController getInstance(){
+        if(instance == null){
+            instance = new MainController();
+        }
+        return instance;
+    }
 
-    public MainController(MainFrame frame) {
-        this.frame = frame;
-
+    public MainController() {
         //TODO: remove this and somehow integrate this in the GUI or find better 
         //place. This loads the xml structure for reading the messages received
         //via the Iridium communication link
@@ -68,8 +73,10 @@ public class MainController {
         MailReceiver.getInstance().addMailUpdateListener(new MailListener());
         MailReceiver.getInstance().connect();
         SerialComm.getInstance().addSerialListener(new RXListener());
-
-        instance = this;
+    }
+    
+    public void setFrame(MainFrame frame) {
+        this.frame = frame;
     }
 
     public void exportCSV() {
@@ -83,7 +90,7 @@ public class MainController {
             }                 
         }
     }
-
+        
     public void addIridiumFile() {
         JFileChooser jf = new JFileChooser();
         int returnVal = jf.showOpenDialog(frame);

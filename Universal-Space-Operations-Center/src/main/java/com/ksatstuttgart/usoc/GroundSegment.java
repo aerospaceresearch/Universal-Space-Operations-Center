@@ -43,7 +43,7 @@ public class GroundSegment {
      * @param args - does not support any arguments.
      */
     public static void main(String[] args) {
-        new MainController(new MainFrame());
+        MainController.getInstance().setFrame(new MainFrame());
     }
     
 }
