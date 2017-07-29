@@ -53,11 +53,11 @@ Used conventions:
                    datatype="UINT8" unit="NONE" isLittleEndian="TRUE"/>
 		</sensor>
 		<sensor type="PRESSURE" name="MS5607 Digital Pressure Sensor Front">
-			<var dataname = "Pressure" start="2455"
+			<var dataname = "Pressure_Front" start="2455"
                    datatype="FLOAT32" numpoints="1" frequency="1" unit="0.1mbar" isLittleEndian="TRUE"/>
 		</sensor>
 		<sensor type="PRESSURE" name="MS5607 Digital Pressure Sensor PCB" isLittleEndian="TRUE">
-			<var dataname = "Pressure" start="2487"
+			<var dataname = "Pressure_PCB" start="2487"
                    datatype="FLOAT32" numpoints="1" frequency="1" unit="0.1mbar" isLittleEndian="TRUE"/>
 		</sensor>
 		<sensor type="TIMER" name="GNSS TIME">
