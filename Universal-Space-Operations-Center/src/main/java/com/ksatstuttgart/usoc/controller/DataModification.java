@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 KSat Stuttgart e.V..
+ * Copyright 2017 KSat e.V.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,36 +29,53 @@ import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import java.util.ArrayList;
 
 /**
- *
+ * This class is responsible for adjusting sensor data for better data 
+ * representation.
+ * 
  * @author valentinstarlinger
  */
 public class DataModification {
 
+    /**
+     * This method is used to adjust sensor data.
+     * 
+     * This should be modified for every experiment. 
+     * Currently adjusted for the MIRKA2-ICV experiment!
+     * 
+     * @param sensor - Sensor: A sensor that should be adjusted
+     * @return a modified Sensor
+     */
     public static Sensor adjustSensorData(Sensor sensor) {
-        //modify this for every experiment. 
-        //currently adjusted for MIRKA2-ICV
+        //copy the sensor so the original sensor is not messed with
         Sensor adjusted = new Sensor(sensor);
 
+        //MIRKA2-ICV: adjust IMU data - conversion quaternion to euler angles
         if (sensor.getSensorName().contains("IMU")) {
+            //for the IMU conversion it is necessary to generate new variables
             adjusted.setVariables(new ArrayList<Var>());
 
+            //create yaw, pitch and roll variables
             Var yaw = new Var();
             Var pitch = new Var();
             Var roll = new Var();
 
             yaw.setDataName("Yaw");
-            pitch.setDataName("Pitch");
-            roll.setDataName("Roll");
-
+            yaw.setUnit("[deg]");
             yaw.setDataType(DataType.FLOAT32);
+            pitch.setDataName("Pitch");
+            pitch.setUnit("[deg]");
             pitch.setDataType(DataType.FLOAT32);
+            roll.setDataName("Roll");
+            roll.setUnit("[deg]");
             roll.setDataType(DataType.FLOAT32);
-
+            
+            //for every timestep create euler angles from quaternions
             for (Long key : sensor.getVars().get(0).getValues().keySet()) {
-                double n = 0, x = 0, y = 0, z = 0;
+                //get w,x,y and z variables for the specified time step
+                double w = 0, x = 0, y = 0, z = 0;
                 for (Var var : sensor.getVars()) {
                     if (var.getDataName().contains("W")) {
-                        n = new Double((int) var.getValues().get(key));
+                        w = new Double((int) var.getValues().get(key));
                     } else if (var.getDataName().contains("X")) {
                         x = new Double((int) var.getValues().get(key));
                     } else if (var.getDataName().contains("Y")) {
@@ -67,54 +84,54 @@ public class DataModification {
                         z = new Double((int) var.getValues().get(key));
                     }
                 }
-
-                double abs = Math.sqrt((Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(z, 2)+Math.pow(n, 2)));
                 
+                //normalize the values
+                double abs = Math.sqrt((Math.pow(x, 2)+Math.pow(y, 2)+Math.pow(z, 2)+Math.pow(w, 2)));               
                 x = x/abs;
                 y = y/abs;
                 z = z/abs;
-                n = n/abs;
+                w = w/abs;
                 
-                yaw.addValue(key, (180/Math.PI)*Math.atan2((2 * x * y + 2 * z * n), (Math.pow(n, 2) + Math.pow(x, 2) - Math.pow(y, 2) - Math.pow(z, 2))));
-                pitch.addValue(key,  (180/Math.PI)*Math.asin((2 * y * n - 2 * z * x)));
-                roll.addValue(key,  (180/Math.PI)*Math.atan2((2 * z * y + 2 * x * n), (Math.pow(n, 2) - Math.pow(x, 2) - Math.pow(y, 2) + Math.pow(z, 2))));
+                //compute and add values
+                yaw.addValue(key, (180/Math.PI)*Math.atan2((2 * x * y + 2 * z * w), 
+                        (Math.pow(w, 2) + Math.pow(x, 2) - Math.pow(y, 2) - Math.pow(z, 2))));
+                pitch.addValue(key,  (180/Math.PI)*Math.asin((2 * y * w - 2 * z * x)));
+                roll.addValue(key,  (180/Math.PI)*Math.atan2((2 * z * y + 2 * x * w), 
+                        (Math.pow(w, 2) - Math.pow(x, 2) - Math.pow(y, 2) + Math.pow(z, 2))));
             }
 
+            //add variables to the adjusted sensor
             adjusted.addVariable(yaw);
             adjusted.addVariable(pitch);
             adjusted.addVariable(roll);
         }
 
+        //MIRKA2-ICV: Thermocouple values are multiplied by 10 and saved as UINT
+        //to save bandwith
         if (sensor.getSensorName().contains("Thermocouple")) {
             for (Var var : adjusted.getVars()) {
+                //change datatype to new value
                 var.setDataType(DataType.FLOAT32);
                 for (Long key : var.getValues().keySet()) {
+                    //devide the current value by 10 and replace the old one
                     var.getValues().replace(key, (double) (((int) var.getValues().get(key)) / 10));
                 }
             }
         }
 
-        if (sensor.getSensorName().contains("GNSS TIME")) {
-
-        }
-
+        //MIRKA2-ICV: Battery Voltage is only sent as direct voltage reading.
         if (sensor.getSensorName().contains("Battery")) {
             for (Var var : adjusted.getVars()) {
+                //change datatype 
                 var.setDataType(DataType.FLOAT32);
                 for (Long key : var.getValues().keySet()) {
+                    //compute actual battery voltage from voltage reading
                     double newValue = (double) ((((double) ((int) var.getValues().get(key) * 4)) / 1024d) * 3.3 * 3);
+                    //replace old value
                     var.getValues().replace(key, newValue);
                 }
             }
         }
-//        System.out.println("adjusted data for sensor: " + sensor.getSensorName());
-//        for (Var var : adjusted.getVars()) {
-//            System.out.print(var.getDataName()+": ");
-//            for (Long key : var.getValues().keySet()) {
-//                System.out.println("adjusted: " + var.getValues().get(key));
-//            }
-//
-//        }
         return adjusted;
     }
 
