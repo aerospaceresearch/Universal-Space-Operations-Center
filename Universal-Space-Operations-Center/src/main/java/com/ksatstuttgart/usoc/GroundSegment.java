@@ -44,6 +44,7 @@ public class GroundSegment {
      */
     public static void main(String[] args) {
         MainController.getInstance().setFrame(new MainFrame());
+        MainController.getInstance().connectToMail();
     }
     
 }

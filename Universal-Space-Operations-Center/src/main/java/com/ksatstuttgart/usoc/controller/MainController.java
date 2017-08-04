@@ -53,7 +53,7 @@ public class MainController {
     private MainFrame frame;
     private final MessageController messageController;
 
-    public static MainController instance;
+    private static MainController instance;
     
     public static MainController getInstance(){
         if(instance == null){
@@ -71,14 +71,25 @@ public class MainController {
         messageController = new MessageController(structure);
 
         MailReceiver.getInstance().addMailUpdateListener(new MailListener());
-        MailReceiver.getInstance().connect();
         SerialComm.getInstance().addSerialListener(new RXListener());
     }
     
     public void setFrame(MainFrame frame) {
         this.frame = frame;
     }
+    
+    public MainFrame getFrame(){
+        return this.frame;
+    }
 
+    public MessageController getMessageController(){
+        return this.messageController;
+    }
+
+    public void connectToMail(){
+        MailReceiver.getInstance().connect();
+    }
+    
     public void exportCSV() {
         JFileChooser jf = new JFileChooser();
         int returnVal = jf.showSaveDialog(frame);
@@ -132,7 +143,7 @@ public class MainController {
             }
         }.start();
     }
-
+    
     public void clearMessageData() {
         messageController.clearData();
         frame.updateData(messageController);
@@ -153,7 +164,7 @@ public class MainController {
                         if (!buffer.isEmpty()) {
                             LogSaver.saveDownlink("EIMESSAGE" + buffer + "ENDEIMESSAGE", false);
                             buffer = "";
-                            frame.updateSerialLog(new SerialEvent("Received erroneous Iridium data\n", e.getPort(), e.getTimeStamp()));
+                            MainController.getInstance().getFrame().updateSerialLog(new SerialEvent("Received erroneous Iridium data\n", e.getPort(), e.getTimeStamp()));
                         }
                     } catch (InterruptedException ex) {
                     }
@@ -163,7 +174,7 @@ public class MainController {
 
         @Override
         public void error(String msg) {
-            frame.updateSerialError(msg);
+            MainController.getInstance().getFrame().updateSerialError(msg);
             LogSaver.saveDownlink(msg, false);
         }
 
@@ -174,15 +185,15 @@ public class MainController {
         @Override
         public void mailUpdated(MailEvent e) {
             //System.out.println("mail updated");
-            messageController.addSBD340Message(e.getText());
-            frame.updateIridiumLog(e, messageController);
-            frame.updateData(messageController);
+            MainController.getInstance().getMessageController().addSBD340Message(e.getText());
+            MainController.getInstance().getFrame().updateIridiumLog(e, messageController);
+            MainController.getInstance().getFrame().updateData(messageController);
             LogSaver.saveIridium(e.toString());
         }
 
         @Override
         public void error(String msg) {
-            frame.updateIridiumError(msg);
+            MainController.getInstance().getFrame().updateIridiumError(msg);
             LogSaver.saveIridium(msg);
         }
 

@@ -146,7 +146,7 @@ public class IridiumPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainController.instance.addIridiumFile();
+            MainController.getInstance().addIridiumFile();
         }
 
     }
@@ -155,7 +155,7 @@ public class IridiumPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainController.instance.clearMessageData();
+            MainController.getInstance().clearMessageData();
         }
 
     }
@@ -164,7 +164,7 @@ public class IridiumPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainController.instance.exportCSV();
+            MainController.getInstance().exportCSV();
         }
 
     }
