@@ -46,6 +46,7 @@ import javax.swing.JTabbedPane;
 public class MainFrame extends JFrame {
 
     GridBagConstraints gbc;
+    JTabbedPane dataTabs;
 
     IridiumPanel ip;
     SerialPanel sp;
@@ -65,7 +66,7 @@ public class MainFrame extends JFrame {
         //Panels
         JPanel mainPanel = new JPanel();
 
-        JTabbedPane dataVisualization = new JTabbedPane();
+        dataTabs = new JTabbedPane();
         dp = new CurrentDataPanel();//true,1600,900);
         dp.setMinimumSize(new java.awt.Dimension(500,dp.getHeight()));
         JScrollPane jsp = new JScrollPane(dp,
@@ -73,9 +74,8 @@ public class MainFrame extends JFrame {
                                           JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
         gnssPanel = new GNSSPanel();
-        
-        dataVisualization.addTab("Graphs", jsp);
-        dataVisualization.addTab("GNSS 3D View", gnssPanel);
+        dataTabs.addTab("Graphs", jsp);
+        dataTabs.addTab("GNSS 3D View", gnssPanel);
         
         ip = new IridiumPanel();
         sp = new SerialPanel();
@@ -85,7 +85,7 @@ public class MainFrame extends JFrame {
         //bottomPanel.addTab("Serial", sp);
         
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(dataVisualization, BorderLayout.WEST);
+        mainPanel.add(dataTabs, BorderLayout.WEST);
         mainPanel.add(bottomPanel, BorderLayout.CENTER);
         mainPanel.add(new JPanel(), BorderLayout.SOUTH);
 
