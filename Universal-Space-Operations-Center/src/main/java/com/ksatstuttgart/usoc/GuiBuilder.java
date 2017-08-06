@@ -458,62 +458,68 @@ public class GuiBuilder {
         
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
+        boolean statePanel = Boolean.parseBoolean(config.getProperty("statePanel"));
         int numberOfBoxes = ConfigHandler.countItems("boxTitle", configPath);
         String path = "src/main/resources/";
         
         // Writes data in CurrentStatePanel.fxml file
         PrintWriter writer = new PrintWriter(path + filePath);
-        writer.println("<?import javafx.scene.control.*?> \n"
-                + "<?import javafx.scene.layout.*?> \n");
-        writer.println("<ScrollPane prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\"> \n"
-                + "  <content> \n"
-                + "    <VBox prefHeight=\"200.0\" prefWidth=\"100.0\"> \n"
-                + "      <children>");
         
-        // Generates boxes
-        for (int counter=1; counter<=numberOfBoxes; counter++) {
-            writer.println("        <GridPane> \n"
-                    + "          <columnConstraints> \n"
-                    + "            <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                    + "            <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                    + "          </columnConstraints> \n"
-                    + "          <rowConstraints>");
-            
-            // Declares necessary parameters
-            int numberOfValues = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
-            int numberOfRows;
-            
-            // Sets number of rows depending on required number of control items
-            if (numberOfValues%2 == 0) {
-                numberOfRows = numberOfValues/2;
-            } else {
-                numberOfRows = (numberOfValues + 1)/2;
-            } 
-        
-            // Writes FXML data
-            for (int i=1; i<=numberOfRows; i++) {
-                writer.println("            <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
+        if (statePanel) {
+            writer.println("<?import javafx.scene.control.*?> \n"
+                    + "<?import javafx.scene.layout.*?> \n");
+            writer.println("<ScrollPane prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\"> \n"
+                    + "  <content> \n"
+                    + "    <VBox prefHeight=\"200.0\" prefWidth=\"100.0\"> \n"
+                    + "      <children>");
+
+            // Generates boxes
+            for (int counter=1; counter<=numberOfBoxes; counter++) {
+                writer.println("        <GridPane> \n"
+                        + "          <columnConstraints> \n"
+                        + "            <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                        + "            <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                        + "          </columnConstraints> \n"
+                        + "          <rowConstraints>");
+
+                // Declares necessary parameters
+                int numberOfValues = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
+                int numberOfRows;
+
+                // Sets number of rows depending on required number of control items
+                if (numberOfValues%2 == 0) {
+                    numberOfRows = numberOfValues/2;
+                } else {
+                    numberOfRows = (numberOfValues + 1)/2;
+                } 
+
+                // Writes FXML data
+                for (int i=1; i<=numberOfRows; i++) {
+                    writer.println("            <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
+                }
+                writer.println("         </rowConstraints> \n"
+                        + "          <children> \n"
+                        + "            <Label text=\"" + config.getProperty("boxTitle[" + counter + "]") + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"0\" />");
+
+                // Writes FXML data of box content
+                for (int j=1; j<=numberOfValues; j++) {
+                    String keyword = config.getProperty("keyword[" + counter + "][" + j + "]");
+                    writer.println("            <Label text=\"" + keyword + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"" + j + "\" />");
+                }
+                writer.println("          </children> \n"
+                        + "        </GridPane>");
             }
-            writer.println("         </rowConstraints> \n"
-                    + "          <children> \n"
-                    + "            <Label text=\"" + config.getProperty("boxTitle[" + counter + "]") + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"0\" />");
-            
-            // Writes FXML data of box content
-            for (int j=1; j<=numberOfValues; j++) {
-                String keyword = config.getProperty("keyword[" + counter + "][" + j + "]");
-                writer.println("            <Label text=\"" + keyword + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"" + j + "\" />");
-            }
-            writer.println("          </children> \n"
-                    + "        </GridPane>");
+
+            writer.println("      </children> \n"
+                    + "    </VBox> \n"
+                    + "  </content> \n"
+                    + "</ScrollPane>");
+
+            // Prints status update
+            System.out.println("Data panel has been updated!");
+        } else {
+            writer.println("");
         }
-        
-        writer.println("      </children> \n"
-                + "    </VBox> \n"
-                + "  </content> \n"
-                + "</ScrollPane>");
-        writer.close();
-        
-        // Prints status update
-        System.out.println("Data panel has been updated!"); 
+    writer.close();
     }
 }

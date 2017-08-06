@@ -25,6 +25,13 @@ package com.ksatstuttgart.usoc;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.MainFrame;
+import java.io.IOException;
+import java.net.URL;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
 * <h1>Ground Segment</h1>
@@ -36,15 +43,46 @@ import com.ksatstuttgart.usoc.gui.MainFrame;
 * @author  Valentin Starlinger
 * @version 1.0
 */
-public class GroundSegment {
+public class GroundSegment extends Application {
 
     /**
      * Calls the MainFrame class
-     * @param args - does not support any arguments.
+     * @param stage
      */
-    public static void main(String[] args) {
-        MainController.getInstance().setFrame(new MainFrame());
-        MainController.getInstance().connectToMail();
+    @Override
+    public void start(Stage stage) {
+        try {
+            
+            MainController.getInstance().setFrame(new MainFrame());
+            MainController.getInstance().connectToMail();
+            
+            /**
+             * Checks whether a regeneration of the FXML structure is
+             * necessary and carries it out in case it is
+            */
+            ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
+        
+            // JavaFX GUI
+            String fxmlFile = "/fxml/MainFrame.fxml";
+            URL location = getClass().getResource(fxmlFile);
+            FXMLLoader loader = new FXMLLoader( );
+            loader.setLocation( location );
+            Parent root = (Parent) loader.load();
+            
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        
+        } catch (IOException e) {
+            System.out.println(e);
+        }
     }
-    
+        
+        
+    /**
+    * @param args the command line arguments
+    */
+    public static void main(String[] args) {
+        launch(args);
+    }
 }

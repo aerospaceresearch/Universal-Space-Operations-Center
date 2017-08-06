@@ -56,17 +56,29 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+
       </rowConstraints>
       <children>
         <Label text="Last message from:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
         <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
         <Label text="Filename:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
         <Label text="Received at:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Button text="Reconnect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Label text="Add file:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <Button text="Clear Data" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label text="#Masseges on reconnect:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <Button text="exportCSV" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Button text="Open" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <Button text="Reconnect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        
       </children>
     </GridPane>
   </top>
