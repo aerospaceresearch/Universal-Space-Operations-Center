@@ -23,9 +23,11 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
+import com.ksatstuttgart.usoc.controller.Utility;
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.TreeMap;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartFactory;
@@ -41,15 +43,14 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-      
 /**
-* <h1>LineChart</h1>
-* This class creates line charts with the possibility to dynamically add new
-* data points or data series to the existing chart.
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
+ * <h1>LineChart</h1>
+ * This class creates line charts with the possibility to dynamically add new
+ * data points or data series to the existing chart.
+ *
+ * @author Valentin Starlinger
+ * @version 1.0
+ */
 public class LineChart extends JPanel {
 
     private final XYSeriesCollection dataset;
@@ -58,7 +59,7 @@ public class LineChart extends JPanel {
     public LineChart(String chartname, String x, String y) {
         this(chartname, x, y, 400, 200);
     }
-        
+
     public LineChart(String chartname, String x, String y, int w, int h) {
         dataset = new XYSeriesCollection();
         chart = createChart(chartname, x, y, dataset);
@@ -71,7 +72,7 @@ public class LineChart extends JPanel {
         this.add(chartPanel);
     }
 
-    public LineChart(String chartname, String x, String y, String seriesname, HashMap<Long,Object> data, DataType dt) {
+    public LineChart(String chartname, String x, String y, String seriesname, TreeMap<Long, Object> data, DataType dt) {
         dataset = new XYSeriesCollection();
         addSeries(seriesname, data, dt);
         chart = createChart(chartname, x, y, dataset);
@@ -79,39 +80,42 @@ public class LineChart extends JPanel {
         this.add(chartPanel);
     }
 
-    public void addSeries(String name, HashMap<Long,Object> data, DataType dt){
+    public void addSeries(String name, TreeMap<Long, Object> data, DataType dt) {
         XYSeries s;
-        try{
+        try {
             s = dataset.getSeries(name);
             dataset.removeSeries(s);
             s = new XYSeries(name);
-        }catch (UnknownKeyException ex){
+        } catch (UnknownKeyException ex) {
             s = new XYSeries(name);
         }
-        
+
         for (Long time : data.keySet()) {
-            switch(dt){
+            switch (dt) {
                 case UINT8:
                 case UINT16:
                 case INT8:
                 case INT16:
                 case BIT3:
                 case BIT10:
-                    s.add((long)time, (int) data.get(time));
+                    s.add((long) time / 1000, (int) data.get(time));
                     break;
                 case UINT32:
-                    s.add((long)time, (long) data.get(time));
+                    s.add((long) time / 1000, (long) data.get(time));
+                    break;
+                case FLOAT16:
+                    s.add((long) time / 1000, (float) data.get(time));
                     break;
                 case FLOAT32:
-                    s.add((long)time, (double) data.get(time));
+                    s.add((long) time / 1000, (double) data.get(time));
                     break;
             }
         }
 
         dataset.addSeries(s);
     }
-    
-    private int getSeriesNumber(String name){
+
+    private int getSeriesNumber(String name) {
         for (Object s : dataset.getSeries()) {
             if (((XYSeries) s).getKey().equals(name)) {
                 return dataset.getSeriesIndex(((XYSeries) s).getKey());
@@ -169,15 +173,15 @@ public class LineChart extends JPanel {
 
     public void updateAxis() {
         XYPlot plot = chart.getXYPlot();
-        
+
         double dw = this.getWidth() == 0 ? 1 : this.getWidth() / 35;
         double dh = this.getHeight() == 0 ? 1 : this.getHeight() / 35;
-        
+
         if ((dataset.getDomainUpperBound(true) - dataset.getDomainLowerBound(true)) > 0) {
             NumberAxis domain = (NumberAxis) plot.getDomainAxis();
             domain.setRange(dataset.getDomainLowerBound(true), dataset.getDomainUpperBound(true));
             double d = (dataset.getDomainUpperBound(true) - dataset.getDomainLowerBound(true)) / dw;
-            domain.setTickUnit(new NumberTickUnit((int)d));
+            domain.setTickUnit(new NumberTickUnit((int) d));
         }
 
         if ((dataset.getRangeUpperBound(true) - dataset.getRangeLowerBound(true)) > 0) {
@@ -188,9 +192,9 @@ public class LineChart extends JPanel {
         }
 
     }
-    
-    public void setSeriesShapesVisible(String series, boolean b){
-        ((XYLineAndShapeRenderer)chart.getXYPlot().getRenderer()).setSeriesShapesFilled(getSeriesNumber(series), b);
+
+    public void setSeriesShapesVisible(String series, boolean b) {
+        ((XYLineAndShapeRenderer) chart.getXYPlot().getRenderer()).setSeriesShapesFilled(getSeriesNumber(series), b);
     }
 
 }

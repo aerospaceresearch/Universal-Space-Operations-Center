@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:sbd340 xmlns:ns2="usoc/" protocol="NONE">
     <data>
-        <sensor name="testName" type="PRESSURE">
+        <sensor sensorfrequency="1.0" sensorpoints="1" name="testName" type="PRESSURE">
             <var dataname="testSensorData" datatype="FLOAT32" frequency="1.0" isLittleEndian="false" numpoints="1" start="40" unit=""/>
         </sensor>
     </data>

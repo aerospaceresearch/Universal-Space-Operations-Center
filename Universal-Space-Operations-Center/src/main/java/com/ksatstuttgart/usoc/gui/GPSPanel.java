@@ -83,7 +83,10 @@ public class GPSPanel extends JPanel{
         //go through gps sensor and set the respective label texts with the latest
         //values
         for (Var var : gpsSensor.getVars()) {
-            Object[] entrySet = var.getValues().entrySet().toArray();
+            Object[] entrySet = var.getValues().values().toArray();
+            if(entrySet.length == 0){
+                continue;
+            }
             String s = entrySet[entrySet.length-1].toString();
             
             switch(var.getDataName()){

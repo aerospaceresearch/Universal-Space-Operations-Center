@@ -33,9 +33,16 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.gui.MainFrame;
 import com.ksatstuttgart.usoc.gui.SerialPanel;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import static java.lang.Thread.sleep;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -43,25 +50,84 @@ import static java.lang.Thread.sleep;
  */
 public class MainController {
 
-    private final MainFrame frame;
+    private MainFrame frame;
     private final MessageController messageController;
+
+    private static MainController instance;
     
-    public MainController(MainFrame frame){
-        this.frame = frame;
-        
+    public static MainController getInstance(){
+        if(instance == null){
+            instance = new MainController();
+        }
+        return instance;
+    }
+
+    public MainController() {
         //TODO: remove this and somehow integrate this in the GUI or find better 
         //place. This loads the xml structure for reading the messages received
         //via the Iridium communication link
         SBD340 structure = XMLReader.getInstance()
-                .getMessageStructure("protocols/messageProtocol.xml");
+                .getMessageStructure("protocols/USOC_SBD340_ICV.xml");
         messageController = new MessageController(structure);
-        
-        MailReceiver.getInstance().addMailUpdateListener(new MailListener());  
-        MailReceiver.getInstance().connect();
+
+        MailReceiver.getInstance().addMailUpdateListener(new MailListener());
         SerialComm.getInstance().addSerialListener(new RXListener());
     }
     
-    public static void startPortThread(final SerialPanel sp){
+    public void setFrame(MainFrame frame) {
+        this.frame = frame;
+    }
+    
+    public MainFrame getFrame(){
+        return this.frame;
+    }
+
+    public MessageController getMessageController(){
+        return this.messageController;
+    }
+
+    public void connectToMail(){
+        MailReceiver.getInstance().connect();
+    }
+    
+    public void exportCSV() {
+        JFileChooser jf = new JFileChooser();
+        int returnVal = jf.showSaveDialog(frame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                ExportController.saveDataAsCSV(messageController.getData(), jf.getSelectedFile(), false);
+            } catch (IOException ex) {
+                System.out.println("something wrong happend when saving the file");
+            }                 
+        }
+    }
+        
+    public void addIridiumFile() {
+        JFileChooser jf = new JFileChooser();
+        int returnVal = jf.showOpenDialog(frame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            InputStream stream;
+            try {
+                stream = new FileInputStream(jf.getSelectedFile());
+                String text = "";
+                int b;
+                while ((b = stream.read()) != -1) {
+                    //System.out.println(counter + ": " + b);
+                    String t = Utility.intToBits(b);
+                    //System.out.println(t);
+                    text += t;
+                }
+                text = text.trim();
+                messageController.addSBD340Message(text);
+                frame.updateData(messageController);
+            } catch (IOException ex) {
+                System.out.println("something wrong happend when adding the file");
+            }
+//                            
+        }
+    }
+
+    public static void startPortThread(final SerialPanel sp) {
         new Thread() {
             @Override
             public void run() {
@@ -78,13 +144,18 @@ public class MainController {
         }.start();
     }
     
+    public void clearMessageData() {
+        messageController.clearData();
+        frame.updateData(messageController);
+    }
+
     private class RXListener implements SerialListener {
 
         String buffer = "";
 
         @Override
         public void messageReceived(final SerialEvent e) {
-            
+
             new Thread() {
                 @Override
                 public void run() {
@@ -93,8 +164,7 @@ public class MainController {
                         if (!buffer.isEmpty()) {
                             LogSaver.saveDownlink("EIMESSAGE" + buffer + "ENDEIMESSAGE", false);
                             buffer = "";
-                            frame.updateSerialLog(new SerialEvent("Received erroneous Iridium data\n", e.getPort(), e.getTimeStamp()));
-
+                            MainController.getInstance().getFrame().updateSerialLog(new SerialEvent("Received erroneous Iridium data\n", e.getPort(), e.getTimeStamp()));
                         }
                     } catch (InterruptedException ex) {
                     }
@@ -104,7 +174,7 @@ public class MainController {
 
         @Override
         public void error(String msg) {
-            frame.updateSerialError(msg);
+            MainController.getInstance().getFrame().updateSerialError(msg);
             LogSaver.saveDownlink(msg, false);
         }
 
@@ -115,15 +185,15 @@ public class MainController {
         @Override
         public void mailUpdated(MailEvent e) {
             //System.out.println("mail updated");
-            messageController.addSBD340Message(e.getText());
-            frame.updateIridiumLog(e, messageController);
-            frame.updateData(messageController);
+            MainController.getInstance().getMessageController().addSBD340Message(e.getText());
+            MainController.getInstance().getFrame().updateIridiumLog(e, messageController);
+            MainController.getInstance().getFrame().updateData(messageController);
             LogSaver.saveIridium(e.toString());
         }
 
         @Override
         public void error(String msg) {
-            frame.updateIridiumError(msg);
+            MainController.getInstance().getFrame().updateIridiumError(msg);
             LogSaver.saveIridium(msg);
         }
 

@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc.gui;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.MailEvent;
 import com.ksatstuttgart.usoc.data.SerialEvent;
+import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import javax.swing.JFrame;
@@ -45,11 +46,14 @@ import javax.swing.JTabbedPane;
 public class MainFrame extends JFrame {
 
     GridBagConstraints gbc;
+    JTabbedPane dataTabs;
 
     IridiumPanel ip;
-    CurrentDataPanel dp;
     SerialPanel sp;
-
+    
+    CurrentDataPanel dp;
+    GNSSPanel gnssPanel;
+    
     public MainFrame() {
         super();
         initialize();
@@ -62,21 +66,26 @@ public class MainFrame extends JFrame {
         //Panels
         JPanel mainPanel = new JPanel();
 
+        dataTabs = new JTabbedPane();
         dp = new CurrentDataPanel();//true,1600,900);
         dp.setMinimumSize(new java.awt.Dimension(500,dp.getHeight()));
         JScrollPane jsp = new JScrollPane(dp,
                                           JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                                           JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
+        gnssPanel = new GNSSPanel();
+        dataTabs.addTab("Graphs", jsp);
+        dataTabs.addTab("GNSS 3D View", gnssPanel);
+        
         ip = new IridiumPanel();
         sp = new SerialPanel();
         
         JTabbedPane bottomPanel = new JTabbedPane();
         bottomPanel.addTab("Iridium", ip);
-        bottomPanel.addTab("Serial", sp);
+        //bottomPanel.addTab("Serial", sp);
         
         mainPanel.setLayout(new BorderLayout());
-        mainPanel.add(jsp, BorderLayout.WEST);
+        mainPanel.add(dataTabs, BorderLayout.WEST);
         mainPanel.add(bottomPanel, BorderLayout.CENTER);
         mainPanel.add(new JPanel(), BorderLayout.SOUTH);
 
@@ -89,6 +98,7 @@ public class MainFrame extends JFrame {
     
     public void updateData(MessageController mc){
         dp.updateData(mc);
+        gnssPanel.updateData(mc);
     }
 
     public void updateIridiumLog(MailEvent e, MessageController mc) {
