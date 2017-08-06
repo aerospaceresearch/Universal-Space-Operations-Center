@@ -23,6 +23,8 @@
  */
 package com.ksatstuttgart.usoc;
 
+import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.gui.MainFrame;
 import java.io.IOException;
 import java.net.URL;
 import javafx.application.Application;
@@ -52,6 +54,8 @@ public class GroundSegment extends Application {
              * necessary and carries it out in case it is
              */
             ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
+            
+            new MainController(new MainFrame());
             
             // JavaFX GUI
             String fxmlFile = "/fxml/MainFrame.fxml";
