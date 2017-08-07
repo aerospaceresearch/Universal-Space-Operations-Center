@@ -89,7 +89,7 @@ public class MessageControllerTest {
         }
 
         //replace all whitespaces, otherwise difficult with comparison
-        assertEquals(true,true);//result.replaceAll("\\s", ""), expected.replaceAll("\\s", ""));
+        assertEquals(expected.replaceAll("\\s", ""), result.replaceAll("\\s", ""));
     }
 
 }
