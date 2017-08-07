@@ -35,6 +35,7 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.gui.SerialPanel;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
+import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
 
 /**
@@ -68,7 +70,7 @@ public class MainController {
         //place. This loads the xml structure for reading the messages received
         //via the Iridium communication link
         listeners = new ArrayList<>();
-        
+
         SBD340 structure = XMLReader.getInstance()
                 .getMessageStructure("protocols/USOC_SBD340_ICV.xml");
         messageController = new MessageController(structure);
@@ -107,28 +109,31 @@ public class MainController {
         }
     }
 
-    public void addIridiumFile() {
+    public void openBinaryFile() {
         JFileChooser jf = new JFileChooser();
         int returnVal = jf.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            InputStream stream;
-            try {
-                stream = new FileInputStream(jf.getSelectedFile());
-                String text = "";
-                int b;
-                while ((b = stream.read()) != -1) {
-                    //System.out.println(counter + ": " + b);
-                    String t = Utility.intToBits(b);
-                    //System.out.println(t);
-                    text += t;
-                }
-                text = text.trim();
-                messageController.addSBD340Message(text);
-                updateListeners(new USOCEvent(DataSource.FILE));
-            } catch (IOException ex) {
-                System.out.println("something wrong happend when adding the file");
+            addBinaryFile(jf.getSelectedFile());
+        }
+    }
+
+    public void addBinaryFile(File file) {
+        InputStream stream;
+        try {
+            stream = new FileInputStream(file);
+            String text = "";
+            int b;
+            while ((b = stream.read()) != -1) {
+                //System.out.println(counter + ": " + b);
+                String t = Utility.intToBits(b);
+                //System.out.println(t);
+                text += t;
             }
-//                            
+            text = text.trim();
+            messageController.addSBD340Message(text);
+            updateListeners(new USOCEvent(DataSource.FILE));
+        } catch (IOException ex) {
+            System.out.println("something wrong happend when adding the file");
         }
     }
 

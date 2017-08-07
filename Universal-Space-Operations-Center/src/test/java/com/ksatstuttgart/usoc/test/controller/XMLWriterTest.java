@@ -50,7 +50,9 @@ import static org.junit.Assert.*;
  * @version 1.0
  */
 public class XMLWriterTest {
-    
+        
+    public static final String TESTPROTOCOLPATH = "tests"+File.separator+"protocols";
+
     public XMLWriterTest() {
     }
     
@@ -117,7 +119,7 @@ public class XMLWriterTest {
             String filename = "testProtocol.xml";
             XMLWriter.getInstance().saveMessageStructure(sbd, filename);
             
-            BufferedReader br = new BufferedReader(new FileReader("protocols"+File.separator+filename));
+            BufferedReader br = new BufferedReader(new FileReader(TESTPROTOCOLPATH+File.separator+filename));
             
             String result = "";
             String nextLine;

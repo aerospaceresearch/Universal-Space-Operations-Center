@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Iridium SBD 340B sequential message prototype
+Used conventions: 
+	First bit is 0, not 1
+	System event numbers are uint8, list of event descriptors is stored in a separate xml file. System events can be: Iridium FSM freeze, TC has detected open circuit, GPS sees no satellite, etc. The 4 event with the highest priority are sent, this number can increase in later iterations.
+	As the default endianness for AVR MCUs is little endian, this is the default for datapoints.
+-->
+<sbd340message type = "sequential">
+	<header>
+		<metadata type = "MSGNUMBER">
+			<datapoint start="0" datatype="UINT8" numpoints="1" unit="NONE" isLittleEndian="TRUE"/>
+		</metadata>
+		<metadata type="TIME">
+				<datapoint start="7" datatype="UINT32" numpoints="1" unit="ms" isLittleEndian="TRUE"/>
+		</metadata>
+		<metadata type = "CARRIER_CURRENT">
+			<datapoint start="39" datatype="BIT3" numpoints="1" unit="NONE" isLittleEndian="TRUE"/>
+		</metadata>
+		<metadata type = "CARRIER_MAX">
+			<datapoint start="42" datatype="BIT3" numpoints="1" unit="NONE" isLittleEndian="TRUE"/>
+		</metadata>
+		<metadata type = "NUM_VALIDEVENTS">
+			<datapoint start="45" datatype="BIT3" numpoints="1" unit="NONE" isLittleEndian="TRUE"/>
+		</metadata>
+		<metadata type = "SYSTEMEVENTS">
+			<datapoint dataName = "Event Descriptor" start="48" datatype="UINT8" numpoints="6" unit="NONE" isLittleEndian="TRUE"/>
+			<datapoint dataName = "Event Time" start="96" datatype="UINT16" numpoints="6" unit="s" isLittleEndian="TRUE"/>
+		</metadata>
+	</header>
+	<datapackage>
+			<sensor type="VOLTAGE" name="Battery Voltage Divider">
+				<datapoint start="192" datatype="BIT10" numpoints="1" unit="V" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="PRESSURE" name="MS5607 Digital Pressure Sensor PCB" isLittleEndian="TRUE">
+				<datapoint dataName = "Pressure" start="202" 
+                   datatype="UINT16" numpoints="6" frequency="0.5" unit="0.1mbar" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="PRESSURE" name="MS5607 Digital Pressure Sensor Front">
+				<datapoint dataName = "Pressure" start="298" 
+                   datatype="UINT16" numpoints="6" frequency="0.5" unit="0.1mbar" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="VOLTAGE" name="MP3H6115A Analog Pressure Sensor">
+				<datapoint dataName = "Voltage" start="394" 
+                   datatype="BIT10" numpoints="6" frequency="0.5" unit="V" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="Thermocouple_1">
+				<datapoint start="490" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="Thermocouple_2">
+				<datapoint start="586" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="Thermocouple_3">
+				<datapoint start="682" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="Thermocouple_4">
+				<datapoint start="778" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="Thermocouple_5">
+				<datapoint start="874" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="Thermocouple_6">
+				<datapoint start="970" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="ColdJunction_1">
+				<datapoint start="1066" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="ColdJunction_2">
+				<datapoint start="1162" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="ColdJunction_3">
+				<datapoint start="1258" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="ColdJunction_4">
+				<datapoint start="1354" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="ColdJunction_5">
+				<datapoint start="1450" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="TEMPERATURE" name="ColdJunction_6">
+				<datapoint start="1546" datatype="INT16" numpoints="6" frequency="0.5" unit="°C" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="ORIENTATION" name="BNO055 IMU">
+				<datapoint dataName = "Quaternion_W" start="1642" 
+                   datatype="FLOAT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Quaternion_X" start="1834" 
+                   datatype="FLOAT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Quaternion_Y" start="2026" 
+                   datatype="FLOAT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Quaternion_Z" start="2218" 
+                   datatype="FLOAT16" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Calibration" start="2410" 
+                   datatype="UINT8" numpoints="12" frequency="1.0" unit="NONE" isLittleEndian="TRUE"/>
+			</sensor>
+			<sensor type="GNSS" name="UBLOX M8">
+				<datapoint dataName = "Longitude" start="2506" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="deg" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Latitude" start="2538" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="deg" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Altitude" start="2570" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="m" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Ground Speed" start="2602" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="m/s" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Heading" start="2634" 
+                   datatype="FLOAT32" numpoints="1" frequency="0.083333" unit="deg" isLittleEndian="TRUE"/>
+				<datapoint dataName = "Time" start="2666" 
+                   datatype="UINT32" numpoints="1" frequency="0.083333" unit="NONE" isLittleEndian="TRUE"/>
+			</sensor>
+			
+	</datapackage>
+</sbd340message>

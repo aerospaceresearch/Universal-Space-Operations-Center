@@ -151,7 +151,7 @@ public class IridiumPanel extends DataPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainController.getInstance().addIridiumFile();
+            MainController.getInstance().openBinaryFile();
         }
 
     }

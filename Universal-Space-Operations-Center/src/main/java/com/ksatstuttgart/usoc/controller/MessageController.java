@@ -42,7 +42,7 @@ import com.ksatstuttgart.usoc.data.message.header.MetaDataType;
 public class MessageController {
 
     private SBD340 data;
-    private final SBD340 structure;
+    private SBD340 structure;
 
     /**
      * Creates a new MessageController instance from a predefined message
@@ -57,6 +57,19 @@ public class MessageController {
      * the incoming data.
      */
     public MessageController(SBD340 messageStructure) {
+        this.data = new SBD340(messageStructure);
+        this.structure = messageStructure;
+    }
+    
+    /**
+     * This method sets a new data structure for the incoming data. 
+     * 
+     * WARNING: invoking this method resets the data variable and consequently 
+     * clears all previously acquired data.
+     * 
+     * @param messageStructure - SBD340: the new structure for the incoming data
+     */
+    public void setMessageStructure(SBD340 messageStructure){
         this.data = new SBD340(messageStructure);
         this.structure = messageStructure;
     }
