@@ -23,6 +23,7 @@
  */
 package com.ksatstuttgart.usoc.controller.communication;
 
+import com.ksatstuttgart.usoc.data.DataSource;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import java.awt.event.ActionEvent;
 import static java.lang.Thread.sleep;
@@ -154,7 +155,8 @@ public class SerialComm {
                     for (byte c : buffer) {
                         s += (char) c;
                     }
-                    messageReceived(new SerialEvent(s, event.getPortName(), System.currentTimeMillis()));
+                    messageReceived(new SerialEvent(s, event.getPortName(), 
+                            System.currentTimeMillis(), DataSource.SERIAL));
                 } catch (SerialPortException ex) {
                     error("Error: Couldn't read incoming Bytes.");
                 }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 KSat e.V.
+ * Copyright 2017 KSat Stuttgart e.V..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,30 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc;
+package com.ksatstuttgart.usoc.controller;
 
-import com.ksatstuttgart.usoc.controller.MainController;
-import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
-import com.ksatstuttgart.usoc.gui.MainFrame;
+import com.ksatstuttgart.usoc.data.USOCEvent;
 
 /**
- * <h1>Ground Segment</h1>
  *
- * <p>
- * This is the main Wrapper class initiating the GUI.
- *
- *
- * @author Valentin Starlinger
- * @version 1.0
+ * @author valentinstarlinger
  */
-public class GroundSegment {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        MainController.getInstance();
-        new MainFrame();
-        MailReceiver.getInstance().connect();
-    }
+public interface DataUpdateListener {
+    public void update(MessageController msg, USOCEvent e);
 }

@@ -27,13 +27,14 @@ package com.ksatstuttgart.usoc.data;
  *
  * @author valentinstarlinger
  */
-public class SerialEvent {
+public class SerialEvent extends USOCEvent{
     
     private String msg;
     private String port;
     private long timeStamp;
 
-    public SerialEvent(String msg, String port, long timeStamp){
+    public SerialEvent(String msg, String port, long timeStamp, DataSource dataSource){
+        super(dataSource);
         this.msg = msg;
         this.port = port;
     }
@@ -60,6 +61,16 @@ public class SerialEvent {
 
     public void setPort(String port) {
         this.port = port;
+    }
+
+    @Override
+    public DataSource getDataSource() {
+        return this.dataSource;
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
     
     
