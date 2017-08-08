@@ -426,6 +426,9 @@ public class GuiBuilder {
                 + "import java.util.ResourceBundle; \n"
                 + "import javafx.event.ActionEvent; \n"
                 + "import javafx.fxml.FXML; \n"
+                + "import com.ksatstuttgart.usoc.controller.communication.SerialComm;\n"
+                + "import com.ksatstuttgart.usoc.controller.MainController;\n"
+                + "import java.util.ArrayList;\n"
                 + "import javafx.fxml.Initializable; \n"
                 + "import javafx.scene.control.ComboBox; \n");
         writer.println("/** \n"
@@ -439,12 +442,8 @@ public class GuiBuilder {
                     + "    @FXML private ComboBox comboBox2; \n"
                     + "    @FXML private ComboBox comboBox3; \n\n"
                     + "    public void setData() { \n"
-                    + "        comboBox1.getItems().clear(); \n"
-                    + "        comboBox2.getItems().clear(); \n"
-                    + "        comboBox3.getItems().clear(); \n"
-                    + "        comboBox1.getItems().addAll(\"H\", \"Ha\", \"Hal\", \"Hall\", \"Hallo\"); \n"
-                    + "        comboBox2.getItems().addAll(\"T\", \"Te\", \"Tes\", \"Test\"); \n"
-                    + "        comboBox3.getItems().addAll(\"A\", \"B\", \"C\"); \n"
+                    + "        comboBox3.getItems().setAll(\"A\", \"B\", \"C\");\n"
+                    + "        comboBox1.getItems().setAll(SerialComm.getInstance().getAvailableCommands());"
                     + "    } \n");
             writer.println("    @FXML \n"
                     + "    private void serialConnect(ActionEvent event) { \n"
@@ -455,7 +454,11 @@ public class GuiBuilder {
                     + "    private void serialSendCommand(ActionEvent event) { \n"
                     + "        System.out.println(\"Send Command button in serial log has been pressed!\"); \n"
                     + "        String output = comboBox1.getSelectionModel().getSelectedItem().toString(); \n"
-                    + "        System.out.println(output); \n"
+                    + "        if (output != null) {\n" 
+                    + "            System.out.println(output);\n" 
+                    + "        } else {\n" 
+                    + "            System.out.println(\"null\");\n" 
+                    + "        }"
                     + "    } \n");
         }
         
@@ -488,11 +491,17 @@ public class GuiBuilder {
             }
         }
         
-        writer.println("    @Override \n"
-                + "    public void initialize(URL url, ResourceBundle rb) { \n"
-                + "        // TODO \n"
-                + "    } \n"
-                + "}");
+        writer.println("    @Override\n" +
+                        "    public void initialize(URL url, ResourceBundle rb) {\n" +
+                        "        // TODO \n" +
+                        "        MainController.startPortThread(this);\n" +
+                        "    }\n" +
+                        "\n" +
+                        "    public void updatePortList(ArrayList<String> portList) {\n" +
+                        "        if (comboBox2 != null) {\n" +
+                        "            comboBox2.getItems().setAll(portList);\n" +
+                        "        }\n" +
+                        "    }\n}");
         writer.close();  
     }
     

@@ -28,6 +28,8 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import java.awt.event.ActionEvent;
 import static java.lang.Thread.sleep;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import jssc.SerialPortEvent;
@@ -47,6 +49,8 @@ public class SerialComm {
     private SerialPort serialPort;
 
     private ArrayList<SerialListener> listener = new ArrayList<>();
+    private static final String[] BAUDRATES = {"38400", "57600"};
+    private static final String[] COMMANDS = {"Ping", "Testing", "Camtest", "Cameras", "Abort", "Prelaunch", "Active", "Reset", "LaunchMacro"};
 
     private static SerialComm instance;
 
@@ -128,14 +132,20 @@ public class SerialComm {
 
     public ArrayList<String> getPorts() {
         ArrayList<String> al = new ArrayList<>();
-        for (String s : jssc.SerialPortList.getPortNames()) {
-            al.add(s);
-        }
+        al.addAll(Arrays.asList(jssc.SerialPortList.getPortNames()));
         return al;
     }
 
     public boolean isOpen() {
         return serialPort != null && serialPort.isOpened();
+    }
+
+    public List<String> getAvailableCommands() {
+        return Arrays.asList(SerialComm.COMMANDS);
+    }
+    
+    public List<String> getAvailableBaudrates() {
+        return Arrays.asList(SerialComm.BAUDRATES);
     }
 
     /*

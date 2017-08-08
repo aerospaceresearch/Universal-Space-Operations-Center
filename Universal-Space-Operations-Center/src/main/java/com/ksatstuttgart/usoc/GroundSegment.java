@@ -59,6 +59,10 @@ public class GroundSegment extends Application{
              */
             ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
 
+            //start the maincontroller and the mail receiver
+            //MainController.getInstance();
+            //MailReceiver.getInstance().connect();
+            
             // JavaFX GUI
             String fxmlFile = "/fxml/MainFrame.fxml";
             URL location = getClass().getResource(fxmlFile);
@@ -80,7 +84,5 @@ public class GroundSegment extends Application{
      */
     public static void main(String[] args) {
         launch(args);
-        MainController.getInstance();
-        MailReceiver.getInstance().connect();
     }
 }

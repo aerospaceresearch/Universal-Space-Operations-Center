@@ -35,15 +35,13 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.gui.SerialPanel;
+import com.ksatstuttgart.usoc.gui.controller.LogController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import javax.swing.JFileChooser;
-import static java.lang.Thread.sleep;
 import static java.lang.Thread.sleep;
 
 /**
@@ -143,15 +141,30 @@ public class MainController {
             public void run() {
                 while (true) {
                     try {
-                        ArrayList<String> ports = new ArrayList<>();
-                        ports.addAll(Arrays.asList(jssc.SerialPortList.getPortNames()));
-                        sp.updatePortList(ports);
+                        sp.updatePortList(SerialComm.getInstance().getPorts());
                         Thread.sleep(500);
                     } catch (InterruptedException ex) {
                     }
                 }
             }
         }.start();
+    }
+    
+    public static void startPortThread(final LogController sp) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        sp.updatePortList(SerialComm.getInstance().getPorts());
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+        };
+        t.setDaemon(true);
+        t.start();
     }
 
     public void clearData() {

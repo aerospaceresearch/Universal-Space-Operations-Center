@@ -4,6 +4,9 @@ import java.net.URL;
 import java.util.ResourceBundle; 
 import javafx.event.ActionEvent; 
 import javafx.fxml.FXML; 
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
+import com.ksatstuttgart.usoc.controller.MainController;
+import java.util.ArrayList;
 import javafx.fxml.Initializable; 
 import javafx.scene.control.ComboBox; 
 
@@ -19,13 +22,8 @@ public class LogController implements Initializable {
     @FXML private ComboBox comboBox3; 
 
     public void setData() { 
-        comboBox1.getItems().clear(); 
-        comboBox2.getItems().clear(); 
-        comboBox3.getItems().clear(); 
-        comboBox1.getItems().addAll("H", "Ha", "Hal", "Hall", "Hallo"); 
-        comboBox2.getItems().addAll("T", "Te", "Tes", "Test"); 
-        comboBox3.getItems().addAll("A", "B", "C"); 
-    } 
+        comboBox3.getItems().setAll("A", "B", "C");
+        comboBox1.getItems().setAll(SerialComm.getInstance().getAvailableCommands());    } 
 
     @FXML 
     private void serialConnect(ActionEvent event) { 
@@ -37,8 +35,11 @@ public class LogController implements Initializable {
     private void serialSendCommand(ActionEvent event) { 
         System.out.println("Send Command button in serial log has been pressed!"); 
         String output = comboBox1.getSelectionModel().getSelectedItem().toString(); 
-        System.out.println(output); 
-    } 
+        if (output != null) {
+            System.out.println(output);
+        } else {
+            System.out.println("null");
+        }    } 
 
     @FXML 
     private void iridiumOpen(ActionEvent event) { 
@@ -60,8 +61,15 @@ public class LogController implements Initializable {
         System.out.println("Reconnect button in iridium log has been pressed!"); 
     } 
 
-    @Override 
-    public void initialize(URL url, ResourceBundle rb) { 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         // TODO 
-    } 
+        MainController.startPortThread(this);
+    }
+
+    public void updatePortList(ArrayList<String> portList) {
+        if (comboBox2 != null) {
+            comboBox2.getItems().setAll(portList);
+        }
+    }
 }
