@@ -23,9 +23,6 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
-import com.ksatstuttgart.usoc.controller.MessageController;
-import com.ksatstuttgart.usoc.data.MailEvent;
-import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -96,25 +93,4 @@ public class MainFrame extends JFrame {
         this.setVisible(true);
     }
     
-    public void updateData(MessageController mc){
-        dp.updateData(mc);
-        gnssPanel.updateData(mc);
-    }
-
-    public void updateIridiumLog(MailEvent e, MessageController mc) {
-        ip.updateData(e, mc);
-    }
-
-    public void updateSerialLog(SerialEvent e) {
-        sp.updateData(e);
-    }
-
-    public void updateIridiumError(String msg) {
-        ip.updateError(msg);
-    }
-
-    public void updateSerialError(String msg) {
-        sp.updateError(msg);
-    }
-
 }

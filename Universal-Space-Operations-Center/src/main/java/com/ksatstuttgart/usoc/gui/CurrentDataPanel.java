@@ -25,6 +25,9 @@ package com.ksatstuttgart.usoc.gui;
 
 import com.ksatstuttgart.usoc.controller.DataModification;
 import com.ksatstuttgart.usoc.controller.MessageController;
+import com.ksatstuttgart.usoc.data.DataSource;
+import com.ksatstuttgart.usoc.data.ErrorEvent;
+import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import java.awt.Font;
@@ -39,7 +42,7 @@ import javax.swing.JPanel;
  * @author Valentin Starlinger
  * @version 1.0
  */
-public class CurrentDataPanel extends JPanel {
+public class CurrentDataPanel extends DataPanel {
 
     private final LineChart batteryChart, thermocoupleChart,
             imuQuaternionChart, pressureChart, timerChart;
@@ -124,7 +127,13 @@ public class CurrentDataPanel extends JPanel {
         );
     }
 
-    public void updateData(MessageController mc) {
+    @Override
+    public void updateData(MessageController mc, USOCEvent e) {
+        
+        //in case this is an error event, ignore it
+        if(e instanceof ErrorEvent){
+            return;
+        }
 
         //go through the data and update the charts
         for (Sensor sensor : mc.getData().getSensors()) {
@@ -196,5 +205,4 @@ public class CurrentDataPanel extends JPanel {
             }
         }
     }
-
 }

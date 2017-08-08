@@ -37,6 +37,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
+import com.ksatstuttgart.usoc.data.DataSource;
+import com.ksatstuttgart.usoc.data.ErrorEvent;
+import com.ksatstuttgart.usoc.data.USOCEvent;
 import javax.swing.JTextField;
 
 /**
@@ -47,7 +50,7 @@ import javax.swing.JTextField;
  * @author Valentin Starlinger
  * @version 1.0
  */
-public class IridiumPanel extends JPanel {
+public class IridiumPanel extends DataPanel {
 
     private final LogPanel lp;
     private final JLabel lastSubject, lastFrom, lastFilename, lastTimestamp;
@@ -55,6 +58,7 @@ public class IridiumPanel extends JPanel {
     private JTextField lastMessages;
 
     public IridiumPanel() {
+        super();
 
         lp = new IridiumLogPanel();
 
@@ -82,7 +86,6 @@ public class IridiumPanel extends JPanel {
         infoPanel.add(received);
         infoPanel.add(lastTimestamp);
 
-
         JLabel addFile = new JLabel("Add File: ");
         openButton = new JButton("Open");
         openButton.addActionListener(new AddFileListener());
@@ -93,16 +96,16 @@ public class IridiumPanel extends JPanel {
         clearData.addActionListener(new ClearDataListener());
         infoPanel.add(clearData);
         infoPanel.add(new JLabel());
-        
+
         infoPanel.add(new JLabel("#Messages on reconnect: "));
         lastMessages = new JTextField("0");
         lastMessages.addActionListener(new MessageNumberListener());
         infoPanel.add(lastMessages);
-        
+
         exportCSV = new JButton("exportCSV");
         exportCSV.addActionListener(new ExportCSVListener());
         infoPanel.add(exportCSV);
-        
+
         reconnect = new JButton("Reconnect");
         reconnect.addActionListener(new ReconnectListener());
         infoPanel.add(reconnect);
@@ -114,21 +117,23 @@ public class IridiumPanel extends JPanel {
 
     }
 
-    public void updateData(MailEvent e, MessageController mc) {
-        String s = "";
-        for (Address from : e.getFrom()) {
-            s += "," + from.toString();
+    @Override
+    public void updateData(MessageController mc, USOCEvent ue) {
+        if (ue instanceof MailEvent) {
+            MailEvent e = (MailEvent) ue;
+            String s = "";
+            for (Address from : e.getFrom()) {
+                s += "," + from.toString();
+            }
+            lastFrom.setText(s.substring(1));
+            lastSubject.setText(e.getSubject());
+            lastFilename.setText(e.getFilename());
+            lastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());
+
+            lp.updateData(mc.getData().toString(), e.getTimeStamp());
+        } else if (ue instanceof ErrorEvent && DataSource.MAIL == ue.getDataSource()){
+            lp.updateError(((ErrorEvent)ue).getErrorMessage());
         }
-        lastFrom.setText(s.substring(1));
-        lastSubject.setText(e.getSubject());
-        lastFilename.setText(e.getFilename());
-        lastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());
-
-        lp.updateData(mc.getData().toString(), e.getTimeStamp());
-    }
-
-    public void updateError(String msg) {
-        lp.updateError(msg);
     }
 
     private class ReconnectListener implements ActionListener {
@@ -146,20 +151,20 @@ public class IridiumPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainController.getInstance().addIridiumFile();
+            MainController.getInstance().openBinaryFile();
         }
 
     }
-    
+
     private class ClearDataListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            MainController.getInstance().clearMessageData();
+            MainController.getInstance().clearData();
         }
 
     }
-    
+
     private class ExportCSVListener implements ActionListener {
 
         @Override
@@ -173,10 +178,10 @@ public class IridiumPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            try{
+            try {
                 int number = Integer.parseInt(lastMessages.getText());
                 //MailReceiver.getInstance().setReconnectMessageNumber(number);
-            }catch(Exception ex){
+            } catch (Exception ex) {
                 //do nothing
                 System.out.println("parsing error");
             }

@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 KSat e.V.
+ * Copyright 2017 KSat Stuttgart e.V..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,51 +27,9 @@ package com.ksatstuttgart.usoc.data;
  *
  * @author valentinstarlinger
  */
-public class SerialEvent extends USOCEvent{
-    
-    private String msg;
-    private String port;
-    private long timeStamp;
-
-    public SerialEvent(String msg, String port, long timeStamp, DataSource dataSource){
-        super(dataSource);
-        this.msg = msg;
-        this.port = port;
-    }
-
-    public long getTimeStamp() {
-        return timeStamp;
-    }
-
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-    
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-    @Override
-    public DataSource getDataSource() {
-        return this.dataSource;
-    }
-
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
-    
-    
+public enum DataSource {
+    SERIAL,
+    MAIL,
+    FILE,
+    ALL;
 }

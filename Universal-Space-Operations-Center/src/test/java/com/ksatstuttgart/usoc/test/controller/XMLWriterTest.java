@@ -50,7 +50,9 @@ import static org.junit.Assert.*;
  * @version 1.0
  */
 public class XMLWriterTest {
-    
+        
+    public static final String TESTPROTOCOLPATH = "tests"+File.separator+"protocols";
+
     public XMLWriterTest() {
     }
     
@@ -117,7 +119,7 @@ public class XMLWriterTest {
             String filename = "testProtocol.xml";
             XMLWriter.getInstance().saveMessageStructure(sbd, filename);
             
-            BufferedReader br = new BufferedReader(new FileReader("protocols"+File.separator+filename));
+            BufferedReader br = new BufferedReader(new FileReader(TESTPROTOCOLPATH+File.separator+filename));
             
             String result = "";
             String nextLine;
@@ -125,22 +127,21 @@ public class XMLWriterTest {
                 result+=nextLine;
             }
             
-            String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-"<ns2:sbd340 xmlns:ns2=\"usoc/\" protocol=\"NONE\">\n" +
-"    <data>\n" +
-"        <sensor sensorfrequency=\"1.0\" sensorpoints=\"1\" name=\"testName\" type=\"PRESSURE\">\n" +
-"            <var dataname=\"testSensorData\" datatype=\"FLOAT32\" frequency=\"1.0\" isLittleEndian=\"false\" numpoints=\"1\" start=\"40\" unit=\"\"/>\n" +
-"        </sensor>\n" +
-"    </data>\n" +
-"    <header>\n" +
-"        <metadata name=\"\" type=\"TIME\">\n" +
-"            <var dataname=\"testMetaData\" datatype=\"FLOAT32\" frequency=\"1.0\" isLittleEndian=\"false\" numpoints=\"1\" start=\"40\" unit=\"\"/>\n" +
-"        </metadata>\n" +
-"    </header>\n" +
+            String expResult = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>" +
+"<ns2:sbd340 xmlns:ns2=\"usoc/\" protocol=\"NONE\">" +
+"    <data>" +
+"        <sensor sensorfrequency=\"1.0\" sensorpoints=\"1\" name=\"testName\" type=\"PRESSURE\">" +
+"            <var dataname=\"testSensorData\" datatype=\"FLOAT32\" frequency=\"1.0\" isLittleEndian=\"false\" numpoints=\"1\" start=\"40\" unit=\"\"/>" +
+"        </sensor>" +
+"    </data>" +
+"    <header>" +
+"        <metadata name=\"\" type=\"TIME\">" +
+"            <var dataname=\"testMetaData\" datatype=\"FLOAT32\" frequency=\"1.0\" isLittleEndian=\"false\" numpoints=\"1\" start=\"40\" unit=\"\"/>" +
+"        </metadata>" +
+"    </header>" +
 "</ns2:sbd340>";
             
-            //TODO: remove this
-            assertEquals(result, result);
+            assertEquals(expResult, result);
         } catch (IOException ex) {
         }
     }

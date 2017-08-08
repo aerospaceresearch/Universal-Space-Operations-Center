@@ -24,9 +24,13 @@
 package com.ksatstuttgart.usoc.gui.worldwind;
 
 import com.ksatstuttgart.usoc.controller.MessageController;
+import com.ksatstuttgart.usoc.data.ErrorEvent;
+import com.ksatstuttgart.usoc.data.SerialEvent;
+import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.data.message.dataPackage.SensorType;
+import com.ksatstuttgart.usoc.gui.DataPanel;
 import gov.nasa.worldwind.Model;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -68,7 +72,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author valentinstarlinger
  */
-public class GNSSPanel extends JPanel {
+public class GNSSPanel extends DataPanel {
 
     WorldWindowGLCanvas wwp_big, wwp_topView, wwp_sideView;
     BasicOrbitView bov_big, bov_topView, bov_sideView;
@@ -83,7 +87,8 @@ public class GNSSPanel extends JPanel {
     private static final boolean OFFLINEMODE = true;
 
     public GNSSPanel() {
-
+        super();
+        
         boolean networkUnavailable = WorldWind.getNetworkStatus().isNetworkUnavailable();
         //if network is unavailable or usenetwork is false go into offline mode
         //true to use network false otherwise
@@ -199,9 +204,17 @@ public class GNSSPanel extends JPanel {
      * view
      *
      * @param controller - MessageController with the updated data
+     * @param e - USOCEvent
      */
-    public void updateData(MessageController controller) {
+    @Override
+    public void updateData(MessageController controller, USOCEvent e) {
 
+        //only update for iridium messages at the moment/ignore error and serial 
+        //events
+        if(e instanceof SerialEvent|| e instanceof ErrorEvent){
+            return;
+        }
+        
         double highestGlobalAlt = 0, highestLastAlt = 0;
         int numPoints = 0;
 
