@@ -1,4 +1,5 @@
 <?import javafx.scene.chart.*?> 
+<?import javafx.scene.control.*?> 
 <?import javafx.scene.layout.*?> 
 
 <GridPane> 

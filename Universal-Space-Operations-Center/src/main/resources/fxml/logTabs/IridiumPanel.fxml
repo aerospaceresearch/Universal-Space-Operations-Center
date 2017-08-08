@@ -33,7 +33,7 @@
         <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <Button text="Open" GridPane.columnIndex="1" GridPane.rowIndex="4" />
         <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <TextField GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <TextField text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
         <Button text="Reconnect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="7" />
         
       </children>

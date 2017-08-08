@@ -1,5 +1,11 @@
 <?import javafx.scene.chart.*?> 
+<?import javafx.scene.control.*?> 
 <?import javafx.scene.layout.*?> 
+
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.LogController" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
+   <tabs> 
+    <Tab text="Graphs"> 
+      <content> 
 
 <GridPane> 
   <columnConstraints> 
@@ -62,3 +68,12 @@
     </LineChart>
   </children> 
 </GridPane>
+      </content> 
+    </Tab> 
+    <Tab text="GNSS 3D View"> 
+      <content> 
+      </content> 
+    </Tab> 
+  </tabs> 
+</TabPane> 
+

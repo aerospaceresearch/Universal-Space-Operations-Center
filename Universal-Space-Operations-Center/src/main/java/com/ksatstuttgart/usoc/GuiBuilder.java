@@ -157,6 +157,7 @@ public class GuiBuilder {
         Properties config = ConfigHandler.getAllValues(configPath);
         int numberOfCharts = ConfigHandler.countItems("chartTitle", configPath);
         int numberOfRows;
+        boolean GNSS3dView = Boolean.parseBoolean(config.getProperty("GNSS3dView"));
         String path = "src/main/resources/";
         
         // Initializes number of rows depending on required number of charts
@@ -169,7 +170,16 @@ public class GuiBuilder {
         // Writes data in ChartPanel.fxml file
         PrintWriter writer = new PrintWriter(path + filePath);
         writer.println("<?import javafx.scene.chart.*?> \n"
+                + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
+        
+        if (GNSS3dView) {
+            writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
+                    + "   <tabs> \n"
+                    + "    <Tab text=\"Graphs\"> \n"
+                    + "      <content> \n");
+        }
+        
         writer.println("<GridPane> \n"
                 + "  <columnConstraints> \n"
                 + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
@@ -198,6 +208,18 @@ public class GuiBuilder {
         }
         writer.println("  </children> \n"
                 + "</GridPane>");
+        
+        if (GNSS3dView) {
+            writer.println("      </content> \n"
+                    + "    </Tab> \n"
+                    + "    <Tab text=\"GNSS 3D View\"> \n"
+                    + "      <content> \n"
+                    + "      </content> \n"
+                    + "    </Tab> \n"
+                    + "  </tabs> \n"
+                    + "</TabPane> \n");
+        }
+
         writer.close();      
 
         // Prints status update
@@ -225,7 +247,9 @@ public class GuiBuilder {
         
         // Writes data in LogPanel.fxml file
         PrintWriter writer = new PrintWriter(path + filePath);
-        writer.println("<?import javafx.geometry.*?> \n"
+        writer.println("<?import java.lang.*?> \n"
+                + "<?import javafx.geometry.*?> \n"
+                + "<?import javafx.collections.*?> \n"
                 + "<?import javafx.scene.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
@@ -402,7 +426,8 @@ public class GuiBuilder {
                 + "import java.util.ResourceBundle; \n"
                 + "import javafx.event.ActionEvent; \n"
                 + "import javafx.fxml.FXML; \n"
-                + "import javafx.fxml.Initializable; \n");
+                + "import javafx.fxml.Initializable; \n"
+                + "import javafx.scene.control.ComboBox; \n");
         writer.println("/** \n"
                 + " * \n"
                 + " * @author Victor \n"
@@ -410,17 +435,43 @@ public class GuiBuilder {
         writer.println("public class LogController implements Initializable { \n");
         
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
+            writer.println("    @FXML private ComboBox comboBox1; \n"
+                    + "    @FXML private ComboBox comboBox2; \n"
+                    + "    @FXML private ComboBox comboBox3; \n\n"
+                    + "    public void setData() { \n"
+                    + "        comboBox1.getItems().clear(); \n"
+                    + "        comboBox2.getItems().clear(); \n"
+                    + "        comboBox3.getItems().clear(); \n"
+                    + "        comboBox1.getItems().addAll(\"H\", \"Ha\", \"Hal\", \"Hall\", \"Hallo\"); \n"
+                    + "        comboBox2.getItems().addAll(\"T\", \"Te\", \"Tes\", \"Test\"); \n"
+                    + "        comboBox3.getItems().addAll(\"A\", \"B\", \"C\"); \n"
+                    + "    } \n");
             writer.println("    @FXML \n"
                     + "    private void serialConnect(ActionEvent event) { \n"
                     + "        System.out.println(\"Connect button in serial log has been pressed!\"); \n"
-                    + "    } \n\n"
-                    + "    @FXML \n"
+                    + "        setData(); \n"
+                    + "    } \n");
+            writer.println("    @FXML \n"
                     + "    private void serialSendCommand(ActionEvent event) { \n"
                     + "        System.out.println(\"Send Command button in serial log has been pressed!\"); \n"
+                    + "        String output = comboBox1.getSelectionModel().getSelectedItem().toString(); \n"
+                    + "        System.out.println(output); \n"
                     + "    } \n");
         }
         
         if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
+            writer.println("    @FXML \n"
+                    + "    private void iridiumOpen(ActionEvent event) { \n"
+                    + "        System.out.println(\"Open button in iridium log has been pressed!\"); \n"
+                    + "    } \n");
+            writer.println("    @FXML \n"
+                    + "    private void iridiumClearData(ActionEvent event) { \n"
+                    + "        System.out.println(\"Clear Data button in iridium log has been pressed!\"); \n"
+                    + "    } \n");
+            writer.println("    @FXML \n"
+                    + "    private void iridiumExportCSV(ActionEvent event) { \n"
+                    + "        System.out.println(\"Export CSV button in iridium log has been pressed!\"); \n"
+                    + "    } \n");
             writer.println("    @FXML \n"
                     + "    private void iridiumReconnect(ActionEvent event) { \n"
                     + "        System.out.println(\"Reconnect button in iridium log has been pressed!\"); \n"
