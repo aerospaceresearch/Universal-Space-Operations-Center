@@ -409,7 +409,7 @@ public class ConfigHandler {
             GuiBuilder.chartControlBuilder("gui/controller/ChartController.java", path);
             GuiBuilder.logBuilder("fxml/LogPanel.fxml", path);
             GuiBuilder.logControlBuilder("gui/controller/LogController.java", path);
-            GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
+            //GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
             GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             
             System.out.println("FXML has been reseted and regenerated completely.");
@@ -437,7 +437,7 @@ public class ConfigHandler {
             }
             // Checks if STATE PROPERTIES has been modified since last compilation
             if (stateMod) {
-                GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
+                //GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
                 GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             }
             rebuildGui = true;

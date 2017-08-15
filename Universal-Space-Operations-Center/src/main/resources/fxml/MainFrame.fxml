@@ -27,10 +27,10 @@
           </Menu> 
         </menus> 
       </MenuBar> 
-   </top> 
+   </top>
 
-   <center> 
-      <fx:include source = "/fxml/ChartPanel.fxml" /> 
+   <center>
+       <fx:include source = "/fxml/ChartPanel.fxml" />
    </center> 
 
    <right> 

@@ -241,13 +241,13 @@ public class GuiBuilder {
                 + "<?import javafx.scene.layout.*?> \n");
         
         if (GNSS3dView) {
-            writer.println("<TabPane prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
+            writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.ChartController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
                     + "   <tabs> \n"
                     + "    <Tab text=\"Graphs\"> \n"
                     + "      <content> \n");
         }
         
-        writer.println("<GridPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.ChartController\"> \n"
+        writer.println("<GridPane> \n"
                 + "  <columnConstraints> \n"
                 + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
                 + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
