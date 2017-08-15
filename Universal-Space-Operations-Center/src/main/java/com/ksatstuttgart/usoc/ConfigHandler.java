@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
+import javafx.stage.Stage;
  
 /**
  * This class communicates with the properties file and
@@ -274,7 +275,9 @@ public class ConfigHandler {
         int numberOfBoxes = countItems("boxTitle", path);
         boolean stateMod = false;
         
-        if (countItems("boxTitle", path) != countItems("boxTitle", pathMod)) {
+        boolean statePanel = valueMod("statePanel", path, pathMod);
+        
+        if (countItems("boxTitle", path) != countItems("boxTitle", pathMod) || statePanel) {
             stateMod = true;
         }
         
@@ -299,7 +302,6 @@ public class ConfigHandler {
         
         return stateMod;
     }
-    
     
     
     
@@ -387,10 +389,11 @@ public class ConfigHandler {
      * 
      * @param path
      * @param pathMod
+     * @param stage
      * @return 
      * @throws java.io.IOException 
     */    
-    public static boolean rebuildGui(String path, String pathMod) throws IOException {
+    public static boolean rebuildGui(String path, String pathMod, Stage stage) throws IOException {
             
         Properties config = getAllValues(path);
         boolean experimentNameMod = experimentNameMod(path, pathMod);
@@ -401,10 +404,12 @@ public class ConfigHandler {
                 
         // Regenerats the entire GUI if RESET is set to true
         if (Boolean.parseBoolean(config.getProperty("RESET"))) {
-            GuiBuilder.setExperimentName();
+            GuiBuilder.setExperimentName(stage, "config/config.properties");
             GuiBuilder.chartBuilder("fxml/ChartPanel.fxml", path);
+            GuiBuilder.chartControlBuilder("gui/controller/ChartController.java", path);
             GuiBuilder.logBuilder("fxml/LogPanel.fxml", path);
             GuiBuilder.logControlBuilder("gui/controller/LogController.java", path);
+            GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
             GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             
             System.out.println("FXML has been reseted and regenerated completely.");
@@ -418,11 +423,12 @@ public class ConfigHandler {
             
             // Checks if 'experimentName' has been modified since last compilation
             if (experimentNameMod) {
-                GuiBuilder.setExperimentName();
+                GuiBuilder.setExperimentName(stage, "config/config.properties");
             }
             // Checks if CHART PROPERTIES has been modified since last compilation
             if (chartMod) {
                 GuiBuilder.chartBuilder("fxml/ChartPanel.fxml", path);
+                GuiBuilder.chartControlBuilder("gui/controller/ChartController.java", path);
             }
             // Checks if LOG PROPERTIES has been modified since last compilation
             if (logMod) {
@@ -431,6 +437,7 @@ public class ConfigHandler {
             }
             // Checks if STATE PROPERTIES has been modified since last compilation
             if (stateMod) {
+                GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
                 GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             }
             rebuildGui = true;

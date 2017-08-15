@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?> 
 <?import javafx.scene.layout.*?> 
 
-<GridPane> 
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.ChartController"> 
   <columnConstraints> 
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" /> 
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" /> 
@@ -11,7 +11,7 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
   <children>
-    <LineChart title="Chart 1" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <LineChart fx:id="lineChart1" title="Chart 1" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
@@ -19,7 +19,7 @@
         <NumberAxis label="Current [A]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Chart 2" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <LineChart fx:id="lineChart2" title="Chart 2" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 

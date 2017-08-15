@@ -29,6 +29,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Properties;
+import javafx.stage.Stage;
 
 /**
  * This class builds the GUI FXML structure based on input 
@@ -47,10 +48,15 @@ public class GuiBuilder {
     
     /**
      * 
+     * @param stage
+     * @param path
      * @return 
+     * @throws java.io.IOException 
     */  
-    public static int setExperimentName() {
-        System.out.println("setExperimentName activated!");
+    public static int setExperimentName(Stage stage, String path) throws IOException {
+        System.out.println("Experiment name has been updated!");
+        Properties config = ConfigHandler.getAllValues(path);
+        stage.setTitle(config.getProperty("experimentName"));
         
         return 0;
     }
@@ -142,6 +148,67 @@ public class GuiBuilder {
 
     
     
+    /**
+     * Method builds the FXML structure of the charts generically
+     * in a scrollable GridPane with two columns
+     * 
+     * @param filePath
+     * @param configPath
+     * @throws java.io.IOException
+    */  
+    public static void mainFrameBuilder(String filePath, String configPath) throws IOException {
+    
+        // Declares necessary parameters
+        Properties config = ConfigHandler.getAllValues(configPath);
+        boolean statePanel = Boolean.parseBoolean(config.getProperty("statePanel"));
+        String path = "src/main/resources/";
+        // Writes data in ChartPanel.fxml file
+        PrintWriter writer = new PrintWriter(path + filePath);
+        
+        writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n");
+        writer.println("<?import javafx.scene.text.*?> \n"
+                + "<?import java.lang.*?> \n"
+                + "<?import javafx.scene.control.*?> \n"
+                + "<?import javafx.scene.layout.*?> \n");
+        writer.println("<BorderPane maxHeight=\"1.7976931348623157E308\" maxWidth=\"1.7976931348623157E308\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"700.0\" prefWidth=\"1180.0\" xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogController\"> \n\n"
+                + "   <top> \n"
+                + "      <MenuBar BorderPane.alignment=\"CENTER\"> \n"
+                + "        <menus> \n"
+                + "          <Menu mnemonicParsing=\"false\" text=\"File\"> \n"
+                + "            <items> \n"
+                + "              <MenuItem mnemonicParsing=\"false\" text=\"Close\" /> \n"
+                + "            </items> \n"
+                + "          </Menu> \n"
+                + "          <Menu mnemonicParsing=\"false\" text=\"Edit\"> \n"
+                + "            <items> \n"
+                + "              <MenuItem mnemonicParsing=\"false\" text=\"Delete\" /> \n"
+                + "            </items> \n"
+                + "          </Menu> \n"
+                + "          <Menu mnemonicParsing=\"false\" text=\"Help\"> \n"
+                + "            <items> \n"
+                + "              <MenuItem mnemonicParsing=\"false\" text=\"About\" /> \n"
+                + "            </items> \n"
+                + "          </Menu> \n"
+                + "        </menus> \n"
+                + "      </MenuBar> \n"
+                + "   </top> \n");
+        if (statePanel) {
+            writer.println("   <left> \n"
+                    + "      <fx:include source = \"/fxml/CurrentStatePanel.fxml\" /> \n"
+                    + "   </left> \n");
+        }
+        writer.println("   <center> \n"
+                + "      <fx:include source = \"/fxml/ChartPanel.fxml\" /> \n"
+                + "   </center> \n\n"
+                + "   <right> \n"
+                + "      <fx:include source = \"/fxml/LogPanel.fxml\" /> \n"
+                + "   </right> \n\n"
+                + "</BorderPane> \n");
+        
+        writer.close();
+    }
+    
+    
     
     /**
      * Method builds the FXML structure of the charts generically
@@ -174,13 +241,13 @@ public class GuiBuilder {
                 + "<?import javafx.scene.layout.*?> \n");
         
         if (GNSS3dView) {
-            writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
+            writer.println("<TabPane prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
                     + "   <tabs> \n"
                     + "    <Tab text=\"Graphs\"> \n"
                     + "      <content> \n");
         }
         
-        writer.println("<GridPane> \n"
+        writer.println("<GridPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.ChartController\"> \n"
                 + "  <columnConstraints> \n"
                 + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
                 + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
@@ -195,7 +262,7 @@ public class GuiBuilder {
         writer.println("  <children>");
         for (int counter=1; counter<=numberOfCharts; counter++) {
             int[] position = getGridPosition(counter);
-            writer.println("    <LineChart title=\"" + config.getProperty("chartTitle[" + counter + "]")
+            writer.println("    <LineChart fx:id=\"lineChart" + counter + "\" title=\"" + config.getProperty("chartTitle[" + counter + "]")
                     + "\" GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\""
                     + position[1] + "\">");  
             writer.println("      <xAxis> \n"
@@ -226,7 +293,59 @@ public class GuiBuilder {
         System.out.println("Chart panel has been updated!");     
     }
     
+        
     
+    /**
+     * Method writes the controller of the chart panel generically
+     * depending on input in the properties file
+     * 
+     * @param filePath
+     * @param configPath
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+    */  
+    public static void chartControlBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
+
+        // Declares necessary parameters
+        Properties config = ConfigHandler.getAllValues(configPath);
+        int numberOfCharts = ConfigHandler.countItems("chartTitle", configPath);
+        String path = "src/main/java/com/ksatstuttgart/usoc/";
+        
+        // Writes data in LogController.java file
+        PrintWriter writer = new PrintWriter(path + filePath);
+        writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
+        writer.println("import java.net.URL; \n"
+                + "import java.util.ResourceBundle; \n"
+                + "import javafx.fxml.Initializable; \n"
+                + "import javafx.scene.chart.LineChart; \n"
+                + "import javafx.scene.chart.XYChart; \n");
+        writer.println("/** \n"
+                + " * \n"
+                + " * @author Victor \n"
+                + " */ \n");
+        writer.println("public class ChartController implements Initializable { \n");
+        for (int i=1; i<=numberOfCharts; i++) {
+            writer.println("    public LineChart<Integer, Integer> lineChart" + i + ";");
+        }
+        writer.println("\n    public void updateData() {");
+        for (int i=1; i<=numberOfCharts; i++) {
+            writer.println("        lineChart" + i + ".getXAxis().setAutoRanging(true); \n"
+                    + "        lineChart" + i + ".getYAxis().setAutoRanging(true); \n"
+                    + "        XYChart.Series series" + i + " = new XYChart.Series<>(); \n"
+                    + "        series" + i + ".getData().add(new XYChart.Data<>(5, 23)); \n"
+                    + "        series" + i + ".getData().add(new XYChart.Data<>(6, 15)); \n"
+                    + "        lineChart" + i + ".getData().add(series" + i + "); \n");
+        }
+        writer.println("    } \n");
+        writer.println("    @Override \n"
+                + "    public void initialize(URL url, ResourceBundle rb) { \n"
+                + "        // TODO");
+        writer.println("    } \n"
+                + "}");
+        
+        writer.close();  
+    }
+   
     
     
     /**
@@ -430,7 +549,8 @@ public class GuiBuilder {
                 + "import com.ksatstuttgart.usoc.controller.MainController;\n"
                 + "import java.util.ArrayList;\n"
                 + "import javafx.fxml.Initializable; \n"
-                + "import javafx.scene.control.ComboBox; \n");
+                + "import javafx.scene.control.ComboBox; \n"
+                + "import javafx.scene.control.TextArea; \n");
         writer.println("/** \n"
                 + " * \n"
                 + " * @author Victor \n"
@@ -440,25 +560,33 @@ public class GuiBuilder {
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
             writer.println("    @FXML private ComboBox comboBox1; \n"
                     + "    @FXML private ComboBox comboBox2; \n"
-                    + "    @FXML private ComboBox comboBox3; \n\n"
+                    + "    @FXML private ComboBox comboBox3; \n"
+                    + "    @FXML private TextArea serialTextArea; \n\n"
                     + "    public void setData() { \n"
-                    + "        comboBox3.getItems().setAll(\"A\", \"B\", \"C\");\n"
-                    + "        comboBox1.getItems().setAll(SerialComm.getInstance().getAvailableCommands());"
+                    + "        comboBox3.getItems().setAll(\"A\", \"B\", \"C\"); \n"
+                    + "        //comboBox1.getItems().setAll(SerialComm.getInstance().getAvailableCommands()); \n"
+                    + "    } \n");
+            writer.println("    public void updatePortList(ArrayList<String> portList) { \n"
+                    + "        if (comboBox2 != null) { \n"
+                    + "            comboBox2.getItems().setAll(portList); \n"
+                    + "        } \n"
+                    + "    } \n");
+            writer.println("    public void serialWriteLog() { \n"
+                    + "        serialTextArea.setText(\"Test\"); \n"
                     + "    } \n");
             writer.println("    @FXML \n"
                     + "    private void serialConnect(ActionEvent event) { \n"
                     + "        System.out.println(\"Connect button in serial log has been pressed!\"); \n"
-                    + "        setData(); \n"
                     + "    } \n");
             writer.println("    @FXML \n"
                     + "    private void serialSendCommand(ActionEvent event) { \n"
                     + "        System.out.println(\"Send Command button in serial log has been pressed!\"); \n"
                     + "        String output = comboBox1.getSelectionModel().getSelectedItem().toString(); \n"
-                    + "        if (output != null) {\n" 
-                    + "            System.out.println(output);\n" 
-                    + "        } else {\n" 
-                    + "            System.out.println(\"null\");\n" 
-                    + "        }"
+                    + "        if (output != null) { \n" 
+                    + "            System.out.println(output); \n" 
+                    + "        } else { \n" 
+                    + "            System.out.println(\"null\"); \n" 
+                    + "        } \n"
                     + "    } \n");
         }
         
@@ -491,19 +619,17 @@ public class GuiBuilder {
             }
         }
         
-        writer.println("    @Override\n" +
-                        "    public void initialize(URL url, ResourceBundle rb) {\n" +
-                        "        // TODO \n" +
-                        "        MainController.startPortThread(this);\n" +
-                        "    }\n" +
-                        "\n" +
-                        "    public void updatePortList(ArrayList<String> portList) {\n" +
-                        "        if (comboBox2 != null) {\n" +
-                        "            comboBox2.getItems().setAll(portList);\n" +
-                        "        }\n" +
-                        "    }\n}");
+        writer.println("    @Override \n"
+                + "    public void initialize(URL url, ResourceBundle rb) { \n"
+                + "        // TODO \n"
+                + "        MainController.startPortThread(this); \n"
+                + "        //setData(); \n"
+                + "    } \n"
+                + "}");
+        
         writer.close();  
     }
+
     
     
     /**

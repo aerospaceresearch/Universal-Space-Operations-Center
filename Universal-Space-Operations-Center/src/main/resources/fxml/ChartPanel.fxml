@@ -2,12 +2,12 @@
 <?import javafx.scene.control.*?> 
 <?import javafx.scene.layout.*?> 
 
-<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.LogController" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
+<TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
    <tabs> 
     <Tab text="Graphs"> 
       <content> 
 
-<GridPane> 
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.ChartController"> 
   <columnConstraints> 
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" /> 
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" /> 
@@ -18,7 +18,7 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
   <children>
-    <LineChart title="Chart 1" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    <LineChart fx:id="lineChart1" title="Chart 1" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
@@ -26,7 +26,7 @@
         <NumberAxis label="Current [A]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Chart 2" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <LineChart fx:id="lineChart2" title="Chart 2" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
@@ -34,7 +34,7 @@
         <NumberAxis label="Power [W]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Chart 3" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    <LineChart fx:id="lineChart3" title="Chart 3" GridPane.columnIndex="0" GridPane.rowIndex="1">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
@@ -42,7 +42,7 @@
         <NumberAxis label="Height [m]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Chart 4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+    <LineChart fx:id="lineChart4" title="Chart 4" GridPane.columnIndex="1" GridPane.rowIndex="1">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
@@ -50,7 +50,7 @@
         <NumberAxis label="Current [A]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Chart 5" GridPane.columnIndex="0" GridPane.rowIndex="2">
+    <LineChart fx:id="lineChart5" title="Chart 5" GridPane.columnIndex="0" GridPane.rowIndex="2">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 
@@ -58,7 +58,7 @@
         <NumberAxis label="Power [W]" side="LEFT" /> 
       </yAxis> 
     </LineChart>
-    <LineChart title="Chart 6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+    <LineChart fx:id="lineChart6" title="Chart 6" GridPane.columnIndex="1" GridPane.rowIndex="2">
       <xAxis> 
         <CategoryAxis label="Time [s]" side="BOTTOM" /> 
       </xAxis> 

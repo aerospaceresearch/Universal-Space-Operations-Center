@@ -47,6 +47,7 @@ import javafx.stage.Stage;
 public class GroundSegment extends Application{
 
     /**
+     * @param stage
      * @param args the command line arguments
      */
     @Override
@@ -57,7 +58,7 @@ public class GroundSegment extends Application{
              * Checks whether a regeneration of the FXML structure is necessary
              * and carries it out in case it is
              */
-            ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties");
+            ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties", stage);
 
             //start the maincontroller and the mail receiver
             //MainController.getInstance();
