@@ -298,6 +298,9 @@ public class GuiBuilder {
         PrintWriter writer = new PrintWriter(path + filePath);
         writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
         writer.println("import java.net.URL; \n"
+                + "import com.ksatstuttgart.usoc.controller.MainController;\n"
+                + "import com.ksatstuttgart.usoc.controller.MessageController;\n"
+                + "import com.ksatstuttgart.usoc.data.USOCEvent;\n"
                 + "import java.util.ResourceBundle; \n"
                 + "import javafx.fxml.Initializable; \n"
                 + "import javafx.scene.chart.LineChart; \n"
@@ -306,7 +309,7 @@ public class GuiBuilder {
                 + " * \n"
                 + " * @author Victor \n"
                 + " */ \n");
-        writer.println("public class ChartController implements Initializable { \n");
+        writer.println("public class ChartController extends DataController implements Initializable { \n");
         for (int i = 1; i <= numberOfCharts; i++) {
             writer.println("    public LineChart<Integer, Integer> lineChart" + i + ";");
         }
@@ -322,8 +325,14 @@ public class GuiBuilder {
         writer.println("    } \n");
         writer.println("    @Override \n"
                 + "    public void initialize(URL url, ResourceBundle rb) { \n"
-                + "        // TODO");
+                + "        // TODO\n"
+                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());");
         writer.println("    } \n"
+                + "    @Override\n"
+                + "    public void updateData(MessageController msgController, USOCEvent e) {\n"
+                + "        updateData();\n"
+                + "    }\n"
+                + "\n"
                 + "}");
 
         writer.close();

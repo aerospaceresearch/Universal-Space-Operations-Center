@@ -1,6 +1,9 @@
 package com.ksatstuttgart.usoc.gui.controller; 
 
 import java.net.URL; 
+import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.controller.MessageController;
+import com.ksatstuttgart.usoc.data.USOCEvent;
 import java.util.ResourceBundle; 
 import javafx.fxml.Initializable; 
 import javafx.scene.chart.LineChart; 
@@ -11,7 +14,7 @@ import javafx.scene.chart.XYChart;
  * @author Victor 
  */ 
 
-public class ChartController implements Initializable { 
+public class ChartController extends DataController implements Initializable { 
 
     public LineChart<Integer, Integer> lineChart1;
     public LineChart<Integer, Integer> lineChart2;
@@ -68,5 +71,10 @@ public class ChartController implements Initializable {
     @Override 
     public void initialize(URL url, ResourceBundle rb) { 
         // TODO
+        MainController.getInstance().addDataUpdateListener(new UpdateListener());
     } 
+    @Override
+    public void updateData(MessageController msgController, USOCEvent e) {
+        updateData();
+    }
 }
