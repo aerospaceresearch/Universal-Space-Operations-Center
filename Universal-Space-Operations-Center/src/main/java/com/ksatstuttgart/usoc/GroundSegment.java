@@ -60,8 +60,8 @@ public class GroundSegment extends Application{
              */
             ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties", stage);
 
-            //start the maincontroller and the mail receiver
-            //MainController.getInstance();
+            //Setting the stage for the MainController
+            MainController.getInstance().setStage(stage);
             //MailReceiver.getInstance().connect();
             
             // JavaFX GUI

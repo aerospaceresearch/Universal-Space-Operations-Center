@@ -43,6 +43,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import static java.lang.Thread.sleep;
+import java.util.List;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  *
@@ -53,6 +56,7 @@ public class MainController {
     private final MessageController messageController;
 
     private static MainController instance;
+    private Stage stage;
 
     private ArrayList<DataUpdateListener> listeners;
 
@@ -76,6 +80,14 @@ public class MainController {
         MailReceiver.getInstance().addMailUpdateListener(new MailListener());
         SerialComm.getInstance().addSerialListener(new RXListener());
     }
+    
+    public void setStage(Stage stage){
+        this.stage = stage;
+    }
+    
+    public Stage getStage(){
+        return this.stage;
+    }
 
     public MessageController getMessageController() {
         return this.messageController;
@@ -96,11 +108,13 @@ public class MainController {
     }
 
     public void exportCSV() {
-        JFileChooser jf = new JFileChooser();
-        int returnVal = jf.showSaveDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Export .csv");
+        
+        File selectedFile = fc.showSaveDialog(stage);
+        if (selectedFile != null) {
             try {
-                ExportController.saveDataAsCSV(messageController.getData(), jf.getSelectedFile(), false);
+                ExportController.saveDataAsCSV(messageController.getData(), selectedFile, false);
             } catch (IOException ex) {
                 System.out.println("something wrong happend when saving the file");
             }
@@ -108,10 +122,15 @@ public class MainController {
     }
 
     public void openBinaryFile() {
-        JFileChooser jf = new JFileChooser();
-        int returnVal = jf.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            addBinaryFile(jf.getSelectedFile());
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open binary file");
+        
+        List<File> files = fc.showOpenMultipleDialog(stage);
+        
+        if(files != null){
+            for (File file : files) {
+                addBinaryFile(file);
+            }
         }
     }
 
