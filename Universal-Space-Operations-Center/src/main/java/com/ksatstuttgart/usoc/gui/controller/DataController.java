@@ -24,7 +24,6 @@
 package com.ksatstuttgart.usoc.gui.controller;
 
 import com.ksatstuttgart.usoc.controller.DataUpdateListener;
-import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.USOCEvent;
 

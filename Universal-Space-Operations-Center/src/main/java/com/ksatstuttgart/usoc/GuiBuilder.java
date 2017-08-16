@@ -639,9 +639,9 @@ public class GuiBuilder {
                 + "                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
                 + "            } else if (DataSource.SERIAL == ue.getDataSource()) {\n"
                 + "                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
-                + "            } else {\n"
+                + "            }\n"
+                + "        } else {\n"
                 + "            serialTextArea.setText(msgController.getData().toString());\n"
-                + "        }\n"
                 + "        }\n"
                 + "    }\n"
                 + "}");
