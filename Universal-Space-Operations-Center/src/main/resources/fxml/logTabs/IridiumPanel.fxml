@@ -24,7 +24,7 @@
         <Label text="Filename:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
         <Label text="Received at:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
         <Label text="Add file:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <Button text="Clear Data" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Button text="Clear Data" onAction="#iridiumClearData" GridPane.columnIndex="0" GridPane.rowIndex="5" />
         <Label text="#Masseges on reconnect:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
         <Button text="exportCSV" onAction="#iridiumExportCSV" GridPane.columnIndex="0" GridPane.rowIndex="7" />
         <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />

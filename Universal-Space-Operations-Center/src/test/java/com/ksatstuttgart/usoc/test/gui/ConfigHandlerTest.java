@@ -137,7 +137,7 @@ public class ConfigHandlerTest {
     public void testChartMod() throws Exception {
         System.out.println("chartMod() has been tested");
         boolean expResult = false;
-        boolean result = ConfigHandler.chartMod("testData/test.properties", "testData/testMod.properties");
+        boolean result = ConfigHandler.mainPanelMod("testData/test.properties", "testData/testMod.properties");
         assertEquals(expResult, result);
     }
 
@@ -150,7 +150,7 @@ public class ConfigHandlerTest {
     public void testLogMod() throws Exception {
         System.out.println("logMod() has been tested");
         boolean expResult = false;
-        boolean result = ConfigHandler.logMod("testData/test.properties", "testData/testMod.properties");
+        boolean result = ConfigHandler.logPanelMod("testData/test.properties", "testData/testMod.properties");
         assertEquals(expResult, result);
     }
 
@@ -163,7 +163,7 @@ public class ConfigHandlerTest {
     public void testStateMod() throws Exception {
         System.out.println("stateMod() has been tested");
         boolean expResult = false;
-        boolean result = ConfigHandler.stateMod("testData/test.properties", "testData/testMod.properties");
+        boolean result = ConfigHandler.statePanelMod("testData/test.properties", "testData/testMod.properties");
         assertEquals(expResult, result);
     }
 

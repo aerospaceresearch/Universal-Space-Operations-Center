@@ -203,7 +203,7 @@ public class GuiBuilder {
      * @param configPath
      * @throws java.io.IOException
      */
-    public static void chartBuilder(String filePath, String configPath) throws IOException {
+    public static void mainPanelBuilder(String filePath, String configPath) throws IOException {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
@@ -226,14 +226,15 @@ public class GuiBuilder {
                 + "<?import javafx.scene.layout.*?> \n");
 
         if (GNSS3dView) {
-            writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.ChartController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
+            writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.MainPanelController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
                     + "   <tabs> \n"
                     + "    <Tab text=\"Graphs\"> \n"
-                    + "      <content> \n");
+                    + "      <content> \n"
+                    + "<GridPane> \n");
+        } else {
+            writer.println("<GridPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.MainPanelController\"> \n");
         }
-
-        writer.println("<GridPane> \n"
-                + "  <columnConstraints> \n"
+        writer.println("  <columnConstraints> \n"
                 + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
                 + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
                 + "  </columnConstraints> \n"
@@ -266,6 +267,8 @@ public class GuiBuilder {
                     + "    </Tab> \n"
                     + "    <Tab text=\"GNSS 3D View\"> \n"
                     + "      <content> \n"
+                    + "        <Pane fx:id=\"pane\"> \n"
+                    + "        </Pane> \n"
                     + "      </content> \n"
                     + "    </Tab> \n"
                     + "  </tabs> \n"
@@ -287,11 +290,12 @@ public class GuiBuilder {
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
-    public static void chartControlBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
+    public static void mainPanelControlBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
         int numberOfCharts = ConfigHandler.countItems("chartTitle", configPath);
+        boolean GNSS3dView = Boolean.parseBoolean(config.getProperty("GNSS3dView"));
         String path = "src/main/java/com/ksatstuttgart/usoc/";
 
         // Writes data in LogController.java file
@@ -300,20 +304,25 @@ public class GuiBuilder {
         writer.println("import java.net.URL; \n"
                 + "import com.ksatstuttgart.usoc.controller.MainController;\n"
                 + "import com.ksatstuttgart.usoc.controller.MessageController;\n"
-                + "import com.ksatstuttgart.usoc.data.USOCEvent;\n"
-                + "import java.util.ResourceBundle; \n"
-                + "import javafx.fxml.Initializable; \n"
-                + "import javafx.scene.chart.LineChart; \n"
-                + "import javafx.scene.chart.XYChart; \n");
+                + "import com.ksatstuttgart.usoc.data.USOCEvent;"
+                + "import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;\n"
+                + "import java.util.ResourceBundle;\n"
+                + "import javafx.embed.swing.SwingNode;\n"
+                + "import javafx.fxml.FXML;\n"
+                + "import javafx.fxml.Initializable;\n"
+                + "import javafx.scene.chart.LineChart;\n"
+                + "import javafx.scene.chart.XYChart;\n"
+                + "import javafx.scene.layout.Pane;\n"
+                + "import javax.swing.SwingUtilities;\n");
         writer.println("/** \n"
                 + " * \n"
                 + " * @author Victor \n"
                 + " */ \n");
-        writer.println("public class ChartController extends DataController implements Initializable { \n");
+        writer.println("public class MainPanelController extends DataController implements Initializable { \n");
         for (int i = 1; i <= numberOfCharts; i++) {
             writer.println("    public LineChart<Integer, Integer> lineChart" + i + ";");
         }
-        writer.println("\n    public void updateData() {");
+        writer.println("\n    public void setData() {");
         for (int i = 1; i <= numberOfCharts; i++) {
             writer.println("        lineChart" + i + ".getXAxis().setAutoRanging(true); \n"
                     + "        lineChart" + i + ".getYAxis().setAutoRanging(true); \n"
@@ -322,19 +331,39 @@ public class GuiBuilder {
                     + "        series" + i + ".getData().add(new XYChart.Data<>(6, 15)); \n"
                     + "        lineChart" + i + ".getData().add(series" + i + "); \n");
         }
-        writer.println("    } \n");
+        writer.println("    } \n\n"
+                + "    @Override\n"
+                + "    public void updateData(MessageController msgController, USOCEvent e) {\n"
+                + "        setData();\n"
+                + "    }\n");
+        
+        
+        if (GNSS3dView) {
+            writer.println("    @FXML private Pane pane;\n"
+                    + "    @FXML private SwingNode swingNode;\n\n"
+                    + "    public void createJavaFXContent(final SwingNode swingNode) {\n"
+                    + "        SwingUtilities.invokeLater(new Runnable() {\n"
+                    + "            @Override\n"
+                    + "            public void run() {\n"
+                    + "                swingNode.setContent(new GNSSPanel());\n"
+                    + "            }\n"
+                    + "        });\n"
+                    + "    }\n");
+        }
+        
         writer.println("    @Override \n"
                 + "    public void initialize(URL url, ResourceBundle rb) { \n"
                 + "        // TODO\n"
-                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());");
-        writer.println("    } \n"
-                + "    @Override\n"
-                + "    public void updateData(MessageController msgController, USOCEvent e) {\n"
-                + "        updateData();\n"
-                + "    }\n"
-                + "\n"
+                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n"
+                + "        //setData();\n");
+        if (GNSS3dView) {
+            writer.println("        swingNode = new SwingNode();\n"
+                    + "        createJavaFXContent(swingNode);\n"
+                    + "        pane.getChildren().add(swingNode);\n");
+        }
+        writer.println("    }\n"
                 + "}");
-
+        
         writer.close();
     }
 
@@ -347,7 +376,7 @@ public class GuiBuilder {
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
-    public static void logBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
+    public static void logPanelBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
@@ -362,7 +391,7 @@ public class GuiBuilder {
                 + "<?import javafx.scene.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
-        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
+        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogPanelController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
                 + "  <tabs>");
 
         // Writes FXML structure if the serial panel is required
@@ -494,7 +523,7 @@ public class GuiBuilder {
      * @throws java.io.FileNotFoundException
      * @throws java.io.IOException
      */
-    public static void logControlBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
+    public static void logPanelControlBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
@@ -550,24 +579,23 @@ public class GuiBuilder {
                 + " * \n"
                 + " * @author Victor \n"
                 + " */ \n");
-        writer.println("public class LogController extends DataController implements Initializable { \n");
+        writer.println("public class LogPanelController extends DataController implements Initializable { \n");
 
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
             writer.println("    @FXML private ComboBox comboBox1; \n"
                     + "    @FXML private ComboBox comboBox2; \n"
                     + "    @FXML private ComboBox comboBox3; \n"
                     + "    @FXML private TextArea serialTextArea; \n\n"
+                    + "    @FXML \n"
                     + "    public void setData() { \n"
                     + "        comboBox1.getItems().setAll(SerialComm.getInstance().getAvailableBaudrates()); \n"
                     + "        comboBox3.getItems().setAll(SerialComm.getInstance().getAvailableCommands()); \n"
                     + "    } \n");
-            writer.println("    public void updatePortList(ArrayList<String> portList) { \n"
+            writer.println("    @FXML \n"
+                    + "    public void updatePortList(ArrayList<String> portList) { \n"
                     + "        if (comboBox2 != null) { \n"
                     + "            comboBox2.getItems().setAll(portList); \n"
                     + "        } \n"
-                    + "    } \n");
-            writer.println("    public void serialWriteLog() { \n"
-                    + "        serialTextArea.setText(\"Test\"); \n"
                     + "    } \n");
             writer.println("    @FXML \n"
                     + "    private void serialConnect(ActionEvent event) { \n"
@@ -585,7 +613,8 @@ public class GuiBuilder {
         }
 
         if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
-            writer.println("    @FXML \n"
+            writer.println("    @FXML private TextArea iridiumTextArea; \n\n"
+                    + "    @FXML \n"
                     + "    private void iridiumOpen(ActionEvent event) { \n"
                     + "        System.out.println(\"Open button in iridium log has been pressed!\");\n"
                     + "        MainController.getInstance().openBinaryFile(); \n"
@@ -616,15 +645,8 @@ public class GuiBuilder {
                 }
             }
         }
-
-        writer.println("    @Override \n"
-                + "    public void initialize(URL url, ResourceBundle rb) { \n"
-                + "        // TODO \n"
-                + "        MainController.startPortThread(this);\n"
-                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());   \n"
-                + "        //setData(); \n"
-                + "    } \n"
-                + "    @Override\n"
+        
+        writer.println("    @Override\n"
                 + "    public void updateData(MessageController msgController, USOCEvent ue) {\n"
                 + "        if (ue instanceof MailEvent) {\n"
                 + "            MailEvent e = (MailEvent) ue;\n"
@@ -652,7 +674,14 @@ public class GuiBuilder {
                 + "        } else {\n"
                 + "            serialTextArea.setText(msgController.getData().toString());\n"
                 + "        }\n"
-                + "    }\n"
+                + "    }\n");
+        writer.println("    @Override \n"
+                + "    public void initialize(URL url, ResourceBundle rb) { \n"
+                + "        // TODO \n"
+                + "        MainController.startPortThread(this);\n"
+                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n"
+                + "        setData(); \n"
+                + "    } \n"
                 + "}");
 
         writer.close();

@@ -3,18 +3,22 @@ package com.ksatstuttgart.usoc.gui.controller;
 import java.net.URL; 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.MessageController;
-import com.ksatstuttgart.usoc.data.USOCEvent;
-import java.util.ResourceBundle; 
-import javafx.fxml.Initializable; 
-import javafx.scene.chart.LineChart; 
-import javafx.scene.chart.XYChart; 
+import com.ksatstuttgart.usoc.data.USOCEvent;import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
+import java.util.ResourceBundle;
+import javafx.embed.swing.SwingNode;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.layout.Pane;
+import javax.swing.SwingUtilities;
 
 /** 
  * 
  * @author Victor 
  */ 
 
-public class ChartController extends DataController implements Initializable { 
+public class MainPanelController extends DataController implements Initializable { 
 
     public LineChart<Integer, Integer> lineChart1;
     public LineChart<Integer, Integer> lineChart2;
@@ -23,7 +27,7 @@ public class ChartController extends DataController implements Initializable {
     public LineChart<Integer, Integer> lineChart5;
     public LineChart<Integer, Integer> lineChart6;
 
-    public void updateData() {
+    public void setData() {
         lineChart1.getXAxis().setAutoRanging(true); 
         lineChart1.getYAxis().setAutoRanging(true); 
         XYChart.Series series1 = new XYChart.Series<>(); 
@@ -68,13 +72,32 @@ public class ChartController extends DataController implements Initializable {
 
     } 
 
+    @Override
+    public void updateData(MessageController msgController, USOCEvent e) {
+        setData();
+    }
+
+    @FXML private Pane pane;
+    @FXML private SwingNode swingNode;
+
+    public void createJavaFXContent(final SwingNode swingNode) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                swingNode.setContent(new GNSSPanel());
+            }
+        });
+    }
+
     @Override 
     public void initialize(URL url, ResourceBundle rb) { 
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
-    } 
-    @Override
-    public void updateData(MessageController msgController, USOCEvent e) {
-        updateData();
+        //setData();
+
+        swingNode = new SwingNode();
+        createJavaFXContent(swingNode);
+        pane.getChildren().add(swingNode);
+
     }
 }

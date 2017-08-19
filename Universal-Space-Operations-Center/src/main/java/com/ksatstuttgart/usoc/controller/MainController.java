@@ -35,7 +35,7 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.gui.SerialPanel;
-import com.ksatstuttgart.usoc.gui.controller.LogController;
+import com.ksatstuttgart.usoc.gui.controller.LogPanelController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -169,7 +169,7 @@ public class MainController {
         }.start();
     }
     
-    public static void startPortThread(final LogController sp) {
+    public static void startPortThread(final LogPanelController sp) {
         Thread t = new Thread() {
             @Override
             public void run() {

@@ -90,9 +90,9 @@ public class GuiBuilderTest {
      * @throws java.lang.Exception
      */
     @Test
-    public void testChartBuilder() throws Exception {
+    public void testMainPanelBuilder() throws Exception {
         System.out.println("chartBuilder() has been tested");
-        GuiBuilder.chartBuilder("testData/ChartPanel.fxml", "testData/test.properties");
+        GuiBuilder.mainPanelBuilder("testData/ChartPanel.fxml", "testData/test.properties");
     }
 
     /**
@@ -100,9 +100,9 @@ public class GuiBuilderTest {
      * @throws java.lang.Exception
      */
     @Test
-    public void testLogBuilder() throws Exception {
+    public void testLogPanelBuilder() throws Exception {
         System.out.println("logBuilder() has been tested");
-        GuiBuilder.logBuilder("testData/LogPanel.fxml", "testData/test.properties");
+        GuiBuilder.logPanelBuilder("testData/LogPanel.fxml", "testData/test.properties");
     }
 
     /**

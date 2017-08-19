@@ -24,26 +24,24 @@ import javax.mail.Address;
  * @author Victor 
  */ 
 
-public class LogController extends DataController implements Initializable { 
+public class LogPanelController extends DataController implements Initializable { 
 
     @FXML private ComboBox comboBox1; 
     @FXML private ComboBox comboBox2; 
     @FXML private ComboBox comboBox3; 
     @FXML private TextArea serialTextArea; 
 
+    @FXML 
     public void setData() { 
         comboBox1.getItems().setAll(SerialComm.getInstance().getAvailableBaudrates()); 
         comboBox3.getItems().setAll(SerialComm.getInstance().getAvailableCommands()); 
     } 
 
+    @FXML 
     public void updatePortList(ArrayList<String> portList) { 
         if (comboBox2 != null) { 
             comboBox2.getItems().setAll(portList); 
         } 
-    } 
-
-    public void serialWriteLog() { 
-        serialTextArea.setText("Test"); 
     } 
 
     @FXML 
@@ -60,6 +58,8 @@ public class LogController extends DataController implements Initializable {
         String output = comboBox3.getSelectionModel().getSelectedItem().toString(); 
         SerialComm.getInstance().send(output);
     } 
+
+    @FXML private TextArea iridiumTextArea; 
 
     @FXML 
     private void iridiumOpen(ActionEvent event) { 
@@ -85,13 +85,6 @@ public class LogController extends DataController implements Initializable {
         MailReceiver.getInstance().reconnect(); 
     } 
 
-    @Override 
-    public void initialize(URL url, ResourceBundle rb) { 
-        // TODO 
-        MainController.startPortThread(this);
-        MainController.getInstance().addDataUpdateListener(new UpdateListener());   
-        //setData(); 
-    } 
     @Override
     public void updateData(MessageController msgController, USOCEvent ue) {
         if (ue instanceof MailEvent) {
@@ -121,4 +114,12 @@ public class LogController extends DataController implements Initializable {
             serialTextArea.setText(msgController.getData().toString());
         }
     }
+
+    @Override 
+    public void initialize(URL url, ResourceBundle rb) { 
+        // TODO 
+        MainController.startPortThread(this);
+        MainController.getInstance().addDataUpdateListener(new UpdateListener());
+        setData(); 
+    } 
 }

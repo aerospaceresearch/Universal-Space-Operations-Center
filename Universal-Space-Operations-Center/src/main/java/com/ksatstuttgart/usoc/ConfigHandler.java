@@ -173,24 +173,28 @@ public class ConfigHandler {
      * @return 
      * @throws java.io.IOException 
     */   
-    public static boolean chartMod(String path, String pathMod) throws IOException {
+    public static boolean mainPanelMod(String path, String pathMod) throws IOException {
         
         int numberOfCharts = countItems("chartTitle", path);
-        boolean chartMod = false;
+        boolean mainPanelMod = false;
         
         if (countItems("chartTitle", path) != countItems("chartTitle", pathMod)) {
-            chartMod = true;
+            mainPanelMod = true;
         }
         
         for (int counter=1; counter<=numberOfCharts; counter++) {
             if ( valueMod("chartTitle[" + counter + "]", path, pathMod) ||
                     valueMod("x[" + counter + "]", path, pathMod) ||
                     valueMod("y[" + counter + "]", path, pathMod) ) {
-                chartMod = true;
+                mainPanelMod = true;
             }
         }
+        
+        if ( valueMod("GNSS3dView", path, pathMod) ) {
+            mainPanelMod = true;
+        }
              
-        return chartMod;
+        return mainPanelMod;
     }
     
     
@@ -204,30 +208,30 @@ public class ConfigHandler {
      * @return
      * @throws java.io.IOException
     */   
-    public static boolean logMod(String path, String pathMod) throws IOException {
+    public static boolean logPanelMod(String path, String pathMod) throws IOException {
         
         Properties config = getAllValues(path);
         int numberOfAddTabs = countItems("tabTitle", path);
-        boolean logMod = false;
+        boolean logPanelMod = false;
         
         if ( valueMod("serialPanel", path, pathMod) || valueMod("iridiumPanel", path, pathMod) ) {
-            logMod = true;
+            logPanelMod = true;
         }
         
         if (countItems("tabTitle", path) != countItems("tabTitle", pathMod) ||
                 countItems("textArea", path) != countItems("textArea", pathMod)) {
-            logMod = true;
+            logPanelMod = true;
         }
         
         for (int counter=1; counter<=numberOfAddTabs; counter++) {
             
             if ( valueMod("tabTitle[" + counter + "]", path, pathMod) ||
                     valueMod("textArea[" + counter + "]", path, pathMod) ) {
-                logMod = true;
+                logPanelMod = true;
             }
 
             if (countItems("control[" + counter + "]", path) != countItems("control[" + counter + "]", pathMod)) {
-                logMod = true;
+                logPanelMod = true;
             }
             
             // Declares necessary parameters
@@ -239,24 +243,24 @@ public class ConfigHandler {
                 switch (control) {
                     case "button":
                         if ( valueMod("bText[" + counter + "][" + j + "]", path, pathMod) ) { 
-                            logMod = true;
+                            logPanelMod = true;
                         }
                         break;
                     case "textField":
                         if ( valueMod("promptText[" + counter + "][" + j + "]", path, pathMod) ) {
-                            logMod = true;
+                            logPanelMod = true;
                         }
                         break;
                     case "label":
                         if ( valueMod("lText[" + counter + "][" + j + "]", path, pathMod) ) {
-                            logMod = true;
+                            logPanelMod = true;
                         }
                         break;
                 }
             }
         }
 
-        return logMod;
+        return logPanelMod;
     }
     
     
@@ -270,37 +274,37 @@ public class ConfigHandler {
      * @return 
      * @throws java.io.IOException 
     */   
-    public static boolean stateMod(String path, String pathMod) throws IOException {
+    public static boolean statePanelMod(String path, String pathMod) throws IOException {
         
         int numberOfBoxes = countItems("boxTitle", path);
-        boolean stateMod = false;
+        boolean statePanelMod = false;
         
         boolean statePanel = valueMod("statePanel", path, pathMod);
         
         if (countItems("boxTitle", path) != countItems("boxTitle", pathMod) || statePanel) {
-            stateMod = true;
+            statePanelMod = true;
         }
         
         for (int counter=1; counter<=numberOfBoxes; counter++) {
             
             if (valueMod("boxTitle[" + counter + "]", path, pathMod)) {
-                stateMod = true;
+                statePanelMod = true;
             }
             
             if (countItems("keyword[" + counter + "]", path) != countItems("keyword[" + counter + "]", pathMod)) {
-                stateMod = true;
+                statePanelMod = true;
             }
             
             // Declares necessary parameters
             int numberOfValues = countItems("keyword[" + counter + "]", path);
             for (int j=1; j<=numberOfValues; j++) {
                 if ( valueMod("keyword[" + counter + "][" + j + "]", path, pathMod) ) {
-                    stateMod = true;
+                    statePanelMod = true;
                 }
             }
         }
         
-        return stateMod;
+        return statePanelMod;
     }
     
     
@@ -339,12 +343,22 @@ public class ConfigHandler {
     public static boolean syntaxCheck(String path) throws IOException {
         
         Properties config = getAllValues(path);
+        String GNSS3dView = config.getProperty("GNSS3dView");
+        String statePanel = config.getProperty("statePanel");
         boolean syntaxCheck = true;
 
         // Checks syntax of CHART PROPERTIES
         if ( !(countItems("chartTitle", path) == countItems("x", path) && 
                 countItems("chartTitle", path) == countItems("y", path)) ) {
             System.out.println("Syntax of CHART PROPERTIES is not accurate.");
+            syntaxCheck = false;
+        }
+        if ( !(GNSS3dView.equals("true") || GNSS3dView.equals("false")) ) {
+            System.out.println("Syntax of GNSS3dView property is not accurate.");
+            syntaxCheck = false;
+        }
+        if ( !(statePanel.equals("true") || statePanel.equals("false")) ) {
+            System.out.println("Syntax of statePanel property is not accurate.");
             syntaxCheck = false;
         }
         
@@ -397,18 +411,18 @@ public class ConfigHandler {
             
         Properties config = getAllValues(path);
         boolean experimentNameMod = experimentNameMod(path, pathMod);
-        boolean chartMod = chartMod(path, pathMod);
-        boolean logMod = logMod(path, pathMod);
-        boolean stateMod = stateMod(path, pathMod);
+        boolean mainPanelMod = mainPanelMod(path, pathMod);
+        boolean logPanelMod = logPanelMod(path, pathMod);
+        boolean statePanelMod = statePanelMod(path, pathMod);
         boolean rebuildGui;
                 
         // Regenerats the entire GUI if RESET is set to true
         if (Boolean.parseBoolean(config.getProperty("RESET"))) {
             GuiBuilder.setExperimentName(stage, "config/config.properties");
-            GuiBuilder.chartBuilder("fxml/ChartPanel.fxml", path);
-            GuiBuilder.chartControlBuilder("gui/controller/ChartController.java", path);
-            GuiBuilder.logBuilder("fxml/LogPanel.fxml", path);
-            GuiBuilder.logControlBuilder("gui/controller/LogController.java", path);
+            GuiBuilder.mainPanelBuilder("fxml/ChartPanel.fxml", path);
+            GuiBuilder.mainPanelControlBuilder("gui/controller/MainPanelController.java", path);
+            GuiBuilder.logPanelBuilder("fxml/LogPanel.fxml", path);
+            GuiBuilder.logPanelControlBuilder("gui/controller/LogPanelController.java", path);
             //GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
             GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             
@@ -419,24 +433,24 @@ public class ConfigHandler {
         
         // If properties has been modified and syntax of properties file
         // is accurate, the FXML structure will be regenerated 
-        if ( fileMod(experimentNameMod, chartMod, logMod, stateMod) && syntaxCheck(path) ) {
+        if ( fileMod(experimentNameMod, mainPanelMod, logPanelMod, statePanelMod) && syntaxCheck(path) ) {
             
             // Checks if 'experimentName' has been modified since last compilation
             if (experimentNameMod) {
                 GuiBuilder.setExperimentName(stage, "config/config.properties");
             }
             // Checks if CHART PROPERTIES has been modified since last compilation
-            if (chartMod) {
-                GuiBuilder.chartBuilder("fxml/ChartPanel.fxml", path);
-                GuiBuilder.chartControlBuilder("gui/controller/ChartController.java", path);
+            if (mainPanelMod) {
+                GuiBuilder.mainPanelBuilder("fxml/ChartPanel.fxml", path);
+                GuiBuilder.mainPanelControlBuilder("gui/controller/MainPanelController.java", path);
             }
             // Checks if LOG PROPERTIES has been modified since last compilation
-            if (logMod) {
-                GuiBuilder.logBuilder("fxml/LogPanel.fxml", path);
-                GuiBuilder.logControlBuilder("gui/controller/LogController.java", path);
+            if (logPanelMod) {
+                GuiBuilder.logPanelBuilder("fxml/LogPanel.fxml", path);
+                GuiBuilder.logPanelControlBuilder("gui/controller/LogPanelController.java", path);
             }
             // Checks if STATE PROPERTIES has been modified since last compilation
-            if (stateMod) {
+            if (statePanelMod) {
                 //GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
                 GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             }
@@ -444,7 +458,7 @@ public class ConfigHandler {
             
         } else {
             // Checks if config file has been modified
-            if ( !fileMod(experimentNameMod, chartMod, logMod, stateMod) ) {
+            if ( !fileMod(experimentNameMod, mainPanelMod, logPanelMod, statePanelMod) ) {
                 System.out.println("No FXML regeneration necessary.");
             }
             
