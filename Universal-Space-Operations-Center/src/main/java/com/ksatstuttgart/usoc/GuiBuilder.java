@@ -340,14 +340,15 @@ public class GuiBuilder {
         
         if (GNSS3dView) {
             writer.println("    @FXML private Pane pane;\n"
-                    + "    @FXML private SwingNode swingNode;\n\n"
-                    + "    public void createJavaFXContent(final SwingNode swingNode) {\n"
+                    + "    public SwingNode buildWW() {\n"
+                    + "        final SwingNode node = new SwingNode();\n"
                     + "        SwingUtilities.invokeLater(new Runnable() {\n"
                     + "            @Override\n"
                     + "            public void run() {\n"
-                    + "                swingNode.setContent(new GNSSPanel());\n"
+                    + "                node.setContent(new GNSSPanel());\n"
                     + "            }\n"
                     + "        });\n"
+                    + "        return node;\n"
                     + "    }\n");
         }
         
@@ -357,9 +358,7 @@ public class GuiBuilder {
                 + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n"
                 + "        //setData();\n");
         if (GNSS3dView) {
-            writer.println("        swingNode = new SwingNode();\n"
-                    + "        createJavaFXContent(swingNode);\n"
-                    + "        pane.getChildren().add(swingNode);\n");
+            writer.println("        pane.getChildren().add(buildWW());\n");
         }
         writer.println("    }\n"
                 + "}");

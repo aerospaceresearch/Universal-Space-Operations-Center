@@ -78,15 +78,15 @@ public class MainPanelController extends DataController implements Initializable
     }
 
     @FXML private Pane pane;
-    @FXML private SwingNode swingNode;
-
-    public void createJavaFXContent(final SwingNode swingNode) {
+    public SwingNode buildWW() {
+        final SwingNode node = new SwingNode();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                swingNode.setContent(new GNSSPanel());
+                node.setContent(new GNSSPanel());
             }
         });
+        return node;
     }
 
     @Override 
@@ -95,9 +95,7 @@ public class MainPanelController extends DataController implements Initializable
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
         //setData();
 
-        swingNode = new SwingNode();
-        createJavaFXContent(swingNode);
-        pane.getChildren().add(swingNode);
+        pane.getChildren().add(buildWW());
 
     }
 }
