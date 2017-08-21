@@ -61,7 +61,7 @@ Used conventions:
                    datatype="FLOAT32" numpoints="1" frequency="1" unit="0.1mbar" isLittleEndian="TRUE"/>
 		</sensor>
 		<sensor type="TIMER" name="GNSS TIME">
-			<var start="2519" datatype="UINT32" numpoints="1" frequency="1" unit="HHMMSSCC" isLittleEndian="TRUE"/>
+			<var start="2519" dataname="GNSS Time" datatype="UINT32" numpoints="1" frequency="1" unit="HHMMSSCC" isLittleEndian="TRUE"/>
 		</sensor>
 		<sensor type="TEMPERATURE" name="Thermocouple_Iridium">
 			<var dataname="Thermocouple_Iridium" start="2551" datatype="INT16" numpoints="1" frequency="1" unit="°C" isLittleEndian="TRUE"/>
