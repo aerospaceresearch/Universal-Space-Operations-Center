@@ -419,11 +419,11 @@ public class ConfigHandler {
         // Regenerats the entire GUI if RESET is set to true
         if (Boolean.parseBoolean(config.getProperty("RESET"))) {
             GuiBuilder.setExperimentName(stage, "config/config.properties");
-            GuiBuilder.mainPanelBuilder("fxml/ChartPanel.fxml", path);
+            GuiBuilder.mainPanelBuilder("fxml/MainPanel.fxml", path);
             GuiBuilder.mainPanelControlBuilder("gui/controller/MainPanelController.java", path);
             GuiBuilder.logPanelBuilder("fxml/LogPanel.fxml", path);
             GuiBuilder.logPanelControlBuilder("gui/controller/LogPanelController.java", path);
-            //GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
+            GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
             GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             
             System.out.println("FXML has been reseted and regenerated completely.");
@@ -441,7 +441,7 @@ public class ConfigHandler {
             }
             // Checks if CHART PROPERTIES has been modified since last compilation
             if (mainPanelMod) {
-                GuiBuilder.mainPanelBuilder("fxml/ChartPanel.fxml", path);
+                GuiBuilder.mainPanelBuilder("fxml/MainPanel.fxml", path);
                 GuiBuilder.mainPanelControlBuilder("gui/controller/MainPanelController.java", path);
             }
             // Checks if LOG PROPERTIES has been modified since last compilation
@@ -451,7 +451,7 @@ public class ConfigHandler {
             }
             // Checks if STATE PROPERTIES has been modified since last compilation
             if (statePanelMod) {
-                //GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
+                GuiBuilder.mainFrameBuilder("fxml/MainFrame.fxml", path);
                 GuiBuilder.currentStateBuilder("fxml/CurrentStatePanel.fxml", path);
             }
             rebuildGui = true;

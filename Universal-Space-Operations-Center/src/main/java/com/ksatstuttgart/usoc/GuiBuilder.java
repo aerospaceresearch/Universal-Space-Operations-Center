@@ -157,42 +157,24 @@ public class GuiBuilder {
                 + "<?import java.lang.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
-        writer.println("<BorderPane maxHeight=\"1.7976931348623157E308\" maxWidth=\"1.7976931348623157E308\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"700.0\" prefWidth=\"1180.0\" xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogController\"> \n\n"
-                + "   <top> \n"
-                + "      <MenuBar BorderPane.alignment=\"CENTER\"> \n"
-                + "        <menus> \n"
-                + "          <Menu mnemonicParsing=\"false\" text=\"File\"> \n"
-                + "            <items> \n"
-                + "              <MenuItem mnemonicParsing=\"false\" text=\"Close\" /> \n"
-                + "            </items> \n"
-                + "          </Menu> \n"
-                + "          <Menu mnemonicParsing=\"false\" text=\"Edit\"> \n"
-                + "            <items> \n"
-                + "              <MenuItem mnemonicParsing=\"false\" text=\"Delete\" /> \n"
-                + "            </items> \n"
-                + "          </Menu> \n"
-                + "          <Menu mnemonicParsing=\"false\" text=\"Help\"> \n"
-                + "            <items> \n"
-                + "              <MenuItem mnemonicParsing=\"false\" text=\"About\" /> \n"
-                + "            </items> \n"
-                + "          </Menu> \n"
-                + "        </menus> \n"
-                + "      </MenuBar> \n"
-                + "   </top> \n");
+        writer.println("<BorderPane maxHeight=\"1.7976931348623157E308\" maxWidth=\"1.7976931348623157E308\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"700.0\" prefWidth=\"1180.0\" xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\">\n");
         if (statePanel) {
             writer.println("   <left> \n"
                     + "      <fx:include source = \"/fxml/CurrentStatePanel.fxml\" /> \n"
                     + "   </left> \n");
         }
         writer.println("   <center> \n"
-                + "      <fx:include source = \"/fxml/ChartPanel.fxml\" /> \n"
+                + "      <fx:include source = \"/fxml/MainPanel.fxml\" /> \n"
                 + "   </center> \n\n"
                 + "   <right> \n"
                 + "      <fx:include source = \"/fxml/LogPanel.fxml\" /> \n"
                 + "   </right> \n\n"
                 + "</BorderPane> \n");
-
+        
         writer.close();
+        
+        // Prints status update
+        System.out.println("MainFrame.fxml has been updated!");
     }
 
     /**
@@ -278,7 +260,7 @@ public class GuiBuilder {
         writer.close();
 
         // Prints status update
-        System.out.println("Chart panel has been updated!");
+        System.out.println("MainPanel.fxml has been updated!");
     }
 
     /**
@@ -304,16 +286,18 @@ public class GuiBuilder {
         writer.println("import java.net.URL; \n"
                 + "import com.ksatstuttgart.usoc.controller.MainController;\n"
                 + "import com.ksatstuttgart.usoc.controller.MessageController;\n"
-                + "import com.ksatstuttgart.usoc.data.USOCEvent;"
-                + "import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;\n"
+                + "import com.ksatstuttgart.usoc.data.USOCEvent;\n"
                 + "import java.util.ResourceBundle;\n"
-                + "import javafx.embed.swing.SwingNode;\n"
-                + "import javafx.fxml.FXML;\n"
                 + "import javafx.fxml.Initializable;\n"
                 + "import javafx.scene.chart.LineChart;\n"
-                + "import javafx.scene.chart.XYChart;\n"
-                + "import javafx.scene.layout.Pane;\n"
-                + "import javax.swing.SwingUtilities;\n");
+                + "import javafx.scene.chart.XYChart;");
+        if (GNSS3dView) {
+            writer.println("import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;\n"
+                    + "import javafx.embed.swing.SwingNode;\n"
+                    + "import javafx.fxml.FXML;\n"
+                    + "import javafx.scene.layout.Pane;\n"
+                    + "import javax.swing.SwingUtilities;\n");
+        }
         writer.println("/** \n"
                 + " * \n"
                 + " * @author Victor \n"
@@ -322,7 +306,7 @@ public class GuiBuilder {
         for (int i = 1; i <= numberOfCharts; i++) {
             writer.println("    public LineChart<Integer, Integer> lineChart" + i + ";");
         }
-        writer.println("\n    public void setData() {");
+        writer.println("\n    public void setData(MessageController msgController, USOCEvent e) {\n");
         for (int i = 1; i <= numberOfCharts; i++) {
             writer.println("        lineChart" + i + ".getXAxis().setAutoRanging(true); \n"
                     + "        lineChart" + i + ".getYAxis().setAutoRanging(true); \n"
@@ -334,10 +318,8 @@ public class GuiBuilder {
         writer.println("    } \n\n"
                 + "    @Override\n"
                 + "    public void updateData(MessageController msgController, USOCEvent e) {\n"
-                + "        setData();\n"
+                + "        setData(msgController, e);\n"
                 + "    }\n");
-        
-        
         if (GNSS3dView) {
             writer.println("    @FXML private Pane pane;\n"
                     + "    public SwingNode buildWW() {\n"
@@ -351,7 +333,6 @@ public class GuiBuilder {
                     + "        return node;\n"
                     + "    }\n");
         }
-        
         writer.println("    @Override \n"
                 + "    public void initialize(URL url, ResourceBundle rb) { \n"
                 + "        // TODO\n"
@@ -364,6 +345,9 @@ public class GuiBuilder {
                 + "}");
         
         writer.close();
+        
+        // Prints status update
+        System.out.println("mainPanelController.java has been updated!");
     }
 
     /**
@@ -510,7 +494,7 @@ public class GuiBuilder {
         writer.close();
 
         // Prints status update
-        System.out.println("Log panel has been updated!");
+        System.out.println("LogPanel.fxml has been updated!");
     }
 
     /**
@@ -684,6 +668,9 @@ public class GuiBuilder {
                 + "}");
 
         writer.close();
+        
+        // Prints status update
+        System.out.println("LogPanelController.java has been updated!");        
     }
 
     /**
@@ -761,5 +748,8 @@ public class GuiBuilder {
             writer.println("");
         }
         writer.close();
+        
+        // Prints status update
+        System.out.println("CurrentStatePanel.fxml has been updated!");
     }
 }

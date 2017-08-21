@@ -2,11 +2,7 @@
 <?import javafx.scene.control.*?> 
 <?import javafx.scene.layout.*?> 
 
-<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.MainPanelController" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
-   <tabs> 
-    <Tab text="Graphs"> 
-      <content> 
-<GridPane> 
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.MainPanelController"> 
 
   <columnConstraints> 
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" /> 
@@ -68,14 +64,3 @@
     </LineChart>
   </children> 
 </GridPane>
-      </content> 
-    </Tab> 
-    <Tab text="GNSS 3D View"> 
-      <content> 
-        <Pane fx:id="pane"> 
-        </Pane> 
-      </content> 
-    </Tab> 
-  </tabs> 
-</TabPane> 
-
