@@ -4,8 +4,8 @@
     <GridPane alignment="TOP_CENTER" BorderPane.alignment="CENTER">
     <padding><Insets bottom="5" /></padding>
       <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" prefWidth="90.0" />
       </columnConstraints>
       <rowConstraints>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -19,22 +19,21 @@
 
       </rowConstraints>
       <children>
-        <Label text="Last message from:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <Label text="Filename:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <Label text="Received at:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Label text="Add file:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <Button text="Clear Data" onAction="#iridiumClearData" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <Label text="#Masseges on reconnect:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-        <Button text="exportCSV" onAction="#iridiumExportCSV" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <Button text="Open" onAction="#iridiumOpen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-        <TextField text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-        <Button text="Reconnect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+        <Label text="Last message from:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Filename:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Received at:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Add file:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Button text="Clear Data" onAction="#iridiumClearData" GridPane.columnIndex="0" GridPane.rowIndex="5" prefWidth="90.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="#Masseges on reconnect:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Button text="exportCSV" onAction="#iridiumExportCSV" GridPane.columnIndex="0" GridPane.rowIndex="7" prefWidth="90.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Label1" fx:id="iridiumLastMessage" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Label2" fx:id="iridiumSubject" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Label3" fx:id="iridiumFilename" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Label text="Label4" fx:id="iridiumReceived" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Button text="Open" onAction="#iridiumOpen" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="60.0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <TextField text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT" maxWidth="60.0" prefWidth="60.0" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Button text="Reconnect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="7" prefWidth="90.0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
         
       </children>
     </GridPane>
