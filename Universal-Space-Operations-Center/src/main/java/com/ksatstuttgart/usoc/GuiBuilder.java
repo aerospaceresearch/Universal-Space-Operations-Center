@@ -157,7 +157,7 @@ public class GuiBuilder {
                 + "<?import java.lang.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
-        writer.println("<BorderPane maxHeight=\"1.7976931348623157E308\" maxWidth=\"1.7976931348623157E308\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"700.0\" prefWidth=\"1180.0\" xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\">\n");
+        writer.println("<BorderPane maxHeight=\"-Infinity\" maxWidth=\"-Infinity\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"400.0\" prefWidth=\"600.0\" xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\">\n");
         if (statePanel) {
             writer.println("   <left> \n"
                     + "      <fx:include source = \"/fxml/CurrentStatePanel.fxml\" /> \n"
@@ -189,9 +189,10 @@ public class GuiBuilder {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
+        boolean GNSS3dView = Boolean.parseBoolean(config.getProperty("GNSS3dView"));
+        boolean chartTab;
         int numberOfCharts = ConfigHandler.countItems("chartTitle", configPath);
         int numberOfRows;
-        boolean GNSS3dView = Boolean.parseBoolean(config.getProperty("GNSS3dView"));
         String path = "src/main/resources/";
 
         // Initializes number of rows depending on required number of charts
@@ -200,62 +201,70 @@ public class GuiBuilder {
         } else {
             numberOfRows = (numberOfCharts + 1) / 2;
         }
+        
+        if (config.getProperty("chartTitle[1]") == null) {
+            chartTab = false;
+        } else {
+            chartTab = true;
+        }
 
         // Writes data in ChartPanel.fxml file
         PrintWriter writer = new PrintWriter(path + filePath);
         writer.println("<?import javafx.scene.chart.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
+        
+        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.MainPanelController\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
+                    + "   <tabs>");
+        if (chartTab) {
+            writer.println("    <Tab text=\"Graphs\"> \n"
+                    + "      <content> \n"
+                    + "        <ScrollPane fitToHeight=\"true\" fitToWidth=\"true\">\n"
+                    + "          <content>\n"
+                    + "            <GridPane>\n"
+                    + "              <columnConstraints> \n"
+                    + "                <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"200.0\" prefWidth=\"400.0\" /> \n"
+                    + "                <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"200.0\" prefWidth=\"400.0\" /> \n"
+                    + "              </columnConstraints> \n"
+                    + "              <rowConstraints>");
+            for (int i = 1; i <= (numberOfRows); i++) {
+                writer.println("                <RowConstraints maxHeight=\"400.0\" minHeight=\"200.0\" prefHeight=\"300.0\" vgrow=\"SOMETIMES\" />");
+            }
+            writer.println("              </rowConstraints>\n"
+                    + "              <children>");
+            for (int counter = 1; counter <= numberOfCharts; counter++) {
+                int[] position = getGridPosition(counter);
+                writer.println("                <LineChart fx:id=\"lineChart" + counter + "\" title=\"" + config.getProperty("chartTitle[" + counter + "]")
+                        + "\" GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\""
+                        + position[1] + "\" maxHeight=\"400.0\" minHeight=\"200.0\" GridPane.halignment=\"CENTER\" GridPane.valignment=\"CENTER\" "
+                        + "GridPane.hgrow=\"SOMETIMES\" GridPane.vgrow=\"SOMETIMES\">");
+                writer.println("                  <xAxis>\n"
+                        + "                    <NumberAxis label=\"" + config.getProperty("x[" + counter + "]") + "\" side=\"BOTTOM\" />\n"
+                            + "                  </xAxis>\n"
+                        + "                  <yAxis>\n"
+                        + "                    <NumberAxis label=\"" + config.getProperty("y[" + counter + "]") + "\" side=\"LEFT\" />\n"
+                        + "                  </yAxis>\n"
+                        + "                </LineChart>");
+            }
+            writer.println("              </children>\n"
+                    + "            </GridPane>\n"
+                    + "          </content>\n"
+                    + "        </ScrollPane>\n"
+                    + "      </content>\n"
+                    + "    </Tab>");
+        }
 
         if (GNSS3dView) {
-            writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.MainPanelController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
-                    + "   <tabs> \n"
-                    + "    <Tab text=\"Graphs\"> \n"
-                    + "      <content> \n"
-                    + "<GridPane> \n");
-        } else {
-            writer.println("<GridPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.MainPanelController\"> \n");
+            writer.println("    <Tab text=\"GNSS 3D View\">\n"
+                    + "      <content>\n"
+                    + "        <Pane fx:id=\"pane\">\n"
+                    + "        </Pane>\n"
+                    + "      </content>\n"
+                    + "    </Tab>");
         }
-        writer.println("  <columnConstraints> \n"
-                + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                + "    <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                + "  </columnConstraints> \n"
-                + "  <rowConstraints>");
-        for (int i = 1; i <= (numberOfRows); i++) {
-            writer.println("    <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
-        }
-        writer.println("  </rowConstraints>");
-
-        // Generates FXML for charts
-        writer.println("  <children>");
-        for (int counter = 1; counter <= numberOfCharts; counter++) {
-            int[] position = getGridPosition(counter);
-            writer.println("    <LineChart fx:id=\"lineChart" + counter + "\" title=\"" + config.getProperty("chartTitle[" + counter + "]")
-                    + "\" GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\""
-                    + position[1] + "\">");
-            writer.println("      <xAxis> \n"
-                    + "        <CategoryAxis label=\"" + config.getProperty("x[" + counter + "]") + "\" side=\"BOTTOM\" /> \n"
-                    + "      </xAxis> \n"
-                    + "      <yAxis> \n"
-                    + "        <NumberAxis label=\"" + config.getProperty("y[" + counter + "]") + "\" side=\"LEFT\" /> \n"
-                    + "      </yAxis> \n"
-                    + "    </LineChart>");
-        }
-        writer.println("  </children> \n"
-                + "</GridPane>");
-
-        if (GNSS3dView) {
-            writer.println("      </content> \n"
-                    + "    </Tab> \n"
-                    + "    <Tab text=\"GNSS 3D View\"> \n"
-                    + "      <content> \n"
-                    + "        <Pane fx:id=\"pane\"> \n"
-                    + "        </Pane> \n"
-                    + "      </content> \n"
-                    + "    </Tab> \n"
-                    + "  </tabs> \n"
-                    + "</TabPane> \n");
-        }
+        writer.println("  </tabs>\n"
+                    + "</TabPane>\n");
+        
 
         writer.close();
 
@@ -283,11 +292,16 @@ public class GuiBuilder {
         // Writes data in LogController.java file
         PrintWriter writer = new PrintWriter(path + filePath);
         writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
-        writer.println("import java.net.URL; \n"
+        writer.println("import com.ksatstuttgart.usoc.controller.DataModification;\n"
+                + "import java.net.URL; \n"
                 + "import com.ksatstuttgart.usoc.controller.MainController;\n"
                 + "import com.ksatstuttgart.usoc.controller.MessageController;\n"
+                + "import com.ksatstuttgart.usoc.data.ErrorEvent;\n"
                 + "import com.ksatstuttgart.usoc.data.USOCEvent;\n"
+                + "import com.ksatstuttgart.usoc.data.message.Var;\n"
+                + "import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;\n"
                 + "import java.util.ResourceBundle;\n"
+                + "import javafx.fxml.FXML;\n"
                 + "import javafx.fxml.Initializable;\n"
                 + "import javafx.scene.chart.LineChart;\n"
                 + "import javafx.scene.chart.XYChart;");
@@ -304,21 +318,87 @@ public class GuiBuilder {
                 + " */ \n");
         writer.println("public class MainPanelController extends DataController implements Initializable { \n");
         for (int i = 1; i <= numberOfCharts; i++) {
-            writer.println("    public LineChart<Integer, Integer> lineChart" + i + ";");
+            writer.println("    @FXML\n"
+                    + "    public LineChart<Number, Number> lineChart" + i + ";");
         }
-        writer.println("\n    public void setData(MessageController msgController, USOCEvent e) {\n");
+        writer.println("\n    @Override\n"
+                + "    public void updateData(MessageController mc, USOCEvent e) {\n\n");
         for (int i = 1; i <= numberOfCharts; i++) {
-            writer.println("        lineChart" + i + ".getXAxis().setAutoRanging(true); \n"
-                    + "        lineChart" + i + ".getYAxis().setAutoRanging(true); \n"
-                    + "        XYChart.Series series" + i + " = new XYChart.Series<>(); \n"
-                    + "        series" + i + ".getData().add(new XYChart.Data<>(5, 23)); \n"
-                    + "        series" + i + ".getData().add(new XYChart.Data<>(6, 15)); \n"
-                    + "        lineChart" + i + ".getData().add(series" + i + "); \n");
+            writer.println("        lineChart" + i + ".getXAxis().setAutoRanging(true);\n"
+                    + "        lineChart" + i + ".getYAxis().setAutoRanging(true);\n");
         }
-        writer.println("    } \n\n"
-                + "    @Override\n"
-                + "    public void updateData(MessageController msgController, USOCEvent e) {\n"
-                + "        setData(msgController, e);\n"
+        writer.println("        //in case this is an error event, ignore it\n"
+                + "        if (e instanceof ErrorEvent) {\n"
+                + "            return;\n"
+                + "        }\n"
+                + "\n"
+                + "        //go through the data and update the charts\n"
+                + "        for (Sensor sensor : mc.getData().getSensors()) {\n"
+                + "            //adjust values for the sensor specific to the current experiment\n"
+                + "            Sensor adjusted = DataModification.adjustSensorData(sensor);\n"
+                + "\n"
+                + "            //search for thermocouple sensors\n"
+                + "            if (adjusted.getSensorName().startsWith(\"Thermocouple\")) {\n"
+                + "                //thermocouple sensors have only one variable with the current\n"
+                + "                //data scheme it uses the sensor name as variable name \n"
+                + "                for (Var var : adjusted.getVars()) {\n"
+                + "                    addVarToChart(var,lineChart1);\n"
+                + "                }\n"
+                + "            }\n"
+                + "\n"
+                + "            //search for pressure sensors\n"
+                + "            if (adjusted.getSensorName().contains(\"Pressure\")) {\n"
+                + "                //pressure sensors have only one variable with the current\n"
+                + "                //data scheme and it uses the sensor name as variable name \n"
+                + "                for (Var var : adjusted.getVars()) {\n"
+                + "                    addVarToChart(var,lineChart2);\n"
+                + "                }\n"
+                + "            }\n"
+                + "\n"
+                + "            //search for pressure sensors\n"
+                + "            if (adjusted.getSensorName().contains(\"GNSS TIME\")) {\n"
+                + "                //pressure sensors have only one variable with the current\n"
+                + "                //data scheme and it uses the sensor name as variable name \n"
+                + "                for (Var var : adjusted.getVars()) {\n"
+                + "                    addVarToChart(var,lineChart3);\n"
+                + "                }\n"
+                + "            }\n"
+                + "\n"
+                + "            //search for voltage sensors\n"
+                + "            if (adjusted.getSensorName().startsWith(\"Battery\")) {\n"
+                + "                //voltage sensors have only one variable with the current\n"
+                + "                //data scheme and it uses the sensor name as variable name \n"
+                + "                for (Var var : adjusted.getVars()) {\n"
+                + "                    addVarToChart(var,lineChart4);\n"
+                + "                }\n"
+                + "            }\n"
+                + "\n"
+                + "            //search for IMU data\n"
+                + "            if (adjusted.getSensorName().contains(\"IMU\")) {\n"
+                + "                for (Var var : adjusted.getVars()) {\n"
+                + "                    //only visualize quaternion data ignore calibration data\n"
+                + "                    //for chart\n"
+                + "                    addVarToChart(var,lineChart5);\n"
+                + "                }\n"
+                + "            }\n"
+                + "        }\n"
+                + "    }\n\n");
+        writer.println("    private void addVarToChart(Var var, LineChart<Number, Number> chart) {\n"
+                + "        XYChart.Series series = getSeriesForChart(var, chart);\n"
+                + "        for (Long time : var.getValues().keySet()) {\n"
+                + "            series.getData().add(new XYChart.Data<>(time, var.getValues().get(time)));\n"
+                + "        }\n"
+                + "    }\n\n");
+        writer.println("    private XYChart.Series getSeriesForChart(Var var, LineChart<Number, Number> chart) {\n"
+                + "        for (XYChart.Series<Number, Number> series : chart.getData()) {\n"
+                + "            if (series.getName().equals(var.getDataName())) {\n"
+                + "                return series;\n"
+                + "            }\n"
+                + "        }\n"
+                + "        XYChart.Series series = new XYChart.Series<>();\n"
+                + "        series.setName(var.getDataName());\n"
+                + "        chart.getData().add(series);\n"
+                + "        return series;\n"
                 + "    }\n");
         if (GNSS3dView) {
             writer.println("    @FXML private Pane pane;\n"
@@ -336,8 +416,7 @@ public class GuiBuilder {
         writer.println("    @Override \n"
                 + "    public void initialize(URL url, ResourceBundle rb) { \n"
                 + "        // TODO\n"
-                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n"
-                + "        //setData();\n");
+                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n");
         if (GNSS3dView) {
             writer.println("        pane.getChildren().add(buildWW());\n");
         }
@@ -374,7 +453,7 @@ public class GuiBuilder {
                 + "<?import javafx.scene.*?> \n"
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
-        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogPanelController\" prefHeight=\"200.0\" prefWidth=\"200.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n "
+        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogPanelController\" maxWidth=\"350.0\" minWidth=\"300.0\" prefWidth=\"350.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
                 + "  <tabs>");
 
         // Writes FXML structure if the serial panel is required

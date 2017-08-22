@@ -1,7 +1,7 @@
-package com.ksatstuttgart.usoc.gui.controller;
+package com.ksatstuttgart.usoc.gui.controller; 
 
 import com.ksatstuttgart.usoc.controller.DataModification;
-import java.net.URL;
+import java.net.URL; 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.ErrorEvent;
@@ -13,13 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+/** 
+ * 
+ * @author Victor 
+ */ 
 
-/**
- *
- * @author Victor
- */
-
-public class MainPanelController extends DataController implements Initializable {
+public class MainPanelController extends DataController implements Initializable { 
 
     @FXML
     public LineChart<Number, Number> lineChart1;
@@ -36,17 +35,25 @@ public class MainPanelController extends DataController implements Initializable
 
     @Override
     public void updateData(MessageController mc, USOCEvent e) {
-        
+
+
         lineChart1.getXAxis().setAutoRanging(true);
         lineChart1.getYAxis().setAutoRanging(true);
+
         lineChart2.getXAxis().setAutoRanging(true);
         lineChart2.getYAxis().setAutoRanging(true);
+
         lineChart3.getXAxis().setAutoRanging(true);
         lineChart3.getYAxis().setAutoRanging(true);
+
         lineChart4.getXAxis().setAutoRanging(true);
         lineChart4.getYAxis().setAutoRanging(true);
+
         lineChart5.getXAxis().setAutoRanging(true);
         lineChart5.getYAxis().setAutoRanging(true);
+
+        lineChart6.getXAxis().setAutoRanging(true);
+        lineChart6.getYAxis().setAutoRanging(true);
 
         //in case this is an error event, ignore it
         if (e instanceof ErrorEvent) {
@@ -105,12 +112,14 @@ public class MainPanelController extends DataController implements Initializable
         }
     }
 
+
     private void addVarToChart(Var var, LineChart<Number, Number> chart) {
         XYChart.Series series = getSeriesForChart(var, chart);
         for (Long time : var.getValues().keySet()) {
             series.getData().add(new XYChart.Data<>(time, var.getValues().get(time)));
         }
     }
+
 
     private XYChart.Series getSeriesForChart(Var var, LineChart<Number, Number> chart) {
         for (XYChart.Series<Number, Number> series : chart.getData()) {
@@ -124,11 +133,10 @@ public class MainPanelController extends DataController implements Initializable
         return series;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @Override 
+    public void initialize(URL url, ResourceBundle rb) { 
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
-        //setData();
 
     }
 }
