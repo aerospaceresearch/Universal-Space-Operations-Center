@@ -13,6 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
+import javafx.embed.swing.SwingNode;
+import javafx.fxml.FXML;
+import javafx.scene.layout.Pane;
+import javax.swing.SwingUtilities;
+
 /** 
  * 
  * @author Victor 
@@ -30,8 +36,6 @@ public class MainPanelController extends DataController implements Initializable
     public LineChart<Number, Number> lineChart4;
     @FXML
     public LineChart<Number, Number> lineChart5;
-    @FXML
-    public LineChart<Number, Number> lineChart6;
 
     @Override
     public void updateData(MessageController mc, USOCEvent e) {
@@ -51,9 +55,6 @@ public class MainPanelController extends DataController implements Initializable
 
         lineChart5.getXAxis().setAutoRanging(true);
         lineChart5.getYAxis().setAutoRanging(true);
-
-        lineChart6.getXAxis().setAutoRanging(true);
-        lineChart6.getYAxis().setAutoRanging(true);
 
         //in case this is an error event, ignore it
         if (e instanceof ErrorEvent) {
@@ -133,10 +134,24 @@ public class MainPanelController extends DataController implements Initializable
         return series;
     }
 
+    @FXML private Pane pane;
+    public SwingNode buildWW() {
+        final SwingNode node = new SwingNode();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                node.setContent(new GNSSPanel());
+            }
+        });
+        return node;
+    }
+
     @Override 
     public void initialize(URL url, ResourceBundle rb) { 
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
+
+        pane.getChildren().add(buildWW());
 
     }
 }

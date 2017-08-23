@@ -14,7 +14,7 @@
               </rowConstraints>
               <children>
                 <Button text="Connect" onAction="#serialConnect" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="-Infinity" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" mnemonicParsing="false" />
-                <Button text="Send Command" onAction="#serialSendCommand" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="-Infinity" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" mnemonicParsing="false" />
+                <Button text="Send Command" onAction="#serialSendCommand" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="-Infinity" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" mnemonicParsing="false" />
                 <ComboBox fx:id="comboBox1" promptText="Baudrates" GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="135.0" minWidth="135.0" prefWidth="135.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" >
                   <items>
                     <FXCollections fx:factory="observableArrayList">

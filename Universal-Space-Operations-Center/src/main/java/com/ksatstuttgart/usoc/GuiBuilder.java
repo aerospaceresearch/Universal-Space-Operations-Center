@@ -158,6 +158,27 @@ public class GuiBuilder {
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
         writer.println("<BorderPane maxHeight=\"-Infinity\" maxWidth=\"-Infinity\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"400.0\" prefWidth=\"600.0\" xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\">\n");
+        writer.println("   <top>\n"
+                + "      <MenuBar BorderPane.alignment=\"CENTER\">\n"
+                + "        <menus>\n"
+                + "          <Menu mnemonicParsing=\"false\" text=\"File\">\n"
+                + "            <items>\n"
+                + "              <MenuItem mnemonicParsing=\"false\" text=\"Close\" />\n"
+                + "            </items>\n"
+                + "          </Menu>\n"
+                + "          <Menu mnemonicParsing=\"false\" text=\"Edit\">\n"
+                + "            <items>\n"
+                + "              <MenuItem mnemonicParsing=\"false\" text=\"Delete\" />\n"
+                + "            </items>\n"
+                + "          </Menu>\n"
+                + "          <Menu mnemonicParsing=\"false\" text=\"Help\">\n"
+                + "            <items>\n"
+                + "              <MenuItem mnemonicParsing=\"false\" text=\"About\" />\n"
+                + "            </items>\n"
+                + "          </Menu>\n"
+                + "        </menus>\n"
+                + "      </MenuBar>\n"
+                + "   </top>\n");
         if (statePanel) {
             writer.println("   <left> \n"
                     + "      <fx:include source = \"/fxml/CurrentStatePanel.fxml\" /> \n"

@@ -19,58 +19,56 @@
                 <RowConstraints maxHeight="400.0" minHeight="200.0" prefHeight="300.0" vgrow="SOMETIMES" />
               </rowConstraints>
               <children>
-                <LineChart fx:id="lineChart1" title="Chart 1" GridPane.columnIndex="0" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart1" title="Thermocouples" GridPane.columnIndex="0" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
                   <yAxis>
-                    <NumberAxis label="Current [A]" side="LEFT" />
+                    <NumberAxis label="Temperature [°C]" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart2" title="Chart 2" GridPane.columnIndex="1" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart2" title="Pressuresensors" GridPane.columnIndex="1" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
                   <yAxis>
-                    <NumberAxis label="Power [W]" side="LEFT" />
+                    <NumberAxis label="Pressure [kPa]" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart3" title="Chart 3" GridPane.columnIndex="0" GridPane.rowIndex="1" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart3" title="Time Signal" GridPane.columnIndex="0" GridPane.rowIndex="1" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
                   <yAxis>
-                    <NumberAxis label="Height [m]" side="LEFT" />
+                    <NumberAxis label="Time" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart4" title="Chart 4" GridPane.columnIndex="1" GridPane.rowIndex="1" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart4" title="Battery Voltage" GridPane.columnIndex="1" GridPane.rowIndex="1" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
                   <yAxis>
-                    <NumberAxis label="Current [A]" side="LEFT" />
+                    <NumberAxis label="Voltage [V]" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart5" title="Chart 5" GridPane.columnIndex="0" GridPane.rowIndex="2" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart5" title="IMU" GridPane.columnIndex="0" GridPane.rowIndex="2" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
                   <yAxis>
-                    <NumberAxis label="Power [W]" side="LEFT" />
-                  </yAxis>
-                </LineChart>
-                <LineChart fx:id="lineChart6" title="Chart 6" GridPane.columnIndex="1" GridPane.rowIndex="2" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
-                  <xAxis>
-                    <NumberAxis label="Time [s]" side="BOTTOM" />
-                  </xAxis>
-                  <yAxis>
-                    <NumberAxis label="Height [m]" side="LEFT" />
+                    <NumberAxis label="Quaternions" side="LEFT" />
                   </yAxis>
                 </LineChart>
               </children>
             </GridPane>
           </content>
         </ScrollPane>
+      </content>
+    </Tab>
+    <Tab text="GNSS 3D View">
+      <content>
+        <Pane fx:id="pane">
+        </Pane>
       </content>
     </Tab>
   </tabs>
