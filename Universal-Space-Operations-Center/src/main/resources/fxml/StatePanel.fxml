@@ -1,0 +1,137 @@
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?> 
+<?import javafx.scene.layout.*?> 
+<?import javafx.geometry.*?> 
+
+<ScrollPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER"> 
+  <content> 
+    <VBox> 
+      <children>
+        <GridPane> 
+          <columnConstraints> 
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" /> 
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" /> 
+          </columnConstraints> 
+          <rowConstraints>
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+         </rowConstraints> 
+          <children> 
+            <Label text="Mode" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
+              <font> 
+                 <Font name="System Bold" size="14.0" /> 
+              </font> 
+            </Label>
+            <Label text="Safe" GridPane.columnIndex="0" GridPane.rowIndex="1"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelSafe" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label text="Idle" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelIdle" GridPane.columnIndex="1" GridPane.rowIndex="2"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label text="Preparation" GridPane.columnIndex="0" GridPane.rowIndex="3"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelPreparation" GridPane.columnIndex="1" GridPane.rowIndex="3"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label text="Execution" GridPane.columnIndex="0" GridPane.rowIndex="4"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelExecution" GridPane.columnIndex="1" GridPane.rowIndex="4"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label text="Observation" GridPane.columnIndex="0" GridPane.rowIndex="5"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelObservation" GridPane.columnIndex="1" GridPane.rowIndex="5"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label text="Diagnosis" GridPane.columnIndex="0" GridPane.rowIndex="6"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labelDiagnosis" GridPane.columnIndex="1" GridPane.rowIndex="6"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+          </children> 
+          <padding> 
+            <Insets bottom="20.0" /> 
+          </padding> 
+        </GridPane>
+        <GridPane> 
+          <columnConstraints> 
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" /> 
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" /> 
+          </columnConstraints> 
+          <rowConstraints>
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+            <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+         </rowConstraints> 
+          <children> 
+            <Label text="Test" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
+              <font> 
+                 <Font name="System Bold" size="14.0" /> 
+              </font> 
+            </Label>
+            <Label text="test1" GridPane.columnIndex="0" GridPane.rowIndex="1"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labeltest1" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label text="test2" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+            <Label fx:id="labeltest2" GridPane.columnIndex="1" GridPane.rowIndex="2"> 
+              <font>
+                 <Font size="12.0" />
+              </font>
+            </Label>
+          </children> 
+          <padding> 
+            <Insets bottom="20.0" /> 
+          </padding> 
+        </GridPane>
+      </children> 
+    </VBox> 
+  </content> 
+</ScrollPane>

@@ -67,8 +67,12 @@
     </Tab>
     <Tab text="GNSS 3D View">
       <content>
-        <Pane fx:id="pane">
-        </Pane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <children>
+            <Pane fx:id="pane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            </Pane>
+          </children>
+        </AnchorPane>
       </content>
     </Tab>
   </tabs>

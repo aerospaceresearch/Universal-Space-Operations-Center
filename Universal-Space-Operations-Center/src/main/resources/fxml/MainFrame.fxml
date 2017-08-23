@@ -29,6 +29,10 @@
       </MenuBar>
    </top>
 
+   <left> 
+      <fx:include source = "/fxml/StatePanel.fxml" /> 
+   </left> 
+
    <center> 
       <fx:include source = "/fxml/MainPanel.fxml" /> 
    </center> 

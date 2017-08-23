@@ -181,7 +181,7 @@ public class GuiBuilder {
                 + "   </top>\n");
         if (statePanel) {
             writer.println("   <left> \n"
-                    + "      <fx:include source = \"/fxml/CurrentStatePanel.fxml\" /> \n"
+                    + "      <fx:include source = \"/fxml/StatePanel.fxml\" /> \n"
                     + "   </left> \n");
         }
         writer.println("   <center> \n"
@@ -278,8 +278,12 @@ public class GuiBuilder {
         if (GNSS3dView) {
             writer.println("    <Tab text=\"GNSS 3D View\">\n"
                     + "      <content>\n"
-                    + "        <Pane fx:id=\"pane\">\n"
-                    + "        </Pane>\n"
+                    + "        <AnchorPane minHeight=\"0.0\" minWidth=\"0.0\" prefHeight=\"180.0\" prefWidth=\"200.0\">\n"
+                    + "          <children>\n"
+                    + "            <Pane fx:id=\"pane\" AnchorPane.bottomAnchor=\"0.0\" AnchorPane.leftAnchor=\"0.0\" AnchorPane.rightAnchor=\"0.0\" AnchorPane.topAnchor=\"0.0\">\n"
+                    + "            </Pane>\n"
+                    + "          </children>\n"
+                    + "        </AnchorPane>\n"
                     + "      </content>\n"
                     + "    </Tab>");
         }
@@ -781,7 +785,7 @@ public class GuiBuilder {
      * @param configPath
      * @throws java.io.IOException
      */
-    public static void currentStateBuilder(String filePath, String configPath) throws IOException {
+    public static void StateBuilder(String filePath, String configPath) throws IOException {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
@@ -793,63 +797,132 @@ public class GuiBuilder {
         PrintWriter writer = new PrintWriter(path + filePath);
 
         if (statePanel) {
-            writer.println("<?import javafx.scene.control.*?> \n"
-                    + "<?import javafx.scene.layout.*?> \n");
-            writer.println("<ScrollPane prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\"> \n"
+            writer.println("<?import javafx.scene.text.*?>\n"
+                    + "<?import javafx.scene.control.*?> \n"
+                    + "<?import javafx.scene.layout.*?> \n"
+                    + "<?import javafx.geometry.*?> \n");
+            writer.println(""
+                    + "<ScrollPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fitToHeight=\"true\" fitToWidth=\"true\" prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\"> \n"
                     + "  <content> \n"
-                    + "    <VBox prefHeight=\"200.0\" prefWidth=\"100.0\"> \n"
+                    + "    <VBox> \n"
                     + "      <children>");
 
             // Generates boxes
             for (int counter = 1; counter <= numberOfBoxes; counter++) {
                 writer.println("        <GridPane> \n"
                         + "          <columnConstraints> \n"
-                        + "            <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                        + "            <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                        + "            <ColumnConstraints halignment=\"LEFT\" hgrow=\"SOMETIMES\" /> \n"
+                        + "            <ColumnConstraints halignment=\"RIGHT\" hgrow=\"SOMETIMES\" /> \n"
                         + "          </columnConstraints> \n"
                         + "          <rowConstraints>");
 
                 // Declares necessary parameters
-                int numberOfValues = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
-                int numberOfRows;
-
-                // Sets number of rows depending on required number of control items
-                if (numberOfValues % 2 == 0) {
-                    numberOfRows = numberOfValues / 2;
-                } else {
-                    numberOfRows = (numberOfValues + 1) / 2;
-                }
+                int numberOfRows = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
 
                 // Writes FXML data
                 for (int i = 1; i <= numberOfRows; i++) {
-                    writer.println("            <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
+                    writer.println("            <RowConstraints maxHeight=\"20.0\" minHeight=\"20.0\" prefHeight=\"20.0\" valignment=\"CENTER\" />");
                 }
                 writer.println("         </rowConstraints> \n"
                         + "          <children> \n"
-                        + "            <Label text=\"" + config.getProperty("boxTitle[" + counter + "]") + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"0\" />");
+                        + "            <Label text=\"" + config.getProperty("boxTitle[" + counter + "]") + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"0\"> \n"
+                        + "              <font> \n"
+                        + "                 <Font name=\"System Bold\" size=\"14.0\" /> \n"
+                        + "              </font> \n"
+                        + "            </Label>");
 
                 // Writes FXML data of box content
-                for (int j = 1; j <= numberOfValues; j++) {
+                for (int j = 1; j <= numberOfRows; j++) {
                     String keyword = config.getProperty("keyword[" + counter + "][" + j + "]");
-                    writer.println("            <Label text=\"" + keyword + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"" + j + "\" />");
+                    writer.println("            <Label text=\"" + keyword + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"" + j + "\"> \n"
+                            + "              <font>\n"
+                            + "                 <Font size=\"12.0\" />\n"
+                            + "              </font>\n"
+                            + "            </Label>\n"
+                            + "            <Label fx:id=\"label" + keyword + "\" GridPane.columnIndex=\"1\" GridPane.rowIndex=\"" + j + "\"> \n"
+                            + "              <font>\n"
+                            + "                 <Font size=\"12.0\" />\n"
+                            + "              </font>\n"
+                            + "            </Label>");
                 }
                 writer.println("          </children> \n"
+                        + "          <padding> \n"
+                        + "            <Insets bottom=\"20.0\" /> \n"
+                        + "          </padding> \n"
                         + "        </GridPane>");
             }
-
             writer.println("      </children> \n"
                     + "    </VBox> \n"
                     + "  </content> \n"
                     + "</ScrollPane>");
-
-            // Prints status update
-            System.out.println("Data panel has been updated!");
         } else {
             writer.println("");
         }
         writer.close();
         
         // Prints status update
-        System.out.println("CurrentStatePanel.fxml has been updated!");
+        System.out.println("StatePanel.fxml has been updated!");
+    }
+    
+    
+    
+        /**
+     * Method writes the controller of the state panel generically depending on
+     * input in the properties file
+     *
+     * @param filePath
+     * @param configPath
+     * @throws java.io.FileNotFoundException
+     * @throws java.io.IOException
+     */
+    public static void statePanelControlBuilder(String filePath, String configPath) throws FileNotFoundException, IOException {
+
+        // Declares necessary parameters
+        Properties config = ConfigHandler.getAllValues(configPath);
+        int numberOfBoxes = ConfigHandler.countItems("boxTitle", configPath);
+        String path = "src/main/java/com/ksatstuttgart/usoc/";
+
+        // Writes data in LogController.java file
+        PrintWriter writer = new PrintWriter(path + filePath);
+        writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
+        writer.println("import java.net.URL; \n"
+                + "import java.util.ResourceBundle; \n"
+                + "import javafx.fxml.FXML; \n"
+                + "import java.awt.Label; \n"
+                + "import javafx.fxml.Initializable; \n");
+        writer.println("/** \n"
+                + " * \n"
+                + " * @author Victor \n"
+                + " */ \n");
+        writer.println("public class StatePanelController implements Initializable { \n");
+        
+        for (int counter = 1; counter <= numberOfBoxes; counter++) {
+            int numberOfRows = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
+            for (int i = 1; i <= numberOfRows; i++) {
+                String keyword = config.getProperty("keyword[" + counter + "][" + i + "]");
+                writer.println("    @FXML Label label" + keyword + ";");
+            }
+        }
+        writer.println("\n"
+                + "    public void updateStates() {");
+        for (int counter = 1; counter <= numberOfBoxes; counter++) {
+            int numberOfRows = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
+            for (int i = 1; i <= numberOfRows; i++) {
+                String keyword = config.getProperty("keyword[" + counter + "][" + i + "]");
+                writer.println("        label" + keyword + ".setText(\"label" + keyword + "\");");
+            }
+        }
+        writer.println("    }\n");
+        writer.println("    @Override \n"
+                + "    public void initialize(URL url, ResourceBundle rb) { \n"
+                + "        // TODO \n"
+                + "        updateStates();\n"
+                + "    } \n"
+                + "}");
+
+        writer.close();
+        
+        // Prints status update
+        System.out.println("StatePanelController.java has been updated!");        
     }
 }

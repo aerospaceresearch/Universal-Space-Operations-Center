@@ -112,7 +112,7 @@ public class GuiBuilderTest {
     @Test
     public void testCurrentStateBuilder() throws Exception {
         System.out.println("currentStateBuilder() has been tested");
-        GuiBuilder.currentStateBuilder("testData/CurrentStatePanel.fxml", "testData/test.properties");
+        GuiBuilder.StateBuilder("testData/CurrentStatePanel.fxml", "testData/test.properties");
     }
     
 }
