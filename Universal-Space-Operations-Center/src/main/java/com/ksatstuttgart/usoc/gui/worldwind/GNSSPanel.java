@@ -34,7 +34,7 @@ import com.ksatstuttgart.usoc.gui.DataPanel;
 import gov.nasa.worldwind.Model;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.awt.WorldWindowGLJPanel;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Matrix;
 import gov.nasa.worldwind.geom.Position;
@@ -60,11 +60,13 @@ import gov.nasa.worldwind.util.StatusBar;
 import gov.nasa.worldwind.view.ViewUtil;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import java.awt.BorderLayout;
+import javafx.geometry.Insets;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import javafx.embed.swing.SwingNode;
+import javafx.scene.layout.StackPane;
 import javax.swing.BoxLayout;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -74,7 +76,7 @@ import javax.swing.border.EmptyBorder;
  */
 public class GNSSPanel extends DataPanel {
 
-    WorldWindowGLCanvas wwp_big, wwp_topView, wwp_sideView;
+    WorldWindowGLJPanel wwp_big, wwp_topView, wwp_sideView;
     BasicOrbitView bov_big, bov_topView, bov_sideView;
     
     StatusBar statusBar;
@@ -83,10 +85,12 @@ public class GNSSPanel extends DataPanel {
     MarkerLayer markerLayer;
 
     JPanel sidePanel;
+    
+    SwingNode sn_bot, sn_top;
 
     private static final boolean OFFLINEMODE = true;
 
-    public GNSSPanel() {
+    public GNSSPanel(StackPane pane) {
         super();
         
         boolean networkUnavailable = WorldWind.getNetworkStatus().isNetworkUnavailable();
@@ -97,11 +101,9 @@ public class GNSSPanel extends DataPanel {
         pathLayer = new RenderableLayer();
         markerLayer = new MarkerLayer();
 
-        wwp_big = new WorldWindowGLCanvas();
-        wwp_topView = new WorldWindowGLCanvas();
-        wwp_sideView = new WorldWindowGLCanvas();
-
-        JLayeredPane jlp = new JLayeredPane();
+        wwp_big = new WorldWindowGLJPanel();
+        wwp_topView = new WorldWindowGLJPanel();
+        wwp_sideView = new WorldWindowGLJPanel();
 
         sidePanel = new JPanel();
         sidePanel.setOpaque(true);
@@ -109,15 +111,12 @@ public class GNSSPanel extends DataPanel {
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
         sidePanel.add(wwp_topView);
         sidePanel.add(wwp_sideView);
-
-        jlp.add(wwp_big, JLayeredPane.MODAL_LAYER);
-        jlp.add(sidePanel, JLayeredPane.DEFAULT_LAYER);
-
+       
         wwp_big.setBounds(0, 0, 600, 600);
         sidePanel.setBounds(400, 0, 200, 200);
 
         this.setLayout(new BorderLayout());
-        this.add(jlp);
+        this.add(wwp_big);
         statusBar = new StatusBar();
         statusBar.setBorder(new EmptyBorder(5, 5, 5, 5));
         
@@ -160,6 +159,14 @@ public class GNSSPanel extends DataPanel {
         bov_topView = new BasicOrbitView();
         bov_topView.setGlobe(flatEarth);
         wwp_topView.setView(bov_topView);
+        
+        sn_bot = new SwingNode();
+        sn_bot.setContent(this);
+        
+        sn_top = new SwingNode();
+        sn_top.setContent(sidePanel);
+        
+        pane.getChildren().addAll(sn_bot,sn_top);
     }
 
     /**
@@ -187,13 +194,13 @@ public class GNSSPanel extends DataPanel {
         //getting the width and height for the big world window
         int width = this.getWidth();
         int height = this.getHeight() - statusBar.getHeight();
-        wwp_big.setBounds(0, 0, width, height);
         //setting the height and width of the sidePanel to a third of the big window
         int spHeight = height / 3;
         int spWidth = width / 3;
         //setting the sidePanel in the upper right corner with the respective width 
         //and height
-        sidePanel.setBounds(width - spWidth, 0, spWidth, spHeight);
+        
+        StackPane.setMargin(sn_top, new Insets(0,0,height-spHeight,width-spWidth));
     }
 
     /**

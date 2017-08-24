@@ -1,7 +1,7 @@
-package com.ksatstuttgart.usoc.gui.controller; 
+package com.ksatstuttgart.usoc.gui.controller;
 
 import com.ksatstuttgart.usoc.controller.DataModification;
-import java.net.URL; 
+import java.net.URL;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.ErrorEvent;
@@ -9,22 +9,18 @@ import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import java.util.ResourceBundle;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
-import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
-import javafx.scene.layout.Pane;
-import javax.swing.SwingUtilities;
+import javafx.scene.layout.StackPane;
 
-/** 
- * 
- * @author Victor 
- */ 
-
-public class MainPanelController extends DataController implements Initializable { 
+/**
+ *
+ * @author Victor
+ */
+public class MainPanelController extends DataController implements Initializable {
 
     @FXML
     public LineChart<Number, Number> lineChart1;
@@ -39,7 +35,6 @@ public class MainPanelController extends DataController implements Initializable
 
     @Override
     public void updateData(MessageController mc, USOCEvent e) {
-
 
         lineChart1.getXAxis().setAutoRanging(true);
         lineChart1.getYAxis().setAutoRanging(true);
@@ -71,7 +66,7 @@ public class MainPanelController extends DataController implements Initializable
                 //thermocouple sensors have only one variable with the current
                 //data scheme it uses the sensor name as variable name 
                 for (Var var : adjusted.getVars()) {
-                    addVarToChart(var,lineChart1);
+                    addVarToChart(var, lineChart1);
                 }
             }
 
@@ -80,7 +75,7 @@ public class MainPanelController extends DataController implements Initializable
                 //pressure sensors have only one variable with the current
                 //data scheme and it uses the sensor name as variable name 
                 for (Var var : adjusted.getVars()) {
-                    addVarToChart(var,lineChart2);
+                    addVarToChart(var, lineChart2);
                 }
             }
 
@@ -89,7 +84,7 @@ public class MainPanelController extends DataController implements Initializable
                 //pressure sensors have only one variable with the current
                 //data scheme and it uses the sensor name as variable name 
                 for (Var var : adjusted.getVars()) {
-                    addVarToChart(var,lineChart3);
+                    addVarToChart(var, lineChart3);
                 }
             }
 
@@ -98,7 +93,7 @@ public class MainPanelController extends DataController implements Initializable
                 //voltage sensors have only one variable with the current
                 //data scheme and it uses the sensor name as variable name 
                 for (Var var : adjusted.getVars()) {
-                    addVarToChart(var,lineChart4);
+                    addVarToChart(var, lineChart4);
                 }
             }
 
@@ -107,12 +102,11 @@ public class MainPanelController extends DataController implements Initializable
                 for (Var var : adjusted.getVars()) {
                     //only visualize quaternion data ignore calibration data
                     //for chart
-                    addVarToChart(var,lineChart5);
+                    addVarToChart(var, lineChart5);
                 }
             }
         }
     }
-
 
     private void addVarToChart(Var var, LineChart<Number, Number> chart) {
         XYChart.Series series = getSeriesForChart(var, chart);
@@ -120,7 +114,6 @@ public class MainPanelController extends DataController implements Initializable
             series.getData().add(new XYChart.Data<>(time, var.getValues().get(time)));
         }
     }
-
 
     private XYChart.Series getSeriesForChart(Var var, LineChart<Number, Number> chart) {
         for (XYChart.Series<Number, Number> series : chart.getData()) {
@@ -134,24 +127,14 @@ public class MainPanelController extends DataController implements Initializable
         return series;
     }
 
-    @FXML private Pane pane;
-    public SwingNode buildWW() {
-        final SwingNode node = new SwingNode();
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                node.setContent(new GNSSPanel());
-            }
-        });
-        return node;
-    }
+    @FXML
+    private StackPane pane;
 
-    @Override 
-    public void initialize(URL url, ResourceBundle rb) { 
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
 
-        pane.getChildren().add(buildWW());
-
+        new GNSSPanel(pane);
     }
 }
