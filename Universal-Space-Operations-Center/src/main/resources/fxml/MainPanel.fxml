@@ -1,11 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?> 
+<?import javafx.scene.control.*?> 
+<?import javafx.scene.layout.*?> 
 
-<?import java.lang.*?>
-<?import javafx.scene.chart.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.ksatstuttgart.usoc.gui.controller.MainPanelController"> 
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.MainPanelController" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
    <tabs>
     <Tab text="Graphs"> 
       <content> 
@@ -22,7 +19,7 @@
                 <RowConstraints maxHeight="400.0" minHeight="200.0" prefHeight="300.0" vgrow="SOMETIMES" />
               </rowConstraints>
               <children>
-                <LineChart fx:id="lineChart1" maxHeight="400.0" minHeight="200.0" title="Thermocouples" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart1" title="Thermocouples" GridPane.columnIndex="0" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
@@ -30,7 +27,7 @@
                     <NumberAxis label="Temperature [°C]" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart2" maxHeight="400.0" minHeight="200.0" title="Pressuresensors" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="0" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart2" title="Pressuresensors" GridPane.columnIndex="1" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
@@ -38,7 +35,7 @@
                     <NumberAxis label="Pressure [kPa]" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart3" maxHeight="400.0" minHeight="200.0" title="Time Signal" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart3" title="Time Signal" GridPane.columnIndex="0" GridPane.rowIndex="1" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
@@ -46,7 +43,7 @@
                     <NumberAxis label="Time" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart4" maxHeight="400.0" minHeight="200.0" title="Battery Voltage" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart4" title="Battery Voltage" GridPane.columnIndex="1" GridPane.rowIndex="1" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
@@ -54,7 +51,7 @@
                     <NumberAxis label="Voltage [V]" side="LEFT" />
                   </yAxis>
                 </LineChart>
-                <LineChart fx:id="lineChart5" maxHeight="400.0" minHeight="200.0" title="IMU" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                <LineChart fx:id="lineChart5" title="IMU" GridPane.columnIndex="0" GridPane.rowIndex="2" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                   <xAxis>
                     <NumberAxis label="Time [s]" side="BOTTOM" />
                   </xAxis>
@@ -71,9 +68,10 @@
     <Tab text="GNSS 3D View">
       <content>
         <StackPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="200.0">
-          
+
         </StackPane>
       </content>
     </Tab>
   </tabs>
 </TabPane>
+
