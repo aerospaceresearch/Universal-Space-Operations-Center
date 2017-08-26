@@ -23,6 +23,7 @@
  */
 package com.ksatstuttgart.usoc;
 
+import com.ksatstuttgart.usoc.gui.setup.ConfigHandler;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
 import com.ksatstuttgart.usoc.gui.MainFrame;

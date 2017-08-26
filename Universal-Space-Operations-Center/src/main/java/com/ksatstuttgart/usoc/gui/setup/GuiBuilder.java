@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc;
+package com.ksatstuttgart.usoc.gui.setup;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

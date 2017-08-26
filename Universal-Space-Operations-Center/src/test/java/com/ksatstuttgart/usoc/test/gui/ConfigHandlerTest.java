@@ -23,7 +23,7 @@
  */
 package com.ksatstuttgart.usoc.test.gui;
 
-import com.ksatstuttgart.usoc.ConfigHandler;
+import com.ksatstuttgart.usoc.gui.setup.ConfigHandler;
 import java.util.Properties;
 import javafx.stage.Stage;
 import org.junit.After;

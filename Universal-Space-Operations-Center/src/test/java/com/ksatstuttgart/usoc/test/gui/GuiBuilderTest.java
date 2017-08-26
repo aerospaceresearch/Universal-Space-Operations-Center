@@ -23,7 +23,7 @@
  */
 package com.ksatstuttgart.usoc.test.gui;
 
-import com.ksatstuttgart.usoc.GuiBuilder;
+import com.ksatstuttgart.usoc.gui.setup.GuiBuilder;
 import java.io.IOException;
 import javafx.stage.Stage;
 import org.junit.After;
