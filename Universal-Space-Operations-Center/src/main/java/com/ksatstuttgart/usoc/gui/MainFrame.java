@@ -70,7 +70,7 @@ public class MainFrame extends JFrame {
                                           JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                                           JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         
-        gnssPanel = null;//new GNSSPanel();
+        gnssPanel = new GNSSPanel(true);
         dataTabs.addTab("Graphs", jsp);
         dataTabs.addTab("GNSS 3D View", gnssPanel);
         
