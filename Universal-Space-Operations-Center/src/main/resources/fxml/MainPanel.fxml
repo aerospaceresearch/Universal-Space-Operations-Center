@@ -65,13 +65,6 @@
         </ScrollPane>
       </content>
     </Tab>
-    <Tab text="GNSS 3D View">
-      <content>
-        <StackPane fx:id="pane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="200.0">
-
-        </StackPane>
-      </content>
-    </Tab>
   </tabs>
 </TabPane>
 

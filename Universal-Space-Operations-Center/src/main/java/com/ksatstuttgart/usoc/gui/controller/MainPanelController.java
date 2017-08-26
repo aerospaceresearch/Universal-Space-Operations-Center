@@ -1,7 +1,7 @@
-package com.ksatstuttgart.usoc.gui.controller;
+package com.ksatstuttgart.usoc.gui.controller; 
 
 import com.ksatstuttgart.usoc.controller.DataModification;
-import java.net.URL;
+import java.net.URL; 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.ErrorEvent;
@@ -13,15 +13,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
-import javafx.fxml.FXML;
-import javafx.scene.layout.StackPane;
-
-/**
- *
- * @author Victor
+/** 
+ * 
+ * @author Victor 
  */
-public class MainPanelController extends DataController implements Initializable {
+public class MainPanelController extends DataController implements Initializable { 
 
     @FXML
     public LineChart<Number, Number> lineChart1;
@@ -128,13 +124,9 @@ public class MainPanelController extends DataController implements Initializable
         return series;
     }
 
-    @FXML
-    private StackPane pane;
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
+    @Override 
+    public void initialize(URL url, ResourceBundle rb) { 
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
-        GNSSPanel.addGNSSPaneltoStackPane(pane);
     }
 }

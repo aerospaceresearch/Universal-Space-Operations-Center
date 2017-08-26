@@ -24,14 +24,14 @@
                 <Label text="Received at:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Label text="Add file:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Button text="Clear Data" onAction="#iridiumClearData" GridPane.columnIndex="0" GridPane.rowIndex="5" prefWidth="90.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
-                <Label text="#Masseges on reconnect:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label text="#Messages on reconnect:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Button text="exportCSV" onAction="#iridiumExportCSV" GridPane.columnIndex="0" GridPane.rowIndex="7" prefWidth="90.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Label fx:id="iridiumLastFrom" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Label fx:id="iridiumLastSubject" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Label fx:id="iridiumLastFilename" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Label fx:id="iridiumLastTimestamp" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Button text="Open" onAction="#iridiumOpen" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="60.0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
-                <TextField text="0" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT" maxWidth="60.0" prefWidth="60.0" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <TextField text="0" fx:id="iridiumReconnectField" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT" maxWidth="60.0" prefWidth="60.0" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <Button text="Reconnect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="7" prefWidth="90.0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
               </children>
             </GridPane>
