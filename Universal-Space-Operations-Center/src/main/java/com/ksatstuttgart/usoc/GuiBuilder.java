@@ -323,6 +323,7 @@ public class GuiBuilder {
                 + "import com.ksatstuttgart.usoc.data.message.Var;\n"
                 + "import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;\n"
                 + "import java.util.ResourceBundle;\n"
+                + "import javafx.fxml.FXML;\n"
                 + "import javafx.fxml.Initializable;\n"
                 + "import javafx.scene.chart.LineChart;\n"
                 + "import javafx.scene.chart.XYChart;");
@@ -428,7 +429,7 @@ public class GuiBuilder {
                 + "        // TODO\n"
                 + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());");
         if (GNSS3dView) {
-            writer.println("        new GNSSPanel(pane);");
+            writer.println("        GNSSPanel.addGNSSPaneltoStackPane(pane);");
         }
         writer.println("    }\n"
                 + "}");
@@ -515,10 +516,10 @@ public class GuiBuilder {
                     + "<BorderPane> \n"
                     + "<padding><Insets top=\"5\" right=\"5\" bottom=\"5\" left=\"5\"/></padding> \n"
                     + "  <top> \n"
-                    + "    <GridPane> \n"
+                    + "    <GridPane alignment=\"TOP_CENTER\" BorderPane.alignment=\"CENTER\">\n"
                     + "      <columnConstraints> \n"
-                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
-                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" minWidth=\"10.0\" prefWidth=\"100.0\" /> \n"
+                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" /> \n"
+                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" /> \n"
                     + "      </columnConstraints> \n"
                     + "      <rowConstraints>");
 
@@ -551,15 +552,15 @@ public class GuiBuilder {
                 switch (control) {
                     case "button":
                         writer.println("        <Button text=\"" + config.getProperty("bText[" + counter + "][" + j + "]") + "\" onAction=\"#button" + counter + j + "\" "
-                                + "mnemonicParsing=\"false\"" + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
+                                + "mnemonicParsing=\"false\"" + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" maxWidth=\"-Infinity\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" GridPane.halignment=\"RIGHT\" GridPane.hgrow=\"SOMETIMES\"/>");
                         break;
                     case "textField":
                         writer.println("        <TextField promptText=\"" + config.getProperty("promptText[" + counter + "][" + j + "]")
-                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
+                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"RIGHT\" maxWidth=\"60.0\" prefWidth=\"60.0\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
                         break;
                     case "label":
                         writer.println("        <Label text=\"" + config.getProperty("lText[" + counter + "][" + j + "]")
-                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" />");
+                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"RIGHT\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
                         break;
                 }
             }
@@ -601,6 +602,8 @@ public class GuiBuilder {
         Properties config = ConfigHandler.getAllValues(configPath);
         int numberOfAddTabs = ConfigHandler.countItems("tabTitle", configPath);
         int maxNumberOfItems = 0;
+        boolean serialPanel = Boolean.parseBoolean(config.getProperty("serialPanel"));
+        boolean iridiumPanel = Boolean.parseBoolean(config.getProperty("iridiumPanel"));
         String path = "src/main/java/com/ksatstuttgart/usoc/";
 
         for (int counter = 1; counter <= numberOfAddTabs; counter++) {
@@ -628,32 +631,48 @@ public class GuiBuilder {
 
         // Writes data in LogController.java file
         PrintWriter writer = new PrintWriter(path + filePath);
-        writer.println("package com.ksatstuttgart.usoc.gui.controller; \n");
-        writer.println("import java.net.URL; \n"
-                + "import java.util.ResourceBundle; \n"
-                + "import javafx.event.ActionEvent; \n"
-                + "import javafx.fxml.FXML; \n"
-                + "import com.ksatstuttgart.usoc.controller.communication.SerialComm;\n"
-                + "import com.ksatstuttgart.usoc.controller.communication.MailReceiver;\n"
-                + "import com.ksatstuttgart.usoc.controller.MainController;\n"
-                + "import java.util.ArrayList;\n"
-                + "import com.ksatstuttgart.usoc.controller.MessageController;\n"
-                + "import com.ksatstuttgart.usoc.data.DataSource;\n"
-                + "import com.ksatstuttgart.usoc.data.ErrorEvent;\n"
-                + "import com.ksatstuttgart.usoc.data.MailEvent;\n"
-                + "import com.ksatstuttgart.usoc.data.SerialEvent;\n"
-                + "import com.ksatstuttgart.usoc.data.USOCEvent;\n"
-                + "import javafx.fxml.Initializable; \n"
-                + "import javafx.scene.control.ComboBox; \n"
-                + "import javafx.scene.control.TextArea;\n"
-                + "import javax.mail.Address; \n");
+        writer.println("package com.ksatstuttgart.usoc.gui.controller;\n");
+        writer.println("import java.net.URL;\n"
+                + "import java.util.ResourceBundle;\n"
+                + "import javafx.event.ActionEvent;\n"
+                + "import javafx.fxml.FXML;\n"
+                + "import javafx.fxml.Initializable;\n");
+        if (serialPanel == true || iridiumPanel == true) {
+            writer.println("// Imports for serialLog or iridiumLog\n"
+                    + "import com.ksatstuttgart.usoc.controller.MainController;\n"
+                    + "import com.ksatstuttgart.usoc.controller.MessageController;\n"
+                    + "import com.ksatstuttgart.usoc.data.DataSource;\n"
+                    + "import com.ksatstuttgart.usoc.data.ErrorEvent;\n"
+                    + "import com.ksatstuttgart.usoc.data.USOCEvent;\n"
+                    + "import javafx.scene.control.TextArea;\n");
+        }
+        if (serialPanel) {
+            writer.println("// Specific imports for serialLog\n"
+                    + "import com.ksatstuttgart.usoc.controller.communication.SerialComm;\n"
+                    + "import java.util.ArrayList;\n"
+                    + "import com.ksatstuttgart.usoc.data.SerialEvent;\n"
+                    + "import javafx.scene.control.ComboBox;\n");
+        }
+        if (iridiumPanel) {
+            writer.println("// Specific imports for iridiumLog\n"
+                    + "import com.ksatstuttgart.usoc.controller.communication.MailReceiver;\n"
+                    + "import com.ksatstuttgart.usoc.data.MailEvent;\n"
+                    + "import java.util.Date;\n"
+                    + "import javafx.scene.control.Label;\n"
+                    + "import javax.mail.Address;\n");
+        }
+        
         writer.println("/** \n"
                 + " * \n"
                 + " * @author Victor \n"
                 + " */ \n");
-        writer.println("public class LogPanelController extends DataController implements Initializable { \n");
+        writer.print("public class LogPanelController ");
+        if (serialPanel || iridiumPanel) {
+            writer.print("extends DataController ");
+        }
+        writer.println("implements Initializable { \n");
 
-        if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
+        if (serialPanel) {
             writer.println("    @FXML private ComboBox comboBox1; \n"
                     + "    @FXML private ComboBox comboBox2; \n"
                     + "    @FXML private ComboBox comboBox3; \n"
@@ -684,8 +703,12 @@ public class GuiBuilder {
                     + "    } \n");
         }
 
-        if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
-            writer.println("    @FXML private TextArea iridiumTextArea; \n\n"
+        if (iridiumPanel) {
+            writer.println("    @FXML private TextArea iridiumTextArea; \n"
+                    + "    @FXML private Label iridiumLastFrom; \n"
+                    + "    @FXML private Label iridiumLastSubject; \n"
+                    + "    @FXML private Label iridiumLastFilename; \n"
+                    + "    @FXML private Label iridiumLastTimestamp; \n\n"
                     + "    @FXML \n"
                     + "    private void iridiumOpen(ActionEvent event) { \n"
                     + "        System.out.println(\"Open button in iridium log has been pressed!\");\n"
@@ -707,6 +730,77 @@ public class GuiBuilder {
                     + "        MailReceiver.getInstance().reconnect(); \n"
                     + "    } \n");
         }
+        
+        if (serialPanel == true && iridiumPanel == true) {
+            
+            writer.println("    @Override\n"
+                    + "    public void updateData(MessageController msgController, USOCEvent ue) {\n"
+                    + "        if (ue instanceof MailEvent) {\n"
+                    + "            MailEvent e = (MailEvent) ue;\n"
+                    + "            String s = \"\";\n"
+                    + "            for (Address from : e.getFrom()) {\n"
+                    + "                s += \",\" + from.toString();\n"
+                    + "            }\n"
+                    + "            //Setting label texts\n"
+                    + "            iridiumLastFrom.setText(s.substring(1));\n"
+                    + "            iridiumLastSubject.setText(e.getSubject());\n"
+                    + "            iridiumLastFilename.setText(e.getFilename());\n"
+                    + "            iridiumLastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());\n"
+                    + "            iridiumTextArea.setText(msgController.getData().toString());\n"
+                    + "        } else if (ue instanceof SerialEvent) {\n"
+                    + "            serialTextArea.setText(((SerialEvent)ue).getMsg());\n"
+                    + "        } else if (ue instanceof ErrorEvent) {\n"
+                    + "            if (DataSource.MAIL == ue.getDataSource()) {\n"
+                    + "                iridiumTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
+                    + "            } else if (DataSource.SERIAL == ue.getDataSource()) {\n"
+                    + "                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
+                    + "            }\n"
+                    + "        } else {\n"
+                    + "            serialTextArea.setText(msgController.getData().toString());\n"
+                    + "            iridiumTextArea.setText(msgController.getData().toString());\n"
+                    + "        }\n"
+                    + "    }\n");
+            
+        } else if (serialPanel == true && iridiumPanel == false) {
+            
+            writer.println("    @Override\n"
+                    + "    public void updateData(MessageController msgController, USOCEvent ue) {\n"
+                    + "        if (ue instanceof SerialEvent) {\n"
+                    + "            serialTextArea.setText(((SerialEvent)ue).getMsg());\n"
+                    + "        } else if (ue instanceof ErrorEvent) {\n"
+                    + "            if (DataSource.SERIAL == ue.getDataSource()) {\n"
+                    + "                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
+                    + "            }\n"
+                    + "        } else {\n"
+                    + "            serialTextArea.setText(msgController.getData().toString());\n"
+                    + "        }\n"
+                    + "    }\n");
+            
+        } else if (serialPanel == false && iridiumPanel == true) {
+            
+            writer.println("    @Override\n"
+                    + "    public void updateData(MessageController msgController, USOCEvent ue) {\n"
+                    + "        if (ue instanceof MailEvent) {\n"
+                    + "            MailEvent e = (MailEvent) ue;\n"
+                    + "            String s = \"\";\n"
+                    + "            for (Address from : e.getFrom()) {\n"
+                    + "                s += \",\" + from.toString();\n"
+                    + "            }\n"
+                    + "            //Setting label texts\n"
+                    + "            iridiumLastFrom.setText(s.substring(1));\n"
+                    + "            iridiumLastSubject.setText(e.getSubject());\n"
+                    + "            iridiumLastFilename.setText(e.getFilename());\n"
+                    + "            iridiumLastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());\n"
+                    + "            iridiumTextArea.setText(msgController.getData().toString());\n"
+                    + "        } else if (ue instanceof ErrorEvent) {\n"
+                    + "            if (DataSource.MAIL == ue.getDataSource()) {\n"
+                    + "                iridiumTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
+                    + "            }\n"
+                    + "        } else {\n"
+                    + "            iridiumTextArea.setText(msgController.getData().toString());\n"
+                    + "        }\n"
+                    + "    }\n");
+        }
 
         for (int counter = 1; counter <= numberOfAddTabs; counter++) {
             int numberOfControlItems = ConfigHandler.countItems("control[" + counter + "]", configPath);
@@ -718,42 +812,23 @@ public class GuiBuilder {
             }
         }
         
-        writer.println("    @Override\n"
-                + "    public void updateData(MessageController msgController, USOCEvent ue) {\n"
-                + "        if (ue instanceof MailEvent) {\n"
-                + "            MailEvent e = (MailEvent) ue;\n"
-                + "            String s = \"\";\n"
-                + "            for (Address from : e.getFrom()) {\n"
-                + "                s += \",\" + from.toString();\n"
-                + "            }\n"
-                + "            //Setting label texts\n"
-                + "            //lastFrom.setText(s.substring(1));\n"
-                + "            //lastSubject.setText(e.getSubject());\n"
-                + "            //lastFilename.setText(e.getFilename());\n"
-                + "            //lastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());\n"
-                + "\n"
-                + "            //TODO: change this to iridiumTextArea\n"
-                + "            serialTextArea.setText(msgController.getData().toString());\n"
-                + "        } else if (ue instanceof SerialEvent) {\n"
-                + "            serialTextArea.setText(((SerialEvent)ue).getMsg());\n"
-                + "        } else if (ue instanceof ErrorEvent) {\n"
-                + "            if (DataSource.MAIL == ue.getDataSource()) {\n"
-                + "                //TODO: change this to iridiumTextArea\n"
-                + "                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
-                + "            } else if (DataSource.SERIAL == ue.getDataSource()) {\n"
-                + "                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());\n"
-                + "            }\n"
-                + "        } else {\n"
-                + "            serialTextArea.setText(msgController.getData().toString());\n"
-                + "        }\n"
-                + "    }\n");
         writer.println("    @Override \n"
                 + "    public void initialize(URL url, ResourceBundle rb) { \n"
-                + "        // TODO \n"
-                + "        MainController.startPortThread(this);\n"
-                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n"
-                + "        setData(); \n"
-                + "    } \n"
+                + "        // TODO");
+        
+        if (serialPanel == true && iridiumPanel == true) {
+            writer.println("        MainController.startPortThread(this);\n"
+                    + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n"
+                    + "        setData();");
+        } else if (serialPanel == true && iridiumPanel == false) {
+            writer.println("        MainController.startPortThread(this);\n"
+                    + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n"
+                    + "        setData();");
+        } else if (serialPanel == false && iridiumPanel == true) {
+            writer.println("        MainController.getInstance().addDataUpdateListener(new UpdateListener());");
+        }
+
+        writer.println("    } \n"
                 + "}");
 
         writer.close();
@@ -770,7 +845,7 @@ public class GuiBuilder {
      * @param configPath
      * @throws java.io.IOException
      */
-    public static void StateBuilder(String filePath, String configPath) throws IOException {
+    public static void StatePanelBuilder(String filePath, String configPath) throws IOException {
 
         // Declares necessary parameters
         Properties config = ConfigHandler.getAllValues(configPath);
@@ -786,60 +861,66 @@ public class GuiBuilder {
                     + "<?import javafx.scene.control.*?> \n"
                     + "<?import javafx.scene.layout.*?> \n"
                     + "<?import javafx.geometry.*?> \n");
-            writer.println(""
-                    + "<ScrollPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fitToHeight=\"true\" fitToWidth=\"true\" prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\"> \n"
-                    + "  <content> \n"
-                    + "    <VBox> \n"
-                    + "      <children>");
+            writer.println("<AnchorPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\">\n"
+                    + "  <children>\n"
+                    + "    <ScrollPane fitToHeight=\"true\" fitToWidth=\"true\" prefHeight=\"200.0\" prefWidth=\"200.0\" AnchorPane.bottomAnchor=\"0.0\" AnchorPane.leftAnchor=\"0.0\" AnchorPane.rightAnchor=\"0.0\" AnchorPane.topAnchor=\"0.0\" BorderPane.alignment=\"CENTER\"> \n"
+                    + "      <content> \n"
+                    + "        <VBox> \n"
+                    + "          <children>");
 
             // Generates boxes
             for (int counter = 1; counter <= numberOfBoxes; counter++) {
-                writer.println("        <GridPane> \n"
-                        + "          <columnConstraints> \n"
-                        + "            <ColumnConstraints halignment=\"LEFT\" hgrow=\"SOMETIMES\" /> \n"
-                        + "            <ColumnConstraints halignment=\"RIGHT\" hgrow=\"SOMETIMES\" /> \n"
-                        + "          </columnConstraints> \n"
-                        + "          <rowConstraints>");
+                writer.println("            <GridPane> \n"
+                        + "              <columnConstraints> \n"
+                        + "                <ColumnConstraints halignment=\"LEFT\" hgrow=\"SOMETIMES\" /> \n"
+                        + "                <ColumnConstraints halignment=\"RIGHT\" hgrow=\"SOMETIMES\" /> \n"
+                        + "              </columnConstraints> \n"
+                        + "              <rowConstraints>");
 
                 // Declares necessary parameters
                 int numberOfRows = ConfigHandler.countItems("keyword[" + counter + "]", configPath);
 
                 // Writes FXML data
                 for (int i = 1; i <= numberOfRows; i++) {
-                    writer.println("            <RowConstraints maxHeight=\"20.0\" minHeight=\"20.0\" prefHeight=\"20.0\" valignment=\"CENTER\" />");
+                    writer.println("                <RowConstraints maxHeight=\"20.0\" minHeight=\"20.0\" prefHeight=\"20.0\" valignment=\"CENTER\" />");
                 }
-                writer.println("         </rowConstraints> \n"
-                        + "          <children> \n"
-                        + "            <Label text=\"" + config.getProperty("boxTitle[" + counter + "]") + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"0\"> \n"
-                        + "              <font> \n"
-                        + "                 <Font name=\"System Bold\" size=\"14.0\" /> \n"
-                        + "              </font> \n"
-                        + "            </Label>");
+                writer.println("             </rowConstraints> \n"
+                        + "              <children> \n"
+                        + "                <Label text=\"" + config.getProperty("boxTitle[" + counter + "]") + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"0\"> \n"
+                        + "                  <font> \n"
+                        + "                     <Font name=\"System Bold\" size=\"14.0\" /> \n"
+                        + "                  </font> \n"
+                        + "                </Label>");
 
                 // Writes FXML data of box content
                 for (int j = 1; j <= numberOfRows; j++) {
                     String keyword = config.getProperty("keyword[" + counter + "][" + j + "]");
-                    writer.println("            <Label text=\"" + keyword + "\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"" + j + "\"> \n"
-                            + "              <font>\n"
-                            + "                 <Font size=\"12.0\" />\n"
-                            + "              </font>\n"
-                            + "            </Label>\n"
-                            + "            <Label fx:id=\"label" + keyword + "\" GridPane.columnIndex=\"1\" GridPane.rowIndex=\"" + j + "\"> \n"
-                            + "              <font>\n"
-                            + "                 <Font size=\"12.0\" />\n"
-                            + "              </font>\n"
-                            + "            </Label>");
+                    writer.println("                <Label text=\"" + keyword + ":\" GridPane.columnIndex=\"0\" GridPane.rowIndex=\"" + j + "\"> \n"
+                            + "                  <font>\n"
+                            + "                     <Font size=\"12.0\" />\n"
+                            + "                  </font>\n"
+                            + "                </Label>\n"
+                            + "                <Label fx:id=\"label" + keyword + "\" GridPane.columnIndex=\"1\" GridPane.rowIndex=\"" + j + "\"> \n"
+                            + "                  <font>\n"
+                            + "                     <Font size=\"12.0\" />\n"
+                            + "                  </font>\n"
+                            + "                </Label>");
                 }
-                writer.println("          </children> \n"
-                        + "          <padding> \n"
-                        + "            <Insets bottom=\"20.0\" /> \n"
-                        + "          </padding> \n"
-                        + "        </GridPane>");
+                writer.println("              </children> \n"
+                        + "              <padding> \n"
+                        + "                <Insets bottom=\"20.0\" /> \n"
+                        + "              </padding> \n"
+                        + "            </GridPane>");
             }
-            writer.println("      </children> \n"
-                    + "    </VBox> \n"
-                    + "  </content> \n"
-                    + "</ScrollPane>");
+            writer.println("          </children> \n"
+                    + "        </VBox> \n"
+                    + "      </content> \n"
+                    + "      <padding> \n"
+                    + "        <Insets bottom=\"10.0\" left=\"7.0\" right=\"7.0\" top=\"10.0\" /> \n"
+                    + "      </padding> \n"
+                    + "    </ScrollPane> \n"
+                    + "  </children> \n"
+                    + "</AnchorPane>");
         } else {
             writer.println("");
         }

@@ -1,23 +1,31 @@
-package com.ksatstuttgart.usoc.gui.controller; 
+package com.ksatstuttgart.usoc.gui.controller;
 
-import java.net.URL; 
-import java.util.ResourceBundle; 
-import javafx.event.ActionEvent; 
-import javafx.fxml.FXML; 
-import com.ksatstuttgart.usoc.controller.communication.SerialComm;
-import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+
+// Imports for serialLog or iridiumLog
 import com.ksatstuttgart.usoc.controller.MainController;
-import java.util.ArrayList;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.DataSource;
 import com.ksatstuttgart.usoc.data.ErrorEvent;
-import com.ksatstuttgart.usoc.data.MailEvent;
-import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
-import javafx.fxml.Initializable; 
-import javafx.scene.control.ComboBox; 
 import javafx.scene.control.TextArea;
-import javax.mail.Address; 
+
+// Specific imports for serialLog
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
+import java.util.ArrayList;
+import com.ksatstuttgart.usoc.data.SerialEvent;
+import javafx.scene.control.ComboBox;
+
+// Specific imports for iridiumLog
+import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
+import com.ksatstuttgart.usoc.data.MailEvent;
+import java.util.Date;
+import javafx.scene.control.Label;
+import javax.mail.Address;
 
 /** 
  * 
@@ -60,6 +68,10 @@ public class LogPanelController extends DataController implements Initializable 
     } 
 
     @FXML private TextArea iridiumTextArea; 
+    @FXML private Label iridiumLastFrom; 
+    @FXML private Label iridiumLastSubject; 
+    @FXML private Label iridiumLastFilename; 
+    @FXML private Label iridiumLastTimestamp; 
 
     @FXML 
     private void iridiumOpen(ActionEvent event) { 
@@ -85,6 +97,34 @@ public class LogPanelController extends DataController implements Initializable 
         MailReceiver.getInstance().reconnect(); 
     } 
 
+    @Override
+    public void updateData(MessageController msgController, USOCEvent ue) {
+        if (ue instanceof MailEvent) {
+            MailEvent e = (MailEvent) ue;
+            String s = "";
+            for (Address from : e.getFrom()) {
+                s += "," + from.toString();
+            }
+            //Setting label texts
+            iridiumLastFrom.setText(s.substring(1));
+            iridiumLastSubject.setText(e.getSubject());
+            iridiumLastFilename.setText(e.getFilename());
+            iridiumLastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());
+            iridiumTextArea.setText(msgController.getData().toString());
+        } else if (ue instanceof SerialEvent) {
+            serialTextArea.setText(((SerialEvent)ue).getMsg());
+        } else if (ue instanceof ErrorEvent) {
+            if (DataSource.MAIL == ue.getDataSource()) {
+                iridiumTextArea.setText(((ErrorEvent) ue).getErrorMessage());
+            } else if (DataSource.SERIAL == ue.getDataSource()) {
+                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());
+            }
+        } else {
+            serialTextArea.setText(msgController.getData().toString());
+            iridiumTextArea.setText(msgController.getData().toString());
+        }
+    }
+
     @FXML 
     private void button11(ActionEvent event) { 
         // Automatically generated method button11() 
@@ -109,41 +149,11 @@ public class LogPanelController extends DataController implements Initializable 
         System.out.println("Button26 was pressed!"); 
     } 
 
-    @Override
-    public void updateData(MessageController msgController, USOCEvent ue) {
-        if (ue instanceof MailEvent) {
-            MailEvent e = (MailEvent) ue;
-            String s = "";
-            for (Address from : e.getFrom()) {
-                s += "," + from.toString();
-            }
-            //Setting label texts
-            //lastFrom.setText(s.substring(1));
-            //lastSubject.setText(e.getSubject());
-            //lastFilename.setText(e.getFilename());
-            //lastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());
-
-            //TODO: change this to iridiumTextArea
-            serialTextArea.setText(msgController.getData().toString());
-        } else if (ue instanceof SerialEvent) {
-            serialTextArea.setText(((SerialEvent)ue).getMsg());
-        } else if (ue instanceof ErrorEvent) {
-            if (DataSource.MAIL == ue.getDataSource()) {
-                //TODO: change this to iridiumTextArea
-                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());
-            } else if (DataSource.SERIAL == ue.getDataSource()) {
-                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());
-            }
-        } else {
-            serialTextArea.setText(msgController.getData().toString());
-        }
-    }
-
     @Override 
     public void initialize(URL url, ResourceBundle rb) { 
-        // TODO 
+        // TODO
         MainController.startPortThread(this);
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
-        setData(); 
+        setData();
     } 
 }

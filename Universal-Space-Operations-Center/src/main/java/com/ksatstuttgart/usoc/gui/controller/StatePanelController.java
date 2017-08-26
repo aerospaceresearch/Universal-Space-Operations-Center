@@ -19,8 +19,8 @@ public class StatePanelController implements Initializable {
     @FXML Label labelExecution;
     @FXML Label labelObservation;
     @FXML Label labelDiagnosis;
-    @FXML Label labeltest1;
-    @FXML Label labeltest2;
+    @FXML Label labelTestLabel1;
+    @FXML Label labelTestLabel2;
 
     public void updateStates() {
         labelSafe.setText("labelSafe");
@@ -29,8 +29,8 @@ public class StatePanelController implements Initializable {
         labelExecution.setText("labelExecution");
         labelObservation.setText("labelObservation");
         labelDiagnosis.setText("labelDiagnosis");
-        labeltest1.setText("labeltest1");
-        labeltest2.setText("labeltest2");
+        labelTestLabel1.setText("labelTestLabel1");
+        labelTestLabel2.setText("labelTestLabel2");
     }
 
     @Override 
