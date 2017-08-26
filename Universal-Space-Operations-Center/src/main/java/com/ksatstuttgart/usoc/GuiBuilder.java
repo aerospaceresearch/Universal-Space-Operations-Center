@@ -278,12 +278,9 @@ public class GuiBuilder {
         if (GNSS3dView) {
             writer.println("    <Tab text=\"GNSS 3D View\">\n"
                     + "      <content>\n"
-                    + "        <AnchorPane minHeight=\"0.0\" minWidth=\"0.0\" prefHeight=\"180.0\" prefWidth=\"200.0\">\n"
-                    + "          <children>\n"
-                    + "            <Pane fx:id=\"pane\" AnchorPane.bottomAnchor=\"0.0\" AnchorPane.leftAnchor=\"0.0\" AnchorPane.rightAnchor=\"0.0\" AnchorPane.topAnchor=\"0.0\">\n"
-                    + "            </Pane>\n"
-                    + "          </children>\n"
-                    + "        </AnchorPane>\n"
+                    + "        <StackPane fx:id=\"pane\" maxHeight=\"1.7976931348623157E308\" maxWidth=\"1.7976931348623157E308\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"180.0\" prefWidth=\"200.0\">\n"
+                    + "\n"
+                    + "        </StackPane>\n"
                     + "      </content>\n"
                     + "    </Tab>");
         }
@@ -326,28 +323,25 @@ public class GuiBuilder {
                 + "import com.ksatstuttgart.usoc.data.message.Var;\n"
                 + "import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;\n"
                 + "import java.util.ResourceBundle;\n"
-                + "import javafx.fxml.FXML;\n"
                 + "import javafx.fxml.Initializable;\n"
                 + "import javafx.scene.chart.LineChart;\n"
                 + "import javafx.scene.chart.XYChart;");
         if (GNSS3dView) {
             writer.println("import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;\n"
-                    + "import javafx.embed.swing.SwingNode;\n"
                     + "import javafx.fxml.FXML;\n"
-                    + "import javafx.scene.layout.Pane;\n"
-                    + "import javax.swing.SwingUtilities;\n");
+                    + "import javafx.scene.layout.StackPane;\n");
         }
         writer.println("/** \n"
                 + " * \n"
                 + " * @author Victor \n"
-                + " */ \n");
+                + " */");
         writer.println("public class MainPanelController extends DataController implements Initializable { \n");
         for (int i = 1; i <= numberOfCharts; i++) {
             writer.println("    @FXML\n"
                     + "    public LineChart<Number, Number> lineChart" + i + ";");
         }
         writer.println("\n    @Override\n"
-                + "    public void updateData(MessageController mc, USOCEvent e) {\n\n");
+                + "    public void updateData(MessageController mc, USOCEvent e) {\n");
         for (int i = 1; i <= numberOfCharts; i++) {
             writer.println("        lineChart" + i + ".getXAxis().setAutoRanging(true);\n"
                     + "        lineChart" + i + ".getYAxis().setAutoRanging(true);\n");
@@ -367,7 +361,7 @@ public class GuiBuilder {
                 + "                //thermocouple sensors have only one variable with the current\n"
                 + "                //data scheme it uses the sensor name as variable name \n"
                 + "                for (Var var : adjusted.getVars()) {\n"
-                + "                    addVarToChart(var,lineChart1);\n"
+                + "                    addVarToChart(var, lineChart1);\n"
                 + "                }\n"
                 + "            }\n"
                 + "\n"
@@ -376,7 +370,7 @@ public class GuiBuilder {
                 + "                //pressure sensors have only one variable with the current\n"
                 + "                //data scheme and it uses the sensor name as variable name \n"
                 + "                for (Var var : adjusted.getVars()) {\n"
-                + "                    addVarToChart(var,lineChart2);\n"
+                + "                    addVarToChart(var, lineChart2);\n"
                 + "                }\n"
                 + "            }\n"
                 + "\n"
@@ -385,7 +379,7 @@ public class GuiBuilder {
                 + "                //pressure sensors have only one variable with the current\n"
                 + "                //data scheme and it uses the sensor name as variable name \n"
                 + "                for (Var var : adjusted.getVars()) {\n"
-                + "                    addVarToChart(var,lineChart3);\n"
+                + "                    addVarToChart(var, lineChart3);\n"
                 + "                }\n"
                 + "            }\n"
                 + "\n"
@@ -394,7 +388,7 @@ public class GuiBuilder {
                 + "                //voltage sensors have only one variable with the current\n"
                 + "                //data scheme and it uses the sensor name as variable name \n"
                 + "                for (Var var : adjusted.getVars()) {\n"
-                + "                    addVarToChart(var,lineChart4);\n"
+                + "                    addVarToChart(var, lineChart4);\n"
                 + "                }\n"
                 + "            }\n"
                 + "\n"
@@ -403,17 +397,17 @@ public class GuiBuilder {
                 + "                for (Var var : adjusted.getVars()) {\n"
                 + "                    //only visualize quaternion data ignore calibration data\n"
                 + "                    //for chart\n"
-                + "                    addVarToChart(var,lineChart5);\n"
+                + "                    addVarToChart(var, lineChart5);\n"
                 + "                }\n"
                 + "            }\n"
                 + "        }\n"
-                + "    }\n\n");
+                + "    }\n");
         writer.println("    private void addVarToChart(Var var, LineChart<Number, Number> chart) {\n"
                 + "        XYChart.Series series = getSeriesForChart(var, chart);\n"
                 + "        for (Long time : var.getValues().keySet()) {\n"
                 + "            series.getData().add(new XYChart.Data<>(time, var.getValues().get(time)));\n"
                 + "        }\n"
-                + "    }\n\n");
+                + "    }\n");
         writer.println("    private XYChart.Series getSeriesForChart(Var var, LineChart<Number, Number> chart) {\n"
                 + "        for (XYChart.Series<Number, Number> series : chart.getData()) {\n"
                 + "            if (series.getName().equals(var.getDataName())) {\n"
@@ -426,24 +420,15 @@ public class GuiBuilder {
                 + "        return series;\n"
                 + "    }\n");
         if (GNSS3dView) {
-            writer.println("    @FXML private Pane pane;\n"
-                    + "    public SwingNode buildWW() {\n"
-                    + "        final SwingNode node = new SwingNode();\n"
-                    + "        SwingUtilities.invokeLater(new Runnable() {\n"
-                    + "            @Override\n"
-                    + "            public void run() {\n"
-                    + "                node.setContent(new GNSSPanel());\n"
-                    + "            }\n"
-                    + "        });\n"
-                    + "        return node;\n"
-                    + "    }\n");
+            writer.println("    @FXML\n"
+                    + "    private StackPane pane;\n");
         }
         writer.println("    @Override \n"
                 + "    public void initialize(URL url, ResourceBundle rb) { \n"
                 + "        // TODO\n"
-                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());\n");
+                + "        MainController.getInstance().addDataUpdateListener(new UpdateListener());");
         if (GNSS3dView) {
-            writer.println("        pane.getChildren().add(buildWW());\n");
+            writer.println("        new GNSSPanel(pane);");
         }
         writer.println("    }\n"
                 + "}");
