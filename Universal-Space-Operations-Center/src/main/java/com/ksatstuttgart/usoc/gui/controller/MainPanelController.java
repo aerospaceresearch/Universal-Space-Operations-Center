@@ -134,7 +134,6 @@ public class MainPanelController extends DataController implements Initializable
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
-
-        new GNSSPanel(pane);
+        GNSSPanel.addGNSSPaneltoStackPane(pane);
     }
 }

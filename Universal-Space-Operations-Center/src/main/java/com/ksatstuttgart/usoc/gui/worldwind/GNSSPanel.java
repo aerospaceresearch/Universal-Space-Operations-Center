@@ -67,32 +67,52 @@ import java.util.TreeMap;
 import javafx.embed.swing.SwingNode;
 import javafx.scene.layout.StackPane;
 import javax.swing.BoxLayout;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 /**
+ * This class provides the possibility to add NASA World Wind Panels to USOC.
+ *
+ * It is based on WorldWindowGLJPanel to provide the views which uses Swing
+ * components.
+ *
+ * However using the addGNSSPaneltoStackPane(StackPane stackPane) method, the resulting
+ * Panels can also be used with JavaFX.
+ *
+ * Since GNSSPanel extends DataPanel, it can also handle updates from the
+ * MessageController. If any registered updates contain GNSS data the
+ * visualization is updated accordingly.
+ *
+ * GNSSPanel draws Markers for GNSS coordinates and connects them in order to
+ * visualize the path of an experiment.
  *
  * @author valentinstarlinger
  */
 public class GNSSPanel extends DataPanel {
 
-    WorldWindowGLJPanel wwp_big, wwp_topView, wwp_sideView;
-    BasicOrbitView bov_big, bov_topView, bov_sideView;
-    
-    StatusBar statusBar;
+    private final WorldWindowGLJPanel wwp_big, wwp_topView, wwp_sideView;
+    private final BasicOrbitView bov_big, bov_topView, bov_sideView;
 
-    RenderableLayer pathLayer;
-    MarkerLayer markerLayer;
+    private final StatusBar statusBar;
 
-    JPanel sidePanel;
-    
-    SwingNode sn_bot, sn_top;
+    private final RenderableLayer pathLayer;
+    private final MarkerLayer markerLayer;
 
+    private final JPanel sidePanel;
+
+    private final SwingNode sn_bot, sn_top;
+
+    private final boolean isUsingSwing;
+
+    //TODO: get this from preferences.
     private static final boolean OFFLINEMODE = true;
 
-    public GNSSPanel(StackPane pane) {
+    public GNSSPanel(boolean isUsingSwing) {
         super();
-        
+
+        this.isUsingSwing = isUsingSwing;
+
         boolean networkUnavailable = WorldWind.getNetworkStatus().isNetworkUnavailable();
         //if network is unavailable or usenetwork is false go into offline mode
         //true to use network false otherwise
@@ -111,15 +131,27 @@ public class GNSSPanel extends DataPanel {
         sidePanel.setLayout(new BoxLayout(sidePanel, BoxLayout.Y_AXIS));
         sidePanel.add(wwp_topView);
         sidePanel.add(wwp_sideView);
-       
+
         wwp_big.setBounds(0, 0, 600, 600);
         sidePanel.setBounds(400, 0, 200, 200);
 
         this.setLayout(new BorderLayout());
-        this.add(wwp_big);
+        if (isUsingSwing) {
+            JLayeredPane jlp = new JLayeredPane();
+            jlp.add(wwp_big, JLayeredPane.MODAL_LAYER);
+            jlp.add(sidePanel, JLayeredPane.DEFAULT_LAYER);
+
+            wwp_big.setBounds(0, 0, 600, 600);
+            sidePanel.setBounds(400, 0, 200, 200);
+
+            this.add(jlp);
+        } else {
+            this.add(wwp_big);
+        }
+
         statusBar = new StatusBar();
         statusBar.setBorder(new EmptyBorder(5, 5, 5, 5));
-        
+
         statusBar.setEventSource(wwp_big);
         this.add(statusBar, BorderLayout.SOUTH);
 
@@ -159,14 +191,18 @@ public class GNSSPanel extends DataPanel {
         bov_topView = new BasicOrbitView();
         bov_topView.setGlobe(flatEarth);
         wwp_topView.setView(bov_topView);
-        
+
         sn_bot = new SwingNode();
         sn_bot.setContent(this);
-        
+
         sn_top = new SwingNode();
         sn_top.setContent(sidePanel);
-        
-        pane.getChildren().addAll(sn_bot,sn_top);
+
+    }
+
+    public static void addGNSSPaneltoStackPane(StackPane stackPane) {
+        GNSSPanel gnssPanel = new GNSSPanel(false);
+        stackPane.getChildren().addAll(gnssPanel.sn_bot, gnssPanel.sn_top);
     }
 
     /**
@@ -199,8 +235,12 @@ public class GNSSPanel extends DataPanel {
         int spWidth = width / 3;
         //setting the sidePanel in the upper right corner with the respective width 
         //and height
-        
-        StackPane.setMargin(sn_top, new Insets(0,0,height-spHeight,width-spWidth));
+        if (isUsingSwing) {
+            wwp_big.setBounds(0, 0, width, height);
+            sidePanel.setBounds(width - spWidth, 0, spWidth, spHeight);
+        } else {
+            StackPane.setMargin(sn_top, new Insets(0, 0, height - spHeight, width - spWidth));
+        }
     }
 
     /**
@@ -218,10 +258,10 @@ public class GNSSPanel extends DataPanel {
 
         //only update for iridium messages at the moment/ignore error and serial 
         //events
-        if(e instanceof SerialEvent|| e instanceof ErrorEvent){
+        if (e instanceof SerialEvent || e instanceof ErrorEvent) {
             return;
         }
-        
+
         double highestGlobalAlt = 0, highestLastAlt = 0;
         int numPoints = 0;
 
