@@ -53,6 +53,7 @@ public class ConfigHandler {
     */
     public static int countItems(String keyword, String path) throws IOException {
         
+        // Declares necessary parameters
         Properties config = getAllValues(path);
         int numberOfItems = 1;
 
@@ -75,6 +76,7 @@ public class ConfigHandler {
     */
     public static Properties getAllValues(String path) throws FileNotFoundException, IOException {
         
+        // Declares necessary parameters
         Properties config = new Properties();
         // Creates FileInputStream from properties
         String filePath = "src/main/resources/";
@@ -102,6 +104,7 @@ public class ConfigHandler {
     */  
     public static void updateConfigMod(String origin, String destination) throws IOException {
 
+        // Declares necessary parameters
         Properties config = getAllValues(origin);
         // Initialize file object
         String filePath = "src/main/resources/";
@@ -131,6 +134,7 @@ public class ConfigHandler {
     */  
     public static boolean valueMod(String keyword, String path, String pathMod) throws IOException {
 
+        // Declares necessary parameters
         Properties config = getAllValues(path);
         Properties configMod = getAllValues(pathMod);
         boolean valueMod;
@@ -172,6 +176,7 @@ public class ConfigHandler {
     */   
     public static boolean mainPanelMod(String path, String pathMod) throws IOException {
         
+        // Declares necessary parameters
         int numberOfCharts = countItems("chartTitle", path);
         boolean mainPanelMod = false;
         
@@ -207,6 +212,7 @@ public class ConfigHandler {
     */   
     public static boolean logPanelMod(String path, String pathMod) throws IOException {
         
+        // Declares necessary parameters
         Properties config = getAllValues(path);
         int numberOfAddTabs = countItems("tabTitle", path);
         boolean logPanelMod = false;
@@ -277,28 +283,29 @@ public class ConfigHandler {
     */   
     public static boolean statePanelMod(String path, String pathMod) throws IOException {
         
-        int numberOfBoxes = countItems("boxTitle", path);
+        // Declares necessary parameters
+        int numberOfSegments = countItems("segmentTitle", path);
         boolean statePanel = valueMod("statePanel", path, pathMod);
         boolean statePanelMod = false;
         
-        // Checks whether the number of boxes has been changed
-        if (countItems("boxTitle", path) != countItems("boxTitle", pathMod) || statePanel) {
+        // Checks whether the number of segments has been changed
+        if (countItems("segmentTitle", path) != countItems("segmentTitle", pathMod) || statePanel) {
             statePanelMod = true;
         }
         
-        // Loops through boxes
-        for (int counter=1; counter<=numberOfBoxes; counter++) {
+        // Loops through segments
+        for (int counter=1; counter<=numberOfSegments; counter++) {
             
-            if (valueMod("boxTitle[" + counter + "]", path, pathMod)) {
+            if (valueMod("segmentTitle[" + counter + "]", path, pathMod)) {
                 statePanelMod = true;
             }
             
-            // Checks whether the number of keywords within the box has been changed
+            // Checks whether the number of keywords within the segment has been changed
             if (countItems("keyword[" + counter + "]", path) != countItems("keyword[" + counter + "]", pathMod)) {
                 statePanelMod = true;
             }
             
-            // Loops through items within the box
+            // Loops through items within the segment
             int numberOfValues = countItems("keyword[" + counter + "]", path);
             for (int j=1; j<=numberOfValues; j++) {
                 // Checks whether a keyword has been changed
@@ -347,6 +354,7 @@ public class ConfigHandler {
     */    
     public static boolean syntaxCheck(String path) throws IOException {
         
+        // Declares necessary parameters
         Properties config = getAllValues(path);
         String GNSS3dView = config.getProperty("GNSS3dView");
         String statePanel = config.getProperty("statePanel");
@@ -423,6 +431,7 @@ public class ConfigHandler {
     */    
     public static boolean rebuildGui(String path, String pathMod, Stage stage) throws IOException {
             
+        // Declares necessary parameters
         Properties config = getAllValues(path);
         boolean experimentNameMod = experimentNameMod(path, pathMod);
         boolean mainPanelMod = mainPanelMod(path, pathMod);

@@ -1,3 +1,26 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2017 KSat Stuttgart e.V..
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.ksatstuttgart.usoc.gui.controller;
 
 import java.net.URL;
@@ -24,14 +47,23 @@ import javafx.scene.control.ComboBox;
 import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
 import com.ksatstuttgart.usoc.data.MailEvent;
 import java.util.Date;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javax.mail.Address;
 
 /** 
+ * The LogPanelController provides the functionality of the LogPanel.
+ * Apart from pre-programmed methods for the SerialLog and IridiumLog,
+ * a dummy method is written for each button of the individually designed
+ * tabs. These methods can be supplemented manually. Those method contents are
+ * recognized and will not be lost if the button label has been changed and the
+ * corresponding FXML structure and controller regenerated.
+ * The LogPanelController is generated automatically.
  * 
- * @author Victor 
- */ 
-
+ * @author Victor Hertel
+ * @version 1.0
+*/
 public class LogPanelController extends DataController implements Initializable { 
 
     @FXML private ComboBox comboBox1; 
@@ -68,6 +100,7 @@ public class LogPanelController extends DataController implements Initializable 
     } 
 
     @FXML private TextArea iridiumTextArea; 
+    @FXML private TextField iridiumReconnectField; 
     @FXML private Label iridiumLastFrom; 
     @FXML private Label iridiumLastSubject; 
     @FXML private Label iridiumLastFilename; 
@@ -93,7 +126,15 @@ public class LogPanelController extends DataController implements Initializable 
 
     @FXML 
     private void iridiumReconnect(ActionEvent event) { 
-        System.out.println("Reconnect button in iridium log has been pressed!");
+        System.out.println("Reconnect button in iridium log has been pressed!"); 
+        ((Button)event.getSource()).setText("Reconnect"); 
+        int numMessages = 0;
+        try { 
+            numMessages = Integer.parseInt(iridiumReconnectField.getText()); 
+        } catch(NumberFormatException ex){ 
+            //do nothing; 
+        } 
+        //MailReceiver.getInstance().setMessagesOnReconnect(numMessages); 
         MailReceiver.getInstance().reconnect(); 
     } 
 

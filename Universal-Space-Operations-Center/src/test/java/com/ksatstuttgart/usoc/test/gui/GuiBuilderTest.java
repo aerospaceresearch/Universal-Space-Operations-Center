@@ -76,6 +76,7 @@ public class GuiBuilderTest {
     /**
      * Test of getGridPosition method, of class GuiBuilder.
      */
+    @Ignore
     @Test
     public void testGetGridPosition() {
         System.out.println("getGridPosition() has been tested");
@@ -89,6 +90,7 @@ public class GuiBuilderTest {
      * Test of chartBuilder method, of class GuiBuilder.
      * @throws java.lang.Exception
      */
+    @Ignore
     @Test
     public void testMainPanelBuilder() throws Exception {
         System.out.println("chartBuilder() has been tested");
@@ -99,6 +101,7 @@ public class GuiBuilderTest {
      * Test of logBuilder method, of class GuiBuilder.
      * @throws java.lang.Exception
      */
+    @Ignore
     @Test
     public void testLogPanelBuilder() throws Exception {
         System.out.println("logBuilder() has been tested");
@@ -109,6 +112,7 @@ public class GuiBuilderTest {
      * Test of currentStateBuilder method, of class GuiBuilder.
      * @throws java.lang.Exception
      */
+    @Ignore
     @Test
     public void testCurrentStateBuilder() throws Exception {
         System.out.println("currentStateBuilder() has been tested");
