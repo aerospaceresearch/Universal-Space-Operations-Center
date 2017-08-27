@@ -245,7 +245,8 @@ public class GuiBuilder {
         // BoarderPane of main window
         writer.println("<BorderPane maxHeight=\"-Infinity\" maxWidth=\"-Infinity\" minHeight=\"-Infinity\" minWidth=\"-Infinity\" prefHeight=\"400.0\" prefWidth=\"600.0\" xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\">\n");
         // MenuBar at BoarderPane -> top
-        writer.println("   <top>\n"
+        writer.println("<!--\n"
+                + "   <top>\n"
                 + "      <MenuBar BorderPane.alignment=\"CENTER\">\n"
                 + "        <menus>\n"
                 + "          <Menu mnemonicParsing=\"false\" text=\"File\">\n"
@@ -265,7 +266,8 @@ public class GuiBuilder {
                 + "          </Menu>\n"
                 + "        </menus>\n"
                 + "      </MenuBar>\n"
-                + "   </top>\n");
+                + "   </top>\n"
+                + "  -->\n");
         // Checks whether the statePanel is needed
         if (statePanel) {
             // StatePanel at BoarderPane -> left
@@ -440,8 +442,11 @@ public class GuiBuilder {
         }
         // Javadoc class header
         writer.println("/** \n"
-                + " * This class ensure the functionality of the MainPanel. The charts are declared\n"
-                + " * and records are assigned. The MainPanelController is generated automatically\n"
+                + " * <h1>MainPanelController</h1>\n"
+                + " * This class ensure the functionality of the MainPanel.\n"
+                + " * <p>\n"
+                + " * The charts are declared and records are assigned.\n"
+                + " * The MainPanelController is generated automatically\n"
                 + " * \n"
                 + " * @author Victor Hertel\n"
                 + " * @version 1.0\n"
@@ -587,7 +592,7 @@ public class GuiBuilder {
                 + "<?import javafx.scene.control.*?> \n"
                 + "<?import javafx.scene.layout.*?> \n");
         // TabPane
-        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogPanelController\" maxWidth=\"265.0\" minWidth=\"265.0\" prefWidth=\"265.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
+        writer.println("<TabPane xmlns=\"http://javafx.com/javafx/8\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller = \"com.ksatstuttgart.usoc.gui.controller.LogPanelController\" maxWidth=\"270.0\" minWidth=\"270.0\" prefWidth=\"270.0\" tabClosingPolicy=\"UNAVAILABLE\" BorderPane.alignment=\"CENTER\"> \n"
                 + "  <tabs>");
 
         // Writes FXML structure if the serial panel is required
@@ -637,15 +642,15 @@ public class GuiBuilder {
         for (int counter = 1; counter <= numberOfAddTabs; counter++) {
             writer.println("    <Tab text=\"" + config.getProperty("tabTitle[" + counter + "]") + "\"> \n"
                     + "      <content> \n"
-                    + "<BorderPane> \n"
-                    + "<padding><Insets top=\"5\" right=\"5\" bottom=\"5\" left=\"5\"/></padding> \n"
-                    + "  <top> \n"
-                    + "    <GridPane alignment=\"TOP_CENTER\" BorderPane.alignment=\"CENTER\">\n"
-                    + "      <columnConstraints> \n"
-                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" /> \n"
-                    + "        <ColumnConstraints hgrow=\"SOMETIMES\" /> \n"
-                    + "      </columnConstraints> \n"
-                    + "      <rowConstraints>");
+                    + "        <BorderPane> \n"
+                    + "        <padding><Insets top=\"5\" right=\"5\" bottom=\"5\" left=\"5\"/></padding> \n"
+                    + "          <top> \n"
+                    + "            <GridPane alignment=\"TOP_CENTER\" BorderPane.alignment=\"CENTER\">\n"
+                    + "              <columnConstraints> \n"
+                    + "                <ColumnConstraints hgrow=\"SOMETIMES\" /> \n"
+                    + "                <ColumnConstraints hgrow=\"SOMETIMES\" /> \n"
+                    + "              </columnConstraints> \n"
+                    + "              <rowConstraints>");
 
             // Declares necessary parameters
             int numberOfControlItems = ConfigHandler.countItems("control[" + counter + "]", configPath);
@@ -660,10 +665,10 @@ public class GuiBuilder {
 
             // Loops through number of rows required for the number of control items
             for (int i = 1; i <= numberOfRows; i++) {
-                writer.println("        <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
+                writer.println("                <RowConstraints minHeight=\"10.0\" prefHeight=\"30.0\" vgrow=\"SOMETIMES\" />");
             }
-            writer.println("     </rowConstraints> \n"
-                    + "      <children>");
+            writer.println("             </rowConstraints> \n"
+                    + "              <children>");
 
             // Loops through control items within the tab
             for (int j = 1; j <= numberOfControlItems; j++) {
@@ -671,34 +676,52 @@ public class GuiBuilder {
                 // Gets grid position for control item
                 int[] position = getGridPosition(j);
                 String control = config.getProperty("control[" + counter + "][" + j + "]");
-
-                // Checks for type of entered control item
-                switch (control) {
-                    case "button":
-                        writer.println("        <Button text=\"" + config.getProperty("bText[" + counter + "][" + j + "]") + "\" onAction=\"#button" + counter + j + "\" "
-                                + "mnemonicParsing=\"false\"" + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" maxWidth=\"-Infinity\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" GridPane.halignment=\"RIGHT\" GridPane.hgrow=\"SOMETIMES\"/>");
-                        break;
-                    case "textField":
-                        writer.println("        <TextField promptText=\"" + config.getProperty("promptText[" + counter + "][" + j + "]")
-                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"RIGHT\" maxWidth=\"60.0\" prefWidth=\"60.0\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
-                        break;
-                    case "label":
-                        writer.println("        <Label text=\"" + config.getProperty("lText[" + counter + "][" + j + "]")
-                                + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"RIGHT\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
-                        break;
+                
+                // Checks if control item has to be aligned on the left or right side of the panel
+                if (j % 2 == 0) {
+                    // Checks for type of entered control item
+                    switch (control) {
+                        case "button":
+                            writer.println("                <Button text=\"" + config.getProperty("bText[" + counter + "][" + j + "]") + "\" onAction=\"#button" + counter + j + "\" "
+                                    + "mnemonicParsing=\"false\"" + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" maxWidth=\"-Infinity\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" GridPane.halignment=\"RIGHT\" GridPane.hgrow=\"SOMETIMES\"/>");
+                            break;
+                        case "textField":
+                            writer.println("                <TextField promptText=\"" + config.getProperty("promptText[" + counter + "][" + j + "]")
+                                    + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"RIGHT\" maxWidth=\"-Infinity\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
+                            break;
+                        case "label":
+                            writer.println("                <Label text=\"" + config.getProperty("lText[" + counter + "][" + j + "]")
+                                    + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"RIGHT\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
+                            break;
+                    }   
+                } else {
+                    // Checks for type of entered control item
+                    switch (control) {
+                        case "button":
+                            writer.println("                <Button text=\"" + config.getProperty("bText[" + counter + "][" + j + "]") + "\" onAction=\"#button" + counter + j + "\" "
+                                    + "mnemonicParsing=\"false\"" + " GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" maxWidth=\"-Infinity\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" GridPane.halignment=\"LEFT\" GridPane.hgrow=\"SOMETIMES\"/>");
+                            break;
+                        case "textField":
+                            writer.println("                <TextField promptText=\"" + config.getProperty("promptText[" + counter + "][" + j + "]")
+                                    + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"LEFT\" maxWidth=\"-Infinity\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
+                            break;
+                        case "label":
+                            writer.println("                <Label text=\"" + config.getProperty("lText[" + counter + "][" + j + "]")
+                                    + "\" " + "GridPane.columnIndex=\"" + position[0] + "\" GridPane.rowIndex=\"" + position[1] + "\" GridPane.halignment=\"LEFT\" GridPane.hgrow=\"SOMETIMES\" GridPane.valignment=\"CENTER\" GridPane.vgrow=\"SOMETIMES\" />");
+                            break;
+                    } 
                 }
             }
-
-            writer.println("      </children> \n"
-                    + "    </GridPane> \n"
-                    + "  </top>");
+            writer.println("              </children> \n"
+                    + "            </GridPane> \n"
+                    + "          </top>");
             // Decides about textarea within the tab
             if (Boolean.parseBoolean(config.getProperty("textArea[" + counter + "]"))) {
-                writer.println("  <center> \n"
-                        + "    <TextArea prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\" /> \n"
-                        + "  </center>");
+                writer.println("          <center> \n"
+                        + "            <TextArea prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\" /> \n"
+                        + "          </center>");
             }
-            writer.println("</BorderPane> \n"
+            writer.println("        </BorderPane> \n"
                     + "      </content> \n"
                     + "    </Tab>");
         }
@@ -806,7 +829,9 @@ public class GuiBuilder {
         } 
         // Javadoc class header
         writer.println("/** \n"
-                + " * The LogPanelController provides the functionality of the LogPanel.\n"
+                + " * <h1>LogPanelController</h1>\n"
+                + " * This class ensures the functionality of the LogPanel.\n"
+                + " * <p>\n"
                 + " * Apart from pre-programmed methods for the SerialLog and IridiumLog,\n"
                 + " * a dummy method is written for each button of the individually designed\n"
                 + " * tabs. These methods can be supplemented manually. Those method contents are\n"
@@ -1139,7 +1164,10 @@ public class GuiBuilder {
                 + "import javafx.fxml.Initializable; \n");
         // Javadoc class header
         writer.println("/** \n"
-                + " * The StatePanelController contains a method for setting and\n"
+                + " * <h1>StatePanelController</h1>\n"
+                + " * This class ensure the functionality of the StatePanel.\n"
+                + " * <p>\n"
+                + " * It contains a method for setting and\n"
                 + " * updating the labels in the StatePanel. A label is automatically\n"
                 + " * set for every entered keyword.\n"
                 + " * \n"

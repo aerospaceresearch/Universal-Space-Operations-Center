@@ -30,7 +30,10 @@ import java.awt.Label;
 import javafx.fxml.Initializable; 
 
 /** 
- * The StatePanelController contains a method for setting and
+ * <h1>StatePanelController</h1>
+ * This class ensure the functionality of the StatePanel.
+ * <p>
+ * It contains a method for setting and
  * updating the labels in the StatePanel. A label is automatically
  * set for every entered keyword.
  * 

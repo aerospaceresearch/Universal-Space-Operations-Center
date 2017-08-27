@@ -38,8 +38,11 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
 /** 
- * This class ensure the functionality of the MainPanel. The charts are declared
- * and records are assigned. The MainPanelController is generated automatically
+ * <h1>MainPanelController</h1>
+ * This class ensure the functionality of the MainPanel.
+ * <p>
+ * The charts are declared and records are assigned.
+ * The MainPanelController is generated automatically
  * 
  * @author Victor Hertel
  * @version 1.0

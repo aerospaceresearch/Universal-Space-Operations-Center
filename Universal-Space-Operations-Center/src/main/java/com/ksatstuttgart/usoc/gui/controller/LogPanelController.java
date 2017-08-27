@@ -53,7 +53,9 @@ import javafx.scene.control.TextField;
 import javax.mail.Address;
 
 /** 
- * The LogPanelController provides the functionality of the LogPanel.
+ * <h1>LogPanelController</h1>
+ * This class ensures the functionality of the LogPanel.
+ * <p>
  * Apart from pre-programmed methods for the SerialLog and IridiumLog,
  * a dummy method is written for each button of the individually designed
  * tabs. These methods can be supplemented manually. Those method contents are
@@ -176,18 +178,6 @@ public class LogPanelController extends DataController implements Initializable 
     private void button14(ActionEvent event) { 
         // Automatically generated method button14() 
         System.out.println("Button14 was pressed!"); 
-    } 
-
-    @FXML 
-    private void button21(ActionEvent event) { 
-        // Automatically generated method button21() 
-        System.out.println("Button21 was pressed!"); 
-    } 
-
-    @FXML 
-    private void button26(ActionEvent event) { 
-        // Automatically generated method button26() 
-        System.out.println("Button26 was pressed!"); 
     } 
 
     @Override 
