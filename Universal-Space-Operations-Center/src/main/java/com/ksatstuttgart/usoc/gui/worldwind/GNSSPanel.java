@@ -34,7 +34,7 @@ import com.ksatstuttgart.usoc.gui.DataPanel;
 import gov.nasa.worldwind.Model;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.awt.WorldWindowGLJPanel;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Matrix;
 import gov.nasa.worldwind.geom.Position;
@@ -60,35 +60,59 @@ import gov.nasa.worldwind.util.StatusBar;
 import gov.nasa.worldwind.view.ViewUtil;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import java.awt.BorderLayout;
+import javafx.geometry.Insets;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.TreeMap;
+import javafx.embed.swing.SwingNode;
+import javafx.scene.layout.StackPane;
 import javax.swing.BoxLayout;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 /**
+ * This class provides the possibility to add NASA World Wind Panels to USOC.
+ *
+ * It is based on WorldWindowGLJPanel to provide the views which uses Swing
+ * components.
+ *
+ * However using the addGNSSPaneltoStackPane(StackPane stackPane) method, the resulting
+ * Panels can also be used with JavaFX.
+ *
+ * Since GNSSPanel extends DataPanel, it can also handle updates from the
+ * MessageController. If any registered updates contain GNSS data the
+ * visualization is updated accordingly.
+ *
+ * GNSSPanel draws Markers for GNSS coordinates and connects them in order to
+ * visualize the path of an experiment.
  *
  * @author valentinstarlinger
  */
 public class GNSSPanel extends DataPanel {
 
-    WorldWindowGLCanvas wwp_big, wwp_topView, wwp_sideView;
-    BasicOrbitView bov_big, bov_topView, bov_sideView;
-    
-    StatusBar statusBar;
+    private final WorldWindowGLJPanel wwp_big, wwp_topView, wwp_sideView;
+    private final BasicOrbitView bov_big, bov_topView, bov_sideView;
 
-    RenderableLayer pathLayer;
-    MarkerLayer markerLayer;
+    private final StatusBar statusBar;
 
-    JPanel sidePanel;
+    private final RenderableLayer pathLayer;
+    private final MarkerLayer markerLayer;
 
+    private final JPanel sidePanel;
+
+    private final SwingNode sn_bot, sn_top;
+
+    private final boolean isUsingSwing;
+
+    //TODO: get this from preferences.
     private static final boolean OFFLINEMODE = true;
 
-    public GNSSPanel() {
+    public GNSSPanel(boolean isUsingSwing) {
         super();
-        
+
+        this.isUsingSwing = isUsingSwing;
+
         boolean networkUnavailable = WorldWind.getNetworkStatus().isNetworkUnavailable();
         //if network is unavailable or usenetwork is false go into offline mode
         //true to use network false otherwise
@@ -97,11 +121,9 @@ public class GNSSPanel extends DataPanel {
         pathLayer = new RenderableLayer();
         markerLayer = new MarkerLayer();
 
-        wwp_big = new WorldWindowGLCanvas();
-        wwp_topView = new WorldWindowGLCanvas();
-        wwp_sideView = new WorldWindowGLCanvas();
-
-        JLayeredPane jlp = new JLayeredPane();
+        wwp_big = new WorldWindowGLJPanel();
+        wwp_topView = new WorldWindowGLJPanel();
+        wwp_sideView = new WorldWindowGLJPanel();
 
         sidePanel = new JPanel();
         sidePanel.setOpaque(true);
@@ -110,17 +132,26 @@ public class GNSSPanel extends DataPanel {
         sidePanel.add(wwp_topView);
         sidePanel.add(wwp_sideView);
 
-        jlp.add(wwp_big, JLayeredPane.MODAL_LAYER);
-        jlp.add(sidePanel, JLayeredPane.DEFAULT_LAYER);
-
         wwp_big.setBounds(0, 0, 600, 600);
         sidePanel.setBounds(400, 0, 200, 200);
 
         this.setLayout(new BorderLayout());
-        this.add(jlp);
+        if (isUsingSwing) {
+            JLayeredPane jlp = new JLayeredPane();
+            jlp.add(wwp_big, JLayeredPane.MODAL_LAYER);
+            jlp.add(sidePanel, JLayeredPane.DEFAULT_LAYER);
+
+            wwp_big.setBounds(0, 0, 600, 600);
+            sidePanel.setBounds(400, 0, 200, 200);
+
+            this.add(jlp);
+        } else {
+            this.add(wwp_big);
+        }
+
         statusBar = new StatusBar();
         statusBar.setBorder(new EmptyBorder(5, 5, 5, 5));
-        
+
         statusBar.setEventSource(wwp_big);
         this.add(statusBar, BorderLayout.SOUTH);
 
@@ -160,6 +191,18 @@ public class GNSSPanel extends DataPanel {
         bov_topView = new BasicOrbitView();
         bov_topView.setGlobe(flatEarth);
         wwp_topView.setView(bov_topView);
+
+        sn_bot = new SwingNode();
+        sn_bot.setContent(this);
+
+        sn_top = new SwingNode();
+        sn_top.setContent(sidePanel);
+
+    }
+
+    public static void addGNSSPaneltoStackPane(StackPane stackPane) {
+        GNSSPanel gnssPanel = new GNSSPanel(false);
+        stackPane.getChildren().addAll(gnssPanel.sn_bot, gnssPanel.sn_top);
     }
 
     /**
@@ -187,13 +230,17 @@ public class GNSSPanel extends DataPanel {
         //getting the width and height for the big world window
         int width = this.getWidth();
         int height = this.getHeight() - statusBar.getHeight();
-        wwp_big.setBounds(0, 0, width, height);
         //setting the height and width of the sidePanel to a third of the big window
         int spHeight = height / 3;
         int spWidth = width / 3;
         //setting the sidePanel in the upper right corner with the respective width 
         //and height
-        sidePanel.setBounds(width - spWidth, 0, spWidth, spHeight);
+        if (isUsingSwing) {
+            wwp_big.setBounds(0, 0, width, height);
+            sidePanel.setBounds(width - spWidth, 0, spWidth, spHeight);
+        } else {
+            StackPane.setMargin(sn_top, new Insets(0, 0, height - spHeight, width - spWidth));
+        }
     }
 
     /**
@@ -211,10 +258,10 @@ public class GNSSPanel extends DataPanel {
 
         //only update for iridium messages at the moment/ignore error and serial 
         //events
-        if(e instanceof SerialEvent|| e instanceof ErrorEvent){
+        if (e instanceof SerialEvent || e instanceof ErrorEvent) {
             return;
         }
-        
+
         double highestGlobalAlt = 0, highestLastAlt = 0;
         int numPoints = 0;
 

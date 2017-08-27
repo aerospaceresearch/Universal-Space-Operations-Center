@@ -1,0 +1,39 @@
+<?import java.lang.*?> 
+<?import javafx.geometry.*?> 
+<?import javafx.collections.*?> 
+<?import javafx.scene.*?> 
+<?import javafx.scene.control.*?> 
+<?import javafx.scene.layout.*?> 
+
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.LogPanelController" maxWidth="265.0" minWidth="265.0" prefWidth="265.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
+  <tabs>
+    <Tab text="testTab"> 
+      <content> 
+<BorderPane> 
+<padding><Insets top="5" right="5" bottom="5" left="5"/></padding> 
+  <top> 
+    <GridPane alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+      <columnConstraints> 
+        <ColumnConstraints hgrow="SOMETIMES" /> 
+        <ColumnConstraints hgrow="SOMETIMES" /> 
+      </columnConstraints> 
+      <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+     </rowConstraints> 
+      <children>
+        <Button text="Button 1" onAction="#button11" mnemonicParsing="false" GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="-Infinity" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES"/>
+        <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <TextField promptText="Prompt Text" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="RIGHT" maxWidth="60.0" prefWidth="60.0" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+        <Button text="Button 2" onAction="#button14" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="-Infinity" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES"/>
+      </children> 
+    </GridPane> 
+  </top>
+  <center> 
+    <TextArea prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" /> 
+  </center>
+</BorderPane> 
+      </content> 
+    </Tab>
+  </tabs> 
+</TabPane>

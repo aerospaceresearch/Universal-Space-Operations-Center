@@ -21,35 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.gui.worldwind;
+package com.ksatstuttgart.usoc.gui.controller; 
 
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.util.StatusBar;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
+import java.net.URL; 
+import java.util.ResourceBundle; 
+import javafx.fxml.FXML; 
+import java.awt.Label; 
+import javafx.fxml.Initializable; 
 
-/**
- *
- * @author valentinstarlinger
- */
-public class WorldWindPanel extends JPanel{
-    
-        WorldWindowGLCanvas wwd;
+/** 
+ * <h1>StatePanelController</h1>
+ * This class ensure the functionality of the StatePanel.
+ * <p>
+ * It contains a method for setting and
+ * updating the labels in the StatePanel. A label is automatically
+ * set for every entered keyword.
+ * 
+ * @author Victor Hertel
+ * @version 1.0
+*/
+public class StatePanelController implements Initializable { 
 
-        public WorldWindPanel(WorldWindowGLCanvas shareWith, int width, int height)
-        {
-            // To share resources among World Windows, pass the first World Window to the constructor of the other
-            // World Windows.
-            this.wwd = shareWith != null ? new WorldWindowGLCanvas(shareWith) : new WorldWindowGLCanvas();
-            this.wwd.setSize(new java.awt.Dimension(width, height));
+    @FXML Label labelkeyword1;
+    @FXML Label labelkeyword2;
 
-            this.setLayout(new BorderLayout(5, 5));
-            this.add(this.wwd, BorderLayout.CENTER);
+    public void updateStates() {
+        labelkeyword1.setText("labelkeyword1");
+        labelkeyword2.setText("labelkeyword2");
+    }
 
-            StatusBar statusBar = new StatusBar();
-            statusBar.setBorder(new EmptyBorder(5, 5, 5, 5));
-            statusBar.setEventSource(wwd);
-            this.add(statusBar, BorderLayout.SOUTH);
-        }
+    @Override 
+    public void initialize(URL url, ResourceBundle rb) { 
+        // TODO 
+        updateStates();
+    } 
 }

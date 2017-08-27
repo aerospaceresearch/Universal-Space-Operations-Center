@@ -1,0 +1,42 @@
+        <BorderPane>
+        <padding><Insets top="5" right="5" bottom="5" left="5"/></padding>
+          <top>
+            <GridPane alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+            <padding><Insets bottom="5" /></padding>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" prefWidth="90.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+              <children>
+                <Label text="Last message from:" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label text="Subject:" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label text="Filename:" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label text="Received at:" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label text="Add file:" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Button text="Clear Data" onAction="#iridiumClearData" GridPane.columnIndex="0" GridPane.rowIndex="5" prefWidth="90.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label text="#Messages on (re)connect:" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Button text="exportCSV" onAction="#iridiumExportCSV" GridPane.columnIndex="0" GridPane.rowIndex="7" prefWidth="90.0" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label fx:id="iridiumLastFrom" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label fx:id="iridiumLastSubject" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label fx:id="iridiumLastFilename" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Label fx:id="iridiumLastTimestamp" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Button text="Open" onAction="#iridiumOpen" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="60.0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <TextField text="0" fx:id="iridiumReconnectField" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.halignment="RIGHT" maxWidth="60.0" prefWidth="60.0" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                <Button text="Connect" onAction="#iridiumReconnect" GridPane.columnIndex="1" GridPane.rowIndex="7" prefWidth="90.0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+              </children>
+            </GridPane>
+          </top>
+          <center>
+            <TextArea fx:id="iridiumTextArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+          </center>
+        </BorderPane>

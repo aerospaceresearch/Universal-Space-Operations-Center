@@ -35,16 +35,17 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.gui.SerialPanel;
+import com.ksatstuttgart.usoc.gui.controller.LogPanelController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import javax.swing.JFileChooser;
 import static java.lang.Thread.sleep;
-import static java.lang.Thread.sleep;
+import java.util.List;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  *
@@ -55,6 +56,7 @@ public class MainController {
     private final MessageController messageController;
 
     private static MainController instance;
+    private Stage stage;
 
     private ArrayList<DataUpdateListener> listeners;
 
@@ -78,6 +80,14 @@ public class MainController {
         MailReceiver.getInstance().addMailUpdateListener(new MailListener());
         SerialComm.getInstance().addSerialListener(new RXListener());
     }
+    
+    public void setStage(Stage stage){
+        this.stage = stage;
+    }
+    
+    public Stage getStage(){
+        return this.stage;
+    }
 
     public MessageController getMessageController() {
         return this.messageController;
@@ -98,11 +108,13 @@ public class MainController {
     }
 
     public void exportCSV() {
-        JFileChooser jf = new JFileChooser();
-        int returnVal = jf.showSaveDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Export .csv");
+        
+        File selectedFile = fc.showSaveDialog(stage);
+        if (selectedFile != null) {
             try {
-                ExportController.saveDataAsCSV(messageController.getData(), jf.getSelectedFile(), false);
+                ExportController.saveDataAsCSV(messageController.getData(), selectedFile, false);
             } catch (IOException ex) {
                 System.out.println("something wrong happend when saving the file");
             }
@@ -110,10 +122,15 @@ public class MainController {
     }
 
     public void openBinaryFile() {
-        JFileChooser jf = new JFileChooser();
-        int returnVal = jf.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            addBinaryFile(jf.getSelectedFile());
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Open binary file");
+        
+        List<File> files = fc.showOpenMultipleDialog(stage);
+        
+        if(files != null){
+            for (File file : files) {
+                addBinaryFile(file);
+            }
         }
     }
 
@@ -143,15 +160,30 @@ public class MainController {
             public void run() {
                 while (true) {
                     try {
-                        ArrayList<String> ports = new ArrayList<>();
-                        ports.addAll(Arrays.asList(jssc.SerialPortList.getPortNames()));
-                        sp.updatePortList(ports);
+                        sp.updatePortList(SerialComm.getInstance().getPorts());
                         Thread.sleep(500);
                     } catch (InterruptedException ex) {
                     }
                 }
             }
         }.start();
+    }
+    
+    public static void startPortThread(final LogPanelController sp) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        sp.updatePortList(SerialComm.getInstance().getPorts());
+                        Thread.sleep(500);
+                    } catch (InterruptedException ex) {
+                    }
+                }
+            }
+        };
+        t.setDaemon(true);
+        t.start();
     }
 
     public void clearData() {

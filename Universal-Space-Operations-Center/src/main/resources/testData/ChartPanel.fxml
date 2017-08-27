@@ -1,0 +1,44 @@
+<?import javafx.scene.chart.*?> 
+<?import javafx.scene.control.*?> 
+<?import javafx.scene.layout.*?> 
+
+<TabPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller = "com.ksatstuttgart.usoc.gui.controller.MainPanelController" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER"> 
+   <tabs>
+    <Tab text="Graphs"> 
+      <content> 
+        <ScrollPane fitToHeight="true" fitToWidth="true">
+          <content>
+            <GridPane>
+              <columnConstraints> 
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="400.0" /> 
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" prefWidth="400.0" /> 
+              </columnConstraints> 
+              <rowConstraints>
+                <RowConstraints maxHeight="400.0" minHeight="200.0" prefHeight="300.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+              <children>
+                <LineChart fx:id="lineChart1" title="Chart 1" GridPane.columnIndex="0" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                  <xAxis>
+                    <NumberAxis label="Time [s]" side="BOTTOM" />
+                  </xAxis>
+                  <yAxis>
+                    <NumberAxis label="Current [A]" side="LEFT" />
+                  </yAxis>
+                </LineChart>
+                <LineChart fx:id="lineChart2" title="Chart 2" GridPane.columnIndex="1" GridPane.rowIndex="0" maxHeight="400.0" minHeight="200.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                  <xAxis>
+                    <NumberAxis label="Time [s]" side="BOTTOM" />
+                  </xAxis>
+                  <yAxis>
+                    <NumberAxis label="Power [W]" side="LEFT" />
+                  </yAxis>
+                </LineChart>
+              </children>
+            </GridPane>
+          </content>
+        </ScrollPane>
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
+
