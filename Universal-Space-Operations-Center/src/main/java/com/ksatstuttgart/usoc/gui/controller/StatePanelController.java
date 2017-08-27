@@ -42,24 +42,12 @@ import javafx.fxml.Initializable;
 */
 public class StatePanelController implements Initializable { 
 
-    @FXML Label labelSafe;
-    @FXML Label labelIdle;
-    @FXML Label labelPreparation;
-    @FXML Label labelExecution;
-    @FXML Label labelObservation;
-    @FXML Label labelDiagnosis;
-    @FXML Label labelTestLabel1;
-    @FXML Label labelTestLabel2;
+    @FXML Label labelkeyword1;
+    @FXML Label labelkeyword2;
 
     public void updateStates() {
-        labelSafe.setText("labelSafe");
-        labelIdle.setText("labelIdle");
-        labelPreparation.setText("labelPreparation");
-        labelExecution.setText("labelExecution");
-        labelObservation.setText("labelObservation");
-        labelDiagnosis.setText("labelDiagnosis");
-        labelTestLabel1.setText("labelTestLabel1");
-        labelTestLabel2.setText("labelTestLabel2");
+        labelkeyword1.setText("labelkeyword1");
+        labelkeyword2.setText("labelkeyword2");
     }
 
     @Override 

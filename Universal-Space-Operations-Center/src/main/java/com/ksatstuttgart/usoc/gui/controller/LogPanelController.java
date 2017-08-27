@@ -174,12 +174,6 @@ public class LogPanelController extends DataController implements Initializable 
         System.out.println("Button11 was pressed!"); 
     } 
 
-    @FXML 
-    private void button14(ActionEvent event) { 
-        // Automatically generated method button14() 
-        System.out.println("Button14 was pressed!"); 
-    } 
-
     @Override 
     public void initialize(URL url, ResourceBundle rb) { 
         // TODO

@@ -37,6 +37,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
+import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
+import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
+
 /** 
  * <h1>MainPanelController</h1>
  * This class ensure the functionality of the MainPanel.
@@ -154,9 +158,13 @@ public class MainPanelController extends DataController implements Initializable
         return series;
     }
 
+    @FXML
+    private StackPane pane;
+
     @Override 
     public void initialize(URL url, ResourceBundle rb) { 
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
+        GNSSPanel.addGNSSPaneltoStackPane(pane);
     }
 }

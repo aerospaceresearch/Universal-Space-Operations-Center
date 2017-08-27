@@ -144,7 +144,6 @@
                 <Button text="Button 1" onAction="#button11" mnemonicParsing="false" GridPane.columnIndex="0" GridPane.rowIndex="0" maxWidth="-Infinity" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" GridPane.halignment="LEFT" GridPane.hgrow="SOMETIMES"/>
                 <Label text="Label 1" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
                 <TextField promptText="Prompt Text 1" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="LEFT" maxWidth="-Infinity" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
-                <Button text="Button 2" onAction="#button14" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="-Infinity" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" GridPane.halignment="RIGHT" GridPane.hgrow="SOMETIMES"/>
               </children> 
             </GridPane> 
           </top>
