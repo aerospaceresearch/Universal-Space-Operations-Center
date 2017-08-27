@@ -23,7 +23,6 @@
  */
 package com.ksatstuttgart.usoc.data;
 
-import com.ksatstuttgart.usoc.controller.MessageController;
 import java.util.Arrays;
 import javax.mail.Address;
 
@@ -31,14 +30,15 @@ import javax.mail.Address;
  *
  * @author valentinstarlinger
  */
-public class MailEvent {
-    
+public class MailEvent extends USOCEvent {
+
     private Address[] from;
     private String subject, filename, text;
     private long timeStampGmail;
     private long timeStamp;
 
-    public MailEvent(Address[] from, String subject, String filename, String text, long timeStamp, long timeStampGmail) {
+    public MailEvent(Address[] from, String subject, String filename, String text, long timeStamp, long timeStampGmail, DataSource dataSource) {
+        super(dataSource);
         this.from = from;
         this.subject = subject;
         this.filename = filename;
@@ -78,19 +78,28 @@ public class MailEvent {
     public void setTimeStampGmail(long timeStampGmail) {
         this.timeStampGmail = timeStampGmail;
     }
-    
+
     public void setFilename(String filename) {
         this.filename = filename;
     }
 
-    public String getText(){
+    public String getText() {
         return text;
     }
 
     @Override
-    public String toString(){
-        return timeStamp+"\n"+Arrays.toString(from)+"\n"+subject+"\n"+filename+"\n"+text+"\n"+"\n";
+    public String toString() {
+        return timeStamp + "\n" + Arrays.toString(from) + "\n" + subject + "\n" + filename + "\n" + text + "\n" + "\n";
     }
-    
-    
+
+    @Override
+    public DataSource getDataSource() {
+        return this.dataSource;
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
 }

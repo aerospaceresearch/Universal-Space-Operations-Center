@@ -24,6 +24,7 @@
 package com.ksatstuttgart.usoc.gui;
 
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -37,28 +38,31 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import com.ksatstuttgart.usoc.controller.communication.SerialComm;
+import com.ksatstuttgart.usoc.data.DataSource;
+import com.ksatstuttgart.usoc.data.ErrorEvent;
+import com.ksatstuttgart.usoc.data.USOCEvent;
 
 /**
-* <h1>SerialPanel</h1>
-* This class creates a GUI to control the Serial communication and to send 
-* commands to the experiment using the serial communication port. 
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
-
-public class SerialPanel extends JPanel {
+ * <h1>SerialPanel</h1>
+ * This class creates a GUI to control the Serial communication and to send
+ * commands to the experiment using the serial communication port.
+ *
+ * @author Valentin Starlinger
+ * @version 1.0
+ */
+public class SerialPanel extends DataPanel {
 
     private final JComboBox commandBox;
     private final JButton send, connect;
     private final LogPanel lp;
     private final JComboBox ports, baudrate;
-    
-    private static final String[] baudrates = {"38400","57600"};
-    private static final String[] commands = {"Ping","Testing","Camtest","Cameras","Abort","Prelaunch","Active","Reset","LaunchMacro"};
-    
+
+    private static final String[] baudrates = {"38400", "57600"};
+    private static final String[] commands = {"Ping", "Testing", "Camtest", "Cameras", "Abort", "Prelaunch", "Active", "Reset", "LaunchMacro"};
 
     public SerialPanel() {
+        super();
+
         commandBox = new JComboBox(commands);
         send = new JButton("Send Command");
         send.addActionListener(new SendListener());
@@ -66,62 +70,64 @@ public class SerialPanel extends JPanel {
         baudrate = new JComboBox(baudrates);
         connect = new JButton("Connect");
         connect.addActionListener(new ConnectListener());
-        
+
         JPanel cp = new JPanel();
         GridBagConstraints gbc = new GridBagConstraints();
-        cp.setLayout(new GridLayout(3,2));
-        
+        cp.setLayout(new GridLayout(3, 2));
+
         cp.add(baudrate);
         cp.add(new JLabel());
         cp.add(ports);
         cp.add(connect);
         cp.add(commandBox);
         cp.add(send);
-        
+
         lp = new SerialLogPanel();
-        
+
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        this.setLayout(new BorderLayout(5,5));
-        this.add(cp,BorderLayout.NORTH);
+        this.setLayout(new BorderLayout(5, 5));
+        this.add(cp, BorderLayout.NORTH);
         this.add(lp, BorderLayout.CENTER);
         this.setPreferredSize(new java.awt.Dimension(0, 250));
 
     }
 
-    public void updateData(SerialEvent e) {
-        lp.updateData(e.getMsg(), e.getTimeStamp());
-    }
-    
-    public void updateError(String msg){
-        lp.updateError(msg);
+    @Override
+    public void updateData(MessageController msgController, USOCEvent ue) {
+        if (ue instanceof SerialEvent) {
+            SerialEvent e = (SerialEvent) ue;
+            lp.updateData(e.getMsg(), e.getTimeStamp());
+        } else if (ue instanceof ErrorEvent && ue.getDataSource() == DataSource.SERIAL){
+            lp.updateError(((ErrorEvent)ue).getErrorMessage());
+        }
     }
     
     public String getPort() {
-        return ((String)ports.getSelectedItem());
+        return ((String) ports.getSelectedItem());
     }
-    
-    public void updatePortList(ArrayList<String> ports){
+
+    public void updatePortList(ArrayList<String> ports) {
         for (String port : ports) {
-            if(!portsContains(port)){
+            if (!portsContains(port)) {
                 this.ports.addItem(port);
             }
         }
         for (int i = 0; i < this.ports.getItemCount(); i++) {
             boolean contains = false;
             for (String port : ports) {
-                if(port.equals(this.ports.getItemAt(i))){
+                if (port.equals(this.ports.getItemAt(i))) {
                     contains = true;
                 }
             }
-            if(!contains){
+            if (!contains) {
                 this.ports.removeItemAt(i);
             }
         }
     }
-    
-    private boolean portsContains(String s){
+
+    private boolean portsContains(String s) {
         for (int i = 0; i < ports.getItemCount(); i++) {
-            if(((String)ports.getItemAt(i)).equals(s)){
+            if (((String) ports.getItemAt(i)).equals(s)) {
                 return true;
             }
         }
@@ -129,25 +135,25 @@ public class SerialPanel extends JPanel {
     }
 
     public int getBaudrate() {
-        return Integer.parseInt((String)baudrate.getSelectedItem());
+        return Integer.parseInt((String) baudrate.getSelectedItem());
     }
-    
-    private class SendListener implements ActionListener{
+
+    private class SendListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ActionEvent ae = new ActionEvent(e.getSource(), ActionEvent.ACTION_PERFORMED, (String)commandBox.getSelectedItem());
+            ActionEvent ae = new ActionEvent(e.getSource(), ActionEvent.ACTION_PERFORMED, (String) commandBox.getSelectedItem());
             SerialComm.sendAction(ae);
         }
-        
+
     }
-    
-    private class ConnectListener implements ActionListener{
+
+    private class ConnectListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            SerialComm.getInstance().start((String)ports.getSelectedItem(), getBaudrate());
+            SerialComm.getInstance().start((String) ports.getSelectedItem(), getBaudrate());
         }
-        
+
     }
 }

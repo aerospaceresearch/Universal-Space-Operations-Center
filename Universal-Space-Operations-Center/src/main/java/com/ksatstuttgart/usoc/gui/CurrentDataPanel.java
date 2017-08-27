@@ -23,15 +23,17 @@
  */
 package com.ksatstuttgart.usoc.gui;
 
+import com.ksatstuttgart.usoc.controller.DataModification;
 import com.ksatstuttgart.usoc.controller.MessageController;
+import com.ksatstuttgart.usoc.data.DataSource;
+import com.ksatstuttgart.usoc.data.ErrorEvent;
+import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
-import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 /**
  * <h1>MailUpdateListener</h1>
@@ -40,10 +42,10 @@ import javax.swing.JScrollPane;
  * @author Valentin Starlinger
  * @version 1.0
  */
-public class CurrentDataPanel extends JPanel {
+public class CurrentDataPanel extends DataPanel {
 
-    private final LineChart batteryChart, thermocoupleChart, coldjunctionChart,
-            imuQuaternionChart, pressureChart, iridiumChart;
+    private final LineChart batteryChart, thermocoupleChart,
+            imuQuaternionChart, pressureChart, timerChart;
 
     private final GPSPanel gpsp;
 
@@ -53,6 +55,7 @@ public class CurrentDataPanel extends JPanel {
         super();
         
         gpsp = new GPSPanel();
+        timerChart = new LineChart("Time Signal","Time [s]", "Time");
 
         /**
          *
@@ -61,7 +64,6 @@ public class CurrentDataPanel extends JPanel {
         jl_temp.setFont(BIGFONT);
 
         thermocoupleChart = new LineChart("Thermocouples", "Time [s]", "Temperature [°C]");
-        coldjunctionChart = new LineChart("Coldjunctions", "Time [s]", "Temperature [°C]");
 
         JLabel jl_pressure = new JLabel("Pressure:");
         jl_pressure.setFont(BIGFONT);
@@ -77,7 +79,6 @@ public class CurrentDataPanel extends JPanel {
 
         imuQuaternionChart = new LineChart("IMU", "Time [s]", "Quaternions");
         batteryChart = new LineChart("Battery Voltage", "Time [s]", "Voltage [V]");
-        iridiumChart = new LineChart("Iridium", "Time [s]", "");
 
         GroupLayout gl = new GroupLayout(this);
         this.setLayout(gl);
@@ -86,10 +87,13 @@ public class CurrentDataPanel extends JPanel {
         gl.setAutoCreateContainerGaps(true);
 
         gl.setVerticalGroup(gl.createSequentialGroup()
-                .addComponent(jl_temp)
+                .addGroup(gl.createParallelGroup()
+                        .addComponent(jl_temp)
+                        .addComponent(jl_battery)
+                )
                 .addGroup(gl.createParallelGroup()
                         .addComponent(thermocoupleChart)
-                        .addComponent(coldjunctionChart)
+                        .addComponent(batteryChart)
                 )
                 .addGroup(gl.createParallelGroup()
                         .addComponent(jl_imu)
@@ -100,15 +104,8 @@ public class CurrentDataPanel extends JPanel {
                         .addComponent(pressureChart)
                 )
                 .addGroup(gl.createParallelGroup()
-                        .addComponent(jl_battery)
-                        .addComponent(jl_transceiver)
-                )
-                .addGroup(gl.createParallelGroup()
-                        .addComponent(batteryChart)
-                        .addComponent(iridiumChart)
-                )
-                .addGroup(gl.createParallelGroup()
                         .addComponent(gpsp)
+                        .addComponent(timerChart)
                 )
         );
 
@@ -118,102 +115,94 @@ public class CurrentDataPanel extends JPanel {
                         .addComponent(thermocoupleChart)
                         .addComponent(jl_imu)
                         .addComponent(imuQuaternionChart)
-                        .addComponent(jl_battery)
-                        .addComponent(batteryChart)
+                        .addComponent(gpsp)
                 )
                 .addGroup(gl.createParallelGroup()
-                        .addComponent(coldjunctionChart)
+                        .addComponent(jl_battery)
+                        .addComponent(batteryChart)
                         .addComponent(jl_pressure)
                         .addComponent(pressureChart)
-                        .addComponent(jl_transceiver)
-                        .addComponent(iridiumChart)
-                        .addComponent(gpsp)
+                        .addComponent(timerChart)
                 )
         );
     }
 
-    public void updateData(MessageController mc) {
+    @Override
+    public void updateData(MessageController mc, USOCEvent e) {
+        
+        //in case this is an error event, ignore it
+        if(e instanceof ErrorEvent){
+            return;
+        }
 
         //go through the data and update the charts
-        for (Sensor sensor : mc.getData().getData().getSensors()) {
+        for (Sensor sensor : mc.getData().getSensors()) {
+            //adjust values for the sensor specific to the current experiment
+            Sensor adjusted = DataModification.adjustSensorData(sensor);
+            
             //search for thermocouple sensors
-            if (sensor.getSensorName().startsWith("Thermocouple")) {
+            if (adjusted.getSensorName().startsWith("Thermocouple")) {
                 //thermocouple sensors have only one variable with the current
                 //data scheme it uses the sensor name as variable name 
                 //TODO: this needs to be fixed
-                thermocoupleChart.addSeries(sensor.getSensorName()
-                        , sensor.getVars().get(0).getValues()
-                        , sensor.getVars().get(0).getDataType());
+                thermocoupleChart.addSeries(adjusted.getSensorName()
+                        , adjusted.getVars().get(0).getValues()
+                        , adjusted.getVars().get(0).getDataType());
             }
 
-            //search for coldjunction sensors
-            if (sensor.getSensorName().startsWith("ColdJunction")) {
-                //coldjunction sensors have only one variable with the current
-                //data scheme and it uses the sensor name as variable name 
-                //TODO: this needs to be fixed
-                coldjunctionChart.addSeries(sensor.getSensorName()
-                        , sensor.getVars().get(0).getValues()
-                        , sensor.getVars().get(0).getDataType());
-                coldjunctionChart.updateAxis();
-
-            }
-            
             //search for pressure sensors
-            if (sensor.getSensorName().contains("Pressure")) {
+            if (adjusted.getSensorName().contains("Pressure")) {
                 //pressure sensors have only one variable with the current
                 //data scheme and it uses the sensor name as variable name 
                 //TODO: this needs to be fixed
-                pressureChart.addSeries(sensor.getSensorName()
-                        , sensor.getVars().get(0).getValues()
-                        , sensor.getVars().get(0).getDataType());
+                pressureChart.addSeries(adjusted.getSensorName()
+                        , adjusted.getVars().get(0).getValues()
+                        , adjusted.getVars().get(0).getDataType());
                 pressureChart.updateAxis();
 
             }
             
+            //search for pressure sensors
+            if (adjusted.getSensorName().contains("GNSS TIME")) {
+                //pressure sensors have only one variable with the current
+                //data scheme and it uses the sensor name as variable name 
+                //TODO: this needs to be fixed
+                timerChart.addSeries(adjusted.getSensorName()
+                        , adjusted.getVars().get(0).getValues()
+                        , adjusted.getVars().get(0).getDataType());
+                timerChart.updateAxis();
+
+            }
+            
             //search for voltage sensors
-            if (sensor.getSensorName().startsWith("Battery")) {
+            if (adjusted.getSensorName().startsWith("Battery")) {
                 //voltage sensors have only one variable with the current
                 //data scheme and it uses the sensor name as variable name 
                 //TODO: this needs to be fixed
-                batteryChart.addSeries(sensor.getSensorName()
-                        , sensor.getVars().get(0).getValues()
-                        , sensor.getVars().get(0).getDataType());
+                batteryChart.addSeries(adjusted.getSensorName()
+                        , adjusted.getVars().get(0).getValues()
+                        , adjusted.getVars().get(0).getDataType());
                 batteryChart.updateAxis();
 
             }
             
             //search for IMU data
-            if (sensor.getSensorName().contains("IMU")){
-                for (Var var : sensor.getVars()) {
+            if (adjusted.getSensorName().contains("IMU")){
+                for (Var var : adjusted.getVars()) {
                     //only visualize quaternion data ignore calibration data
                     //for chart
-                    if(var.getDataName().startsWith("Quaternion")){
-                        imuQuaternionChart.addSeries(var.getDataName()
-                                , var.getValues()
-                                , var.getDataType());
-                        imuQuaternionChart.updateAxis();
-                    }
+                    imuQuaternionChart.addSeries(var.getDataName()
+                            , var.getValues()
+                            , var.getDataType());
+                    imuQuaternionChart.updateAxis();
                 }
             }
             
-            //search for transceiver data
-            if (sensor.getSensorName().startsWith("Carrier")){
-                //transceiver sensors have only has variable with the current
-                //data scheme and it uses the sensor name as variable name 
-                //TODO: this needs to be fixed, should have max and current in same
-                //sensor
-                iridiumChart.addSeries(sensor.getSensorName()
-                        , sensor.getVars().get(0).getValues()
-                        , sensor.getVars().get(0).getDataType());
-                iridiumChart.updateAxis();    
-            }
-            
             //search for gps data
-            if (sensor.getSensorName().startsWith("UBLOX")){
+            if (adjusted.getSensorName().startsWith("UBLOX")){
                 //gps panel has its separate update method
-                gpsp.updateGPS(sensor);
+                gpsp.updateGPS(adjusted);
             }
         }
     }
-
 }

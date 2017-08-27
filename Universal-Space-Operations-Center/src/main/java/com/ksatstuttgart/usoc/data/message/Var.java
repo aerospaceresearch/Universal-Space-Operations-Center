@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc.data.message;
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.TreeMap;
 import javax.xml.bind.annotation.XmlAttribute;
 
 /**
@@ -42,7 +43,7 @@ public class Var implements Cloneable{
     private boolean isLittleEndian;
     private String unit;
     
-    private HashMap<Long, Object> values = new HashMap<>();
+    private TreeMap<Long, Object> values = new TreeMap<>();
     
     public Var(){
     }
@@ -55,13 +56,17 @@ public class Var implements Cloneable{
         this.startPosition = (var.getStartPosition());
         this.unit = (var.getUnit());
         this.isLittleEndian = var.isLittleEndian();
+        
+        for (Long key : var.getValues().keySet()) {
+            this.values.put(key, var.getValues().get(key));
+        }
     }
     
     public void addValue(long time, Object value){
         values.put(time, value);
     }
 
-    public HashMap<Long, Object> getValues(){
+    public TreeMap<Long, Object> getValues(){
         return values;
     }
     
@@ -134,11 +139,11 @@ public class Var implements Cloneable{
 
     @Override
     public String toString(){
-        return this.getDataName()+"["+this.getUnit()+"] (Type: "+this.getDataType()
-                +") StartPosition: "+this.getStartPosition()
-                +", NumPoints: "+this.getNumPoints()
-                +", Frequency: "+this.getFrequency()
-                +", isLittleEndian: "+this.isLittleEndian();
+        String s = this.getDataName();
+        for (Long time : this.getValues().keySet()) {
+            s+="\n"+time+": "+this.getValues().get(time);
+        }
+        return s;
     }
     
     /*

@@ -34,6 +34,7 @@ import com.ksatstuttgart.usoc.data.message.dataPackage.SensorType;
 import com.ksatstuttgart.usoc.data.message.header.Header;
 import com.ksatstuttgart.usoc.data.message.header.MetaData;
 import com.ksatstuttgart.usoc.data.message.header.MetaDataType;
+import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +46,9 @@ import org.junit.BeforeClass;
  * @author Valentin Starlinger
  * @version 1.0
  */
-public class XMLReaderTest {
+public class XMLReaderTest {    
+    
+    public static final String TESTPROTOCOLPATH = "tests"+File.separator+"protocols";
 
     public XMLReaderTest() {
     }
@@ -73,7 +76,7 @@ public class XMLReaderTest {
     public void testReadingDatapackage() {
         System.out.println("testing Reading Data Structure");
 
-        SBD340 result = XMLReader.getInstance().getMessageStructure("protocols/testProtocol.xml");
+        SBD340 result = XMLReader.getInstance().getMessageStructure(TESTPROTOCOLPATH+"/testProtocol.xml");
 
         SBD340 sbd = new SBD340();
         sbd.setProtocol(ProtocolType.NONE);

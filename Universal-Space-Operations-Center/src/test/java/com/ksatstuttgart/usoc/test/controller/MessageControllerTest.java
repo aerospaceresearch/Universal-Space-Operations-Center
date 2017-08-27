@@ -42,6 +42,9 @@ import static org.junit.Assert.*;
  * @author valentinstarlinger
  */
 public class MessageControllerTest {
+    
+    public static final String TESTFILEPATH = "tests"+File.separator+"files";
+    public static final String TESTPROTOCOLPATH = "tests"+File.separator+"protocols";
 
     /**
      * Test of addSBD340Message method, of class MessageController.
@@ -50,10 +53,10 @@ public class MessageControllerTest {
     public void testAddSBD340Message() throws IOException {
         System.out.println("test add and parse of Iridium message");
         SBD340 structure = XMLReader.getInstance()
-                .getMessageStructure("protocols/messageProtocol.xml");
+                .getMessageStructure(TESTPROTOCOLPATH+"/messageProtocol.xml");
         MessageController controller = new MessageController(structure);
 
-        FileInputStream fs = new FileInputStream("protocols" + File.separator + "msg_0");
+        FileInputStream fs = new FileInputStream(TESTFILEPATH + File.separator + "msg_0");
 
         //System.out.println("");
         //System.out.println("- binary message - ");
@@ -67,7 +70,7 @@ public class MessageControllerTest {
         
         controller.addSBD340Message(message.toString());
 
-        BufferedReader br = new BufferedReader(new FileReader("protocols" + File.separator + "logfile.txt"));
+        BufferedReader br = new BufferedReader(new FileReader(TESTFILEPATH + File.separator + "logfile.txt"));
 
         String expected = "";
         String nextLine;
@@ -80,7 +83,7 @@ public class MessageControllerTest {
         System.out.println(prettyResults);
         
         String result = "";
-        for (Sensor sensor : controller.getData().getData().getSensors()) {
+        for (Sensor sensor : controller.getData().getSensors()) {
             for (Var variable : sensor.getVars()) {
                 for (Object value : variable.getValues().values()) {
                     result+=(value)+"\r\n";
@@ -89,7 +92,7 @@ public class MessageControllerTest {
         }
 
         //replace all whitespaces, otherwise difficult with comparison
-        assertEquals(result.replaceAll("\\s", ""), expected.replaceAll("\\s", ""));
+        assertEquals(expected.replaceAll("\\s", ""), result.replaceAll("\\s", ""));
     }
 
 }
