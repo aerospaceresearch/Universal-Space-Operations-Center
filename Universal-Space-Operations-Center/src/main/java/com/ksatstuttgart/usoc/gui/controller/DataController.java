@@ -26,22 +26,28 @@ package com.ksatstuttgart.usoc.gui.controller;
 import com.ksatstuttgart.usoc.controller.DataUpdateListener;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.USOCEvent;
+import javafx.application.Platform;
 
 /**
  *
  * @author valentinstarlinger
  */
-public abstract class DataController{
-    
+public abstract class DataController {
+
     public abstract void updateData(MessageController msgController, USOCEvent e);
 
-    protected class UpdateListener implements DataUpdateListener{
+    protected class UpdateListener implements DataUpdateListener {
 
         @Override
-        public void update(MessageController msgController, USOCEvent e) {
-            updateData(msgController, e);
+        public void update(final MessageController msgController, final USOCEvent e) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    updateData(msgController, e);
+                }
+            });
         }
-        
+
     }
-    
+
 }
