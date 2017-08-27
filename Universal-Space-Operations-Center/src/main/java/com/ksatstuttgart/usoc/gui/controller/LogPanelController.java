@@ -24,7 +24,9 @@ import javafx.scene.control.ComboBox;
 import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
 import com.ksatstuttgart.usoc.data.MailEvent;
 import java.util.Date;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javax.mail.Address;
 
 /** 
@@ -72,6 +74,7 @@ public class LogPanelController extends DataController implements Initializable 
     @FXML private Label iridiumLastSubject; 
     @FXML private Label iridiumLastFilename; 
     @FXML private Label iridiumLastTimestamp; 
+    @FXML private TextField iridiumReconnectField; 
 
     @FXML 
     private void iridiumOpen(ActionEvent event) { 
@@ -94,6 +97,14 @@ public class LogPanelController extends DataController implements Initializable 
     @FXML 
     private void iridiumReconnect(ActionEvent event) { 
         System.out.println("Reconnect button in iridium log has been pressed!");
+        ((Button)event.getSource()).setText("Reconnect");
+        int numMessages = 0;
+        try {
+            numMessages = Integer.parseInt(iridiumReconnectField.getText());
+        } catch(NumberFormatException ex){
+            //do nothing;
+        }
+        MailReceiver.getInstance().setMessagesOnReconnect(numMessages);
         MailReceiver.getInstance().reconnect(); 
     } 
 
