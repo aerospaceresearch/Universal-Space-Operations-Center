@@ -10,6 +10,7 @@ The original version of this software was used as part of the [MIRKA2-RX experim
 ## Authors
 
 * **[Valentin Starlinger](https://github.com/vstarlinger)** - *Initial work*
+* **[Victor Hertel](https://github.com/vhertel)** - *Generic GUI Configuration*
 
 
 ## License
