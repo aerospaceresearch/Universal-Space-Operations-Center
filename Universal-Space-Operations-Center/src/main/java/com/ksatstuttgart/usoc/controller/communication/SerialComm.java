@@ -143,30 +143,34 @@ public class SerialComm {
     public List<String> getAvailableCommands() {
         return Arrays.asList(SerialComm.COMMANDS);
     }
-    
+
     public List<String> getAvailableBaudrates() {
         return Arrays.asList(SerialComm.BAUDRATES);
     }
 
-    /*
-     * In this class must implement the method serialEvent, through it we learn about 
-     * events that happened to our port. But we will not report on all events but only 
-     * those that we put in the mask. In this case the arrival of the data and change the 
-     * status lines CTS and DSR
+    /** 
+     * This class reads chars from the serial port and reports new incoming data.
+     * Incoming data is detected by newLine characters.
      */
     private class SerialPortReader implements SerialPortEventListener {
+
+        String buffer = "";
 
         @Override
         public void serialEvent(SerialPortEvent event) {
             if (event.isRXCHAR()) {//If data is available
                 try {
-                    byte buffer[] = serialPort.readBytes(event.getEventValue());
-                    String s = "";
-                    for (byte c : buffer) {
-                        s += (char) c;
+                    for (byte c : serialPort.readBytes(event.getEventValue())) {
+                        //every time a newLine char is read, send the previous chars 
+                        //to all listeners
+                        if (c == '\n') {
+                            messageReceived(new SerialEvent(buffer, event.getPortName(),
+                                    System.currentTimeMillis(), DataSource.SERIAL));
+                            buffer = "";
+                        } else {
+                            buffer += c;
+                        }
                     }
-                    messageReceived(new SerialEvent(s, event.getPortName(), 
-                            System.currentTimeMillis(), DataSource.SERIAL));
                 } catch (SerialPortException ex) {
                     error("Error: Couldn't read incoming Bytes.");
                 }
