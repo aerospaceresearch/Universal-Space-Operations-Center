@@ -453,7 +453,12 @@ public class ConfigHandler {
             GuiBuilder.StatePanelBuilder("fxml/StatePanel.fxml", path);
             GuiBuilder.statePanelControlBuilder("gui/controller/StatePanelController.java", path);
             
+            // Updates values in configMod.properties file after GUI regeneration
+            updateConfigMod(path, pathMod);
+            // Prints status update
             System.out.println("FXML has been reseted and regenerated completely.");
+            
+            return true;
         }
         
         // If properties has been modified and syntax of properties file
