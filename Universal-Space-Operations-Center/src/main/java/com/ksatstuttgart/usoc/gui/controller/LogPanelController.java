@@ -115,8 +115,7 @@ public class LogPanelController extends DataController implements Initializable 
 
     @FXML 
     private void button12(ActionEvent event) { 
-        // Automatically generated method button12() 
-        System.out.println("Button12 was pressed!"); 
+        textArea1.setText("");
     } 
 
     @Override 
