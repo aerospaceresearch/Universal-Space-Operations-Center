@@ -718,7 +718,7 @@ public class GuiBuilder {
             // Decides about textarea within the tab
             if (Boolean.parseBoolean(config.getProperty("textArea[" + counter + "]"))) {
                 writer.println("          <center> \n"
-                        + "            <TextArea prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\" /> \n"
+                        + "            <TextArea fx:id=\"textArea" + counter + "\" prefHeight=\"200.0\" prefWidth=\"200.0\" BorderPane.alignment=\"CENTER\" /> \n"
                         + "          </center>");
             }
             writer.println("        </BorderPane> \n"
@@ -993,6 +993,11 @@ public class GuiBuilder {
 
         // Loops through additional tabs
         for (int counter = 1; counter <= numberOfAddTabs; counter++) {
+            // Declares TextArea of individual tab
+            if (Boolean.parseBoolean(config.getProperty("textArea[" + counter + "]"))) {
+                writer.println("    @FXML private TextArea textArea" + counter + ";");
+            }
+            writer.println("");
             // Loops through control items within the tab
             int numberOfControlItems = ConfigHandler.countItems("control[" + counter + "]", configPath);
             for (int j = 1; j <= numberOfControlItems; j++) {

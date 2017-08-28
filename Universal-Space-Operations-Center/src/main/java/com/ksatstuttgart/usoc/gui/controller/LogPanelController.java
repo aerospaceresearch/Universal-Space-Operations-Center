@@ -168,6 +168,8 @@ public class LogPanelController extends DataController implements Initializable 
         }
     }
 
+    @FXML private TextArea textArea1;
+
     @FXML 
     private void button11(ActionEvent event) { 
         // Automatically generated method button11() 
