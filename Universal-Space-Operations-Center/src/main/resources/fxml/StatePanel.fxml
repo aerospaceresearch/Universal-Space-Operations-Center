@@ -42,27 +42,235 @@
                 <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
              </rowConstraints> 
               <children> 
-                <Label text="segmentTitle" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
+                <Label text="States" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
                   <font> 
                      <Font name="System Bold" size="14.0" /> 
                   </font> 
                 </Label>
-                <Label text="keyword1:" GridPane.columnIndex="0" GridPane.rowIndex="1"> 
+                <Label text="StateOBC:" GridPane.columnIndex="0" GridPane.rowIndex="1"> 
                   <font>
                      <Font size="12.0" />
                   </font>
                 </Label>
-                <Label fx:id="labelkeyword1" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
+                <Label fx:id="labelStateOBC" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
                   <font>
                      <Font size="12.0" />
                   </font>
                 </Label>
-                <Label text="keyword2:" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
+                <Label text="StateRCU:" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
                   <font>
                      <Font size="12.0" />
                   </font>
                 </Label>
-                <Label fx:id="labelkeyword2" GridPane.columnIndex="1" GridPane.rowIndex="2"> 
+                <Label fx:id="labelStateRCU" GridPane.columnIndex="1" GridPane.rowIndex="2"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+              </children> 
+              <padding> 
+                <Insets bottom="20.0" /> 
+              </padding> 
+            </GridPane>
+            <GridPane> 
+              <columnConstraints> 
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" /> 
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" /> 
+              </columnConstraints> 
+              <rowConstraints>
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+             </rowConstraints> 
+              <children> 
+                <Label text="Modes" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
+                  <font> 
+                     <Font name="System Bold" size="14.0" /> 
+                  </font> 
+                </Label>
+                <Label text="SimulationMode:" GridPane.columnIndex="0" GridPane.rowIndex="1"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelSimulationMode" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="Rover:" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelRover" GridPane.columnIndex="1" GridPane.rowIndex="2"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="HighVoltage:" GridPane.columnIndex="0" GridPane.rowIndex="3"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelHighVoltage" GridPane.columnIndex="1" GridPane.rowIndex="3"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+              </children> 
+              <padding> 
+                <Insets bottom="20.0" /> 
+              </padding> 
+            </GridPane>
+            <GridPane> 
+              <columnConstraints> 
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" /> 
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" /> 
+              </columnConstraints> 
+              <rowConstraints>
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+             </rowConstraints> 
+              <children> 
+                <Label text="Timing Signals" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
+                  <font> 
+                     <Font name="System Bold" size="14.0" /> 
+                  </font> 
+                </Label>
+                <Label text="LO:" GridPane.columnIndex="0" GridPane.rowIndex="1"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelLO" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="SODS:" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelSODS" GridPane.columnIndex="1" GridPane.rowIndex="2"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="SOE:" GridPane.columnIndex="0" GridPane.rowIndex="3"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelSOE" GridPane.columnIndex="1" GridPane.rowIndex="3"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+              </children> 
+              <padding> 
+                <Insets bottom="20.0" /> 
+              </padding> 
+            </GridPane>
+            <GridPane> 
+              <columnConstraints> 
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" /> 
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" /> 
+              </columnConstraints> 
+              <rowConstraints>
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" valignment="CENTER" />
+             </rowConstraints> 
+              <children> 
+                <Label text="Cameras" GridPane.columnIndex="0" GridPane.rowIndex="0"> 
+                  <font> 
+                     <Font name="System Bold" size="14.0" /> 
+                  </font> 
+                </Label>
+                <Label text="RoverLED:" GridPane.columnIndex="0" GridPane.rowIndex="1"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelRoverLED" GridPane.columnIndex="1" GridPane.rowIndex="1"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="RoverCameraAvtive:" GridPane.columnIndex="0" GridPane.rowIndex="2"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelRoverCameraAvtive" GridPane.columnIndex="1" GridPane.rowIndex="2"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="Camera1:" GridPane.columnIndex="0" GridPane.rowIndex="3"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelCamera1" GridPane.columnIndex="1" GridPane.rowIndex="3"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="LED1:" GridPane.columnIndex="0" GridPane.rowIndex="4"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelLED1" GridPane.columnIndex="1" GridPane.rowIndex="4"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="Camera2:" GridPane.columnIndex="0" GridPane.rowIndex="5"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelCamera2" GridPane.columnIndex="1" GridPane.rowIndex="5"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="LED2:" GridPane.columnIndex="0" GridPane.rowIndex="6"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelLED2" GridPane.columnIndex="1" GridPane.rowIndex="6"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="Camera3:" GridPane.columnIndex="0" GridPane.rowIndex="7"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelCamera3" GridPane.columnIndex="1" GridPane.rowIndex="7"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label text="LED3:" GridPane.columnIndex="0" GridPane.rowIndex="8"> 
+                  <font>
+                     <Font size="12.0" />
+                  </font>
+                </Label>
+                <Label fx:id="labelLED3" GridPane.columnIndex="1" GridPane.rowIndex="8"> 
                   <font>
                      <Font size="12.0" />
                   </font>

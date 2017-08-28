@@ -42,12 +42,40 @@ import javafx.fxml.Initializable;
 */
 public class StatePanelController implements Initializable { 
 
-    @FXML Label labelkeyword1;
-    @FXML Label labelkeyword2;
+    @FXML Label labelStateOBC;
+    @FXML Label labelStateRCU;
+    @FXML Label labelSimulationMode;
+    @FXML Label labelRover;
+    @FXML Label labelHighVoltage;
+    @FXML Label labelLO;
+    @FXML Label labelSODS;
+    @FXML Label labelSOE;
+    @FXML Label labelRoverLED;
+    @FXML Label labelRoverCameraAvtive;
+    @FXML Label labelCamera1;
+    @FXML Label labelLED1;
+    @FXML Label labelCamera2;
+    @FXML Label labelLED2;
+    @FXML Label labelCamera3;
+    @FXML Label labelLED3;
 
     public void updateStates() {
-        labelkeyword1.setText("labelkeyword1");
-        labelkeyword2.setText("labelkeyword2");
+        labelStateOBC.setText("labelStateOBC");
+        labelStateRCU.setText("labelStateRCU");
+        labelSimulationMode.setText("labelSimulationMode");
+        labelRover.setText("labelRover");
+        labelHighVoltage.setText("labelHighVoltage");
+        labelLO.setText("labelLO");
+        labelSODS.setText("labelSODS");
+        labelSOE.setText("labelSOE");
+        labelRoverLED.setText("labelRoverLED");
+        labelRoverCameraAvtive.setText("labelRoverCameraAvtive");
+        labelCamera1.setText("labelCamera1");
+        labelLED1.setText("labelLED1");
+        labelCamera2.setText("labelCamera2");
+        labelLED2.setText("labelLED2");
+        labelCamera3.setText("labelCamera3");
+        labelLED3.setText("labelLED3");
     }
 
     @Override 

@@ -37,10 +37,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 
-import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
-import javafx.fxml.FXML;
-import javafx.scene.layout.StackPane;
-
 /** 
  * <h1>MainPanelController</h1>
  * This class ensure the functionality of the MainPanel.
@@ -63,6 +59,16 @@ public class MainPanelController extends DataController implements Initializable
     public LineChart<Number, Number> lineChart4;
     @FXML
     public LineChart<Number, Number> lineChart5;
+    @FXML
+    public LineChart<Number, Number> lineChart6;
+    @FXML
+    public LineChart<Number, Number> lineChart7;
+    @FXML
+    public LineChart<Number, Number> lineChart8;
+    @FXML
+    public LineChart<Number, Number> lineChart9;
+    @FXML
+    public LineChart<Number, Number> lineChart10;
 
     @Override
     public void updateData(MessageController mc, USOCEvent e) {
@@ -81,6 +87,21 @@ public class MainPanelController extends DataController implements Initializable
 
         lineChart5.getXAxis().setAutoRanging(true);
         lineChart5.getYAxis().setAutoRanging(true);
+
+        lineChart6.getXAxis().setAutoRanging(true);
+        lineChart6.getYAxis().setAutoRanging(true);
+
+        lineChart7.getXAxis().setAutoRanging(true);
+        lineChart7.getYAxis().setAutoRanging(true);
+
+        lineChart8.getXAxis().setAutoRanging(true);
+        lineChart8.getYAxis().setAutoRanging(true);
+
+        lineChart9.getXAxis().setAutoRanging(true);
+        lineChart9.getYAxis().setAutoRanging(true);
+
+        lineChart10.getXAxis().setAutoRanging(true);
+        lineChart10.getYAxis().setAutoRanging(true);
 
         //in case this is an error event, ignore it
         if (e instanceof ErrorEvent) {
@@ -158,13 +179,9 @@ public class MainPanelController extends DataController implements Initializable
         return series;
     }
 
-    @FXML
-    private StackPane pane;
-
     @Override 
     public void initialize(URL url, ResourceBundle rb) { 
         // TODO
         MainController.getInstance().addDataUpdateListener(new UpdateListener());
-        GNSSPanel.addGNSSPaneltoStackPane(pane);
     }
 }

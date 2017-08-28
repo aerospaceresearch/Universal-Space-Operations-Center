@@ -43,15 +43,6 @@ import java.util.ArrayList;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import javafx.scene.control.ComboBox;
 
-// Specific imports for iridiumLog
-import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
-import com.ksatstuttgart.usoc.data.MailEvent;
-import java.util.Date;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javax.mail.Address;
-
 /** 
  * <h1>LogPanelController</h1>
  * This class ensures the functionality of the LogPanel.
@@ -101,70 +92,16 @@ public class LogPanelController extends DataController implements Initializable 
         SerialComm.getInstance().send(output);
     } 
 
-    @FXML private TextArea iridiumTextArea; 
-    @FXML private TextField iridiumReconnectField; 
-    @FXML private Label iridiumLastFrom; 
-    @FXML private Label iridiumLastSubject; 
-    @FXML private Label iridiumLastFilename; 
-    @FXML private Label iridiumLastTimestamp; 
-
-    @FXML 
-    private void iridiumOpen(ActionEvent event) { 
-        System.out.println("Open button in iridium log has been pressed!");
-        MainController.getInstance().openBinaryFile(); 
-    } 
-
-    @FXML 
-    private void iridiumClearData(ActionEvent event) { 
-        System.out.println("Clear Data button in iridium log has been pressed!");
-        MainController.getInstance().clearData(); 
-    } 
-
-    @FXML 
-    private void iridiumExportCSV(ActionEvent event) { 
-        System.out.println("Export CSV button in iridium log has been pressed!");
-        MainController.getInstance().exportCSV(); 
-    } 
-
-    @FXML 
-    private void iridiumReconnect(ActionEvent event) { 
-        System.out.println("Reconnect button in iridium log has been pressed!"); 
-        ((Button)event.getSource()).setText("Reconnect"); 
-        int numMessages = 0;
-        try { 
-            numMessages = Integer.parseInt(iridiumReconnectField.getText()); 
-        } catch(NumberFormatException ex){ 
-            //do nothing; 
-        } 
-        //MailReceiver.getInstance().setMessagesOnReconnect(numMessages); 
-        MailReceiver.getInstance().reconnect(); 
-    } 
-
     @Override
     public void updateData(MessageController msgController, USOCEvent ue) {
-        if (ue instanceof MailEvent) {
-            MailEvent e = (MailEvent) ue;
-            String s = "";
-            for (Address from : e.getFrom()) {
-                s += "," + from.toString();
-            }
-            //Setting label texts
-            iridiumLastFrom.setText(s.substring(1));
-            iridiumLastSubject.setText(e.getSubject());
-            iridiumLastFilename.setText(e.getFilename());
-            iridiumLastTimestamp.setText(new Date(e.getTimeStampGmail()).toString());
-            iridiumTextArea.setText(msgController.getData().toString());
-        } else if (ue instanceof SerialEvent) {
+        if (ue instanceof SerialEvent) {
             serialTextArea.setText(((SerialEvent)ue).getMsg());
         } else if (ue instanceof ErrorEvent) {
-            if (DataSource.MAIL == ue.getDataSource()) {
-                iridiumTextArea.setText(((ErrorEvent) ue).getErrorMessage());
-            } else if (DataSource.SERIAL == ue.getDataSource()) {
+            if (DataSource.SERIAL == ue.getDataSource()) {
                 serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());
             }
         } else {
             serialTextArea.setText(msgController.getData().toString());
-            iridiumTextArea.setText(msgController.getData().toString());
         }
     }
 
@@ -172,6 +109,12 @@ public class LogPanelController extends DataController implements Initializable 
     private void button11(ActionEvent event) { 
         // Automatically generated method button11() 
         System.out.println("Button11 was pressed!"); 
+    } 
+
+    @FXML 
+    private void button12(ActionEvent event) { 
+        // Automatically generated method button12() 
+        System.out.println("Button12 was pressed!"); 
     } 
 
     @Override 
