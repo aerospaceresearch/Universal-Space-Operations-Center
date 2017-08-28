@@ -117,7 +117,10 @@ public class ConfigHandler {
         writer.println("# and modifications are not intended!");
         // Writes all keywords and corresponding values in properties file
         config.list(writer);
-        writer.close();       
+        writer.close();
+        
+        // Prints status update
+        System.out.println("configMod.properties has been updated!");
     }
 
     
@@ -451,8 +454,6 @@ public class ConfigHandler {
             GuiBuilder.statePanelControlBuilder("gui/controller/StatePanelController.java", path);
             
             System.out.println("FXML has been reseted and regenerated completely.");
-            
-            return true;
         }
         
         // If properties has been modified and syntax of properties file
