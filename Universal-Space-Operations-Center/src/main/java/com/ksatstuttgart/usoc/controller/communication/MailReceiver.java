@@ -144,6 +144,7 @@ public class MailReceiver {
                         counter--;
                     }
                     if (counter < 0) {
+                        error("Error: Couldn't connect to INBOX");
                         return;
                     }
 
