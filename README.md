@@ -2,14 +2,18 @@
 
 This is a universal ground station that can be used to communicate via the Iridium satellite network as well as communicating to a scientific experiment using the computers serial port. 
 
-The original version of this software was used as part of the [MIRKA2-RX experiment](http://www.ksat-stuttgart.de/en/projects/mirka2-rx) that was part of the [REXUS](https://en.wikipedia.org/wiki/Rexus_and_Bexus) sounding rocket program. It is currently further developed as part of GSOC2017 so expect a lot of changes in the upcoming months :).
+Iridium is a satellite communication system, previously mainly used for satellite phone calls and remote control and tracking of scientific instruments or trucks. Recently, however, more and more lightweight modules were introduced to the market which allow for new applications in vehicles such as high-altitude balloons and miniaturized spacecraft.
 
-## Getting Started
+The goal for my GSOC development was to improve the existing ground station coded for the MIRKA2-RX KSat experiment in order to get a more flexible and versatile platform that can be easily modified and fitted to the needs of any experiment.
 
+## Documentation
+
+The documentation of for this project can be found [here](https://github.com/aerospaceresearch/Universal-Space-Operations-Center/wiki) 
 
 ## Authors
 
 * **[Valentin Starlinger](https://github.com/vstarlinger)** - *Initial work*
+* **[Victor Hertel](https://github.com/vhertel)** - *Generic GUI Configuration*
 
 
 ## License

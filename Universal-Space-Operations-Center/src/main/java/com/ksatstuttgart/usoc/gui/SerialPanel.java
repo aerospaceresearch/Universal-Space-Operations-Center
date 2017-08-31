@@ -57,17 +57,15 @@ public class SerialPanel extends DataPanel {
     private final LogPanel lp;
     private final JComboBox ports, baudrate;
 
-    private static final String[] baudrates = {"38400", "57600"};
-    private static final String[] commands = {"Ping", "Testing", "Camtest", "Cameras", "Abort", "Prelaunch", "Active", "Reset", "LaunchMacro"};
-
+    
     public SerialPanel() {
         super();
 
-        commandBox = new JComboBox(commands);
+        commandBox = new JComboBox(SerialComm.getInstance().getAvailableCommands().toArray());
         send = new JButton("Send Command");
         send.addActionListener(new SendListener());
         ports = new JComboBox();
-        baudrate = new JComboBox(baudrates);
+        baudrate = new JComboBox(SerialComm.getInstance().getAvailableBaudrates().toArray());
         connect = new JButton("Connect");
         connect.addActionListener(new ConnectListener());
 
@@ -90,6 +88,7 @@ public class SerialPanel extends DataPanel {
         this.add(lp, BorderLayout.CENTER);
         this.setPreferredSize(new java.awt.Dimension(0, 250));
 
+        MainController.startPortThread(this);
     }
 
     @Override

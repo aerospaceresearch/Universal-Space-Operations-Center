@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2017 KSat e.V.
+ * Copyright 2017 KSat Stuttgart e.V..
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,25 +23,27 @@
  */
 package com.ksatstuttgart.usoc.controller.communication;
 
-import com.ksatstuttgart.usoc.data.SerialEvent;
-
 /**
-* <h1>SerialListener</h1>
-* This interface enables classes to listen to events happening on an open serial 
-* port via the SerialComm class.
-*
-* @author  Valentin Starlinger
-* @version 1.0
-*/
-public interface SerialListener {
-    /**
-     * This is called when a new message is received via the specified serial port.
-     * @param e - SerialEvent
-     */
-    public abstract void messageReceived(SerialEvent e);
-    /**
-     * This is called when en error occurred regarding the serial communication.
-     * @param msg - String containing a description of the error.
-     */
-    public abstract void error(String msg);
+ *
+ * @author valentinstarlinger
+ */
+public enum SerialCommand {
+    SendImage ("0"),
+    ActivateSimulation ("1"),
+    DeactivateSimulation ("2"),
+    ActivateAscend ("3"),
+    DeactivateAscend ("4"),
+    PerformSelfTest ("5"),
+    Reboot ("6"),
+    Shutdown ("7");
+    
+    private String command;
+    
+    private SerialCommand (String command){
+        this.command = command;
+    }
+    
+    public String getCommand(){
+        return command;
+    }
 }

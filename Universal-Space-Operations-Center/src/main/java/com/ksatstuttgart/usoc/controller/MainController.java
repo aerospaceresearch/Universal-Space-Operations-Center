@@ -80,12 +80,12 @@ public class MainController {
         MailReceiver.getInstance().addMailUpdateListener(new MailListener());
         SerialComm.getInstance().addSerialListener(new RXListener());
     }
-    
-    public void setStage(Stage stage){
+
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
-    public Stage getStage(){
+
+    public Stage getStage() {
         return this.stage;
     }
 
@@ -110,7 +110,7 @@ public class MainController {
     public void exportCSV() {
         FileChooser fc = new FileChooser();
         fc.setTitle("Export .csv");
-        
+
         File selectedFile = fc.showSaveDialog(stage);
         if (selectedFile != null) {
             try {
@@ -124,10 +124,10 @@ public class MainController {
     public void openBinaryFile() {
         FileChooser fc = new FileChooser();
         fc.setTitle("Open binary file");
-        
+
         List<File> files = fc.showOpenMultipleDialog(stage);
-        
-        if(files != null){
+
+        if (files != null) {
             for (File file : files) {
                 addBinaryFile(file);
             }
@@ -168,7 +168,7 @@ public class MainController {
             }
         }.start();
     }
-    
+
     public static void startPortThread(final LogPanelController sp) {
         Thread t = new Thread() {
             @Override
@@ -197,23 +197,8 @@ public class MainController {
 
         @Override
         public void messageReceived(final SerialEvent e) {
-
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        sleep(6000);
-                        if (!buffer.isEmpty()) {
-                            LogSaver.saveDownlink("EIMESSAGE" + buffer + "ENDEIMESSAGE", false);
-                            buffer = "";
-                            MainController.getInstance().updateListeners(
-                                    new SerialEvent("Received erroneous Iridium data\n",
-                                            e.getPort(), e.getTimeStamp(), DataSource.SERIAL));
-                        }
-                    } catch (InterruptedException ex) {
-                    }
-                }
-            }.start();
+            MainController.getInstance().getMessageController().addSBD340Message(e.getMsg());
+            MainController.getInstance().updateListeners(e);
         }
 
         @Override

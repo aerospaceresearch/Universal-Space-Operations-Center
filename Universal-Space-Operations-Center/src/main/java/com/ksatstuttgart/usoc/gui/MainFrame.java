@@ -79,7 +79,7 @@ public class MainFrame extends JFrame {
         
         JTabbedPane bottomPanel = new JTabbedPane();
         bottomPanel.addTab("Iridium", ip);
-        //bottomPanel.addTab("Serial", sp);
+        bottomPanel.addTab("Serial", sp);
         
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(dataTabs, BorderLayout.WEST);

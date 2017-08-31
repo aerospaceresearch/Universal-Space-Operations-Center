@@ -27,6 +27,8 @@ import com.ksatstuttgart.usoc.data.DataSource;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import java.awt.event.ActionEvent;
 import static java.lang.Thread.sleep;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -82,7 +84,7 @@ public class SerialComm {
     }
 
     public void close() {
-        try {
+        try {   
             serialPort.closePort();
         } catch (SerialPortException ex) {
             error("Error: Couldn't close Serialport.");
@@ -90,43 +92,22 @@ public class SerialComm {
     }
 
     public void send(String msg) {
+        if(!isOpen()){
+            error("Error: Serial port is not connected!");
+            return;
+        }
         try {
-            //add a $ to the beginning and a # at the end
-            serialPort.writeBytes(("$" + msg + "#").getBytes());
+            serialPort.writeBytes(msg.getBytes(StandardCharsets.US_ASCII));
         } catch (SerialPortException ex) {
             error("Error: Couldn't send message: " + msg + ".");
         }
     }
 
     public static void sendAction(ActionEvent e) {
+        System.out.println(SerialCommand.valueOf(e.getActionCommand()).getCommand()+"0\n");
         if (SerialComm.getInstance().isOpen()) {
-            switch (e.getActionCommand()) {
-                case "LaunchMacro":
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                SerialComm.getInstance().send("Cameras");
-                                sleep(3 * 1000);
-                                SerialComm.getInstance().send("Prelaunch");
-                                sleep(20 * 1000);
-                                SerialComm.getInstance().send("Active");
-                                sleep(5 * 1000);
-                                SerialComm.getInstance().send("Cameras");
-                                sleep(2 * 1000);
-                                SerialComm.getInstance().send("Cameras");
-                                sleep(2 * 1000);
-                                SerialComm.getInstance().send("Prelaunch");
-                            } catch (InterruptedException ex) {
-                            }
-
-                        }
-                    }.start();
-                    break;
-                default:
-                    SerialComm.getInstance().send(e.getActionCommand());
-                    break;
-            }
+            String command = SerialCommand.valueOf(e.getActionCommand()).getCommand()+"0\n";
+            SerialComm.getInstance().send(command);
         }
     }
 
@@ -141,32 +122,41 @@ public class SerialComm {
     }
 
     public List<String> getAvailableCommands() {
-        return Arrays.asList(SerialComm.COMMANDS);
+        ArrayList<String> commands = new ArrayList<>();
+        for (SerialCommand command : SerialCommand.values()) {
+            commands.add(command.toString());
+        }
+        return commands;
     }
-    
+
     public List<String> getAvailableBaudrates() {
         return Arrays.asList(SerialComm.BAUDRATES);
     }
 
-    /*
-     * In this class must implement the method serialEvent, through it we learn about 
-     * events that happened to our port. But we will not report on all events but only 
-     * those that we put in the mask. In this case the arrival of the data and change the 
-     * status lines CTS and DSR
+    /**
+     * This class reads chars from the serial port and reports new incoming
+     * data. Incoming data is detected by newLine characters.
      */
     private class SerialPortReader implements SerialPortEventListener {
+
+        String buffer = "";
 
         @Override
         public void serialEvent(SerialPortEvent event) {
             if (event.isRXCHAR()) {//If data is available
                 try {
-                    byte buffer[] = serialPort.readBytes(event.getEventValue());
-                    String s = "";
-                    for (byte c : buffer) {
-                        s += (char) c;
+                    for (byte c : serialPort.readBytes(event.getEventValue())) {
+                        //every time a newLine char is read, send the previous chars 
+                        //to all listeners
+                        if (c == '\n') {
+                            messageReceived(new SerialEvent(buffer, event.getPortName(),
+                                    System.currentTimeMillis(), DataSource.SERIAL));
+                            System.out.println(buffer);
+                            buffer = "";
+                        } else {
+                            buffer += (char)c;
+                        }
                     }
-                    messageReceived(new SerialEvent(s, event.getPortName(), 
-                            System.currentTimeMillis(), DataSource.SERIAL));
                 } catch (SerialPortException ex) {
                     error("Error: Couldn't read incoming Bytes.");
                 }
