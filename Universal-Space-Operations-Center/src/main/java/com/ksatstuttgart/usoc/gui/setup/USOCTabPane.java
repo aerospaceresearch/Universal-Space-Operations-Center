@@ -28,6 +28,8 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 
 /**
  *
@@ -43,8 +45,8 @@ public class USOCTabPane extends TabPane {
         try {
             Tab tab = new Tab();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(resourcePath));
-            fxmlLoader.setRoot(tab);
-            fxmlLoader.load();
+            Pane pane = fxmlLoader.load();
+            tab.setContent(pane);
             this.getTabs().add(tab);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -55,9 +57,9 @@ public class USOCTabPane extends TabPane {
         try {
             Tab tab = new Tab();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourcePath));
-            fxmlLoader.setRoot(tab);
             fxmlLoader.setController(controller);
-            fxmlLoader.load();
+            Pane pane = fxmlLoader.load();
+            tab.setContent(pane);
             this.getTabs().add(tab);
         } catch (IOException ex) {
             ex.printStackTrace();
