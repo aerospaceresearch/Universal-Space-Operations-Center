@@ -23,16 +23,9 @@
  */
 package com.ksatstuttgart.usoc;
 
-import com.ksatstuttgart.usoc.gui.setup.ConfigHandler;
 import com.ksatstuttgart.usoc.controller.MainController;
-import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
-import com.ksatstuttgart.usoc.gui.MainFrame;
-import java.io.IOException;
-import java.net.URL;
+import com.ksatstuttgart.usoc.gui.setup.GuiBuilder;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -45,7 +38,7 @@ import javafx.stage.Stage;
  * @author Valentin Starlinger
  * @version 1.0
  */
-public class GroundSegment extends Application{
+public class GroundSegment extends Application {
 
     /**
      * @param stage
@@ -53,32 +46,12 @@ public class GroundSegment extends Application{
      */
     @Override
     public void start(Stage stage) {
-        try {
 
-            /**
-             * Checks whether a regeneration of the FXML structure is necessary
-             * and carries it out in case it is
-             */
-            ConfigHandler.rebuildGui("config/config.properties", "config/configMod.properties", stage);
+        //Setting the stage for the MainController
+        MainController.getInstance().setStage(stage);
 
-            //Setting the stage for the MainController
-            MainController.getInstance().setStage(stage);
-            //MailReceiver.getInstance().connect();
-            
-            // JavaFX GUI
-            String fxmlFile = "/fxml/MainFrame.fxml";
-            URL location = getClass().getResource(fxmlFile);
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(location);
-            Parent root = (Parent) loader.load();
-
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        stage.setScene(GuiBuilder.createGUIFromConfig());
+        stage.show();
     }
 
     /**

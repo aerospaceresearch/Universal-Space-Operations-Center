@@ -23,11 +23,9 @@
  */
 package com.ksatstuttgart.usoc.gui.controller; 
 
-import java.net.URL; 
-import java.util.ResourceBundle; 
-import javafx.fxml.FXML; 
-import java.awt.Label; 
-import javafx.fxml.Initializable; 
+import com.ksatstuttgart.usoc.controller.MessageController;
+import com.ksatstuttgart.usoc.data.USOCEvent;
+import javafx.scene.control.Label;
 
 /** 
  * <h1>StatePanelController</h1>
@@ -40,19 +38,14 @@ import javafx.fxml.Initializable;
  * @author Victor Hertel
  * @version 1.0
 */
-public class StatePanelController implements Initializable { 
-
-    @FXML Label labelkeyword1;
-    @FXML Label labelkeyword2;
-
-    public void updateStates() {
-        labelkeyword1.setText("labelkeyword1");
-        labelkeyword2.setText("labelkeyword2");
+public class StatePanelController extends DataController { 
+    
+    public void addLabel(Label label, String value) {
+        label.setText(value);
     }
-
-    @Override 
-    public void initialize(URL url, ResourceBundle rb) { 
-        // TODO 
-        updateStates();
-    } 
+    
+    @Override
+    public void updateData(MessageController msgController, USOCEvent e) {
+        
+    }
 }

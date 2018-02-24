@@ -35,7 +35,7 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.gui.SerialPanel;
-import com.ksatstuttgart.usoc.gui.controller.LogPanelController;
+import com.ksatstuttgart.usoc.gui.controller.SerialPanelController;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -169,7 +169,7 @@ public class MainController {
         }.start();
     }
 
-    public static void startPortThread(final LogPanelController sp) {
+    public static void startPortThread(final SerialPanelController sp) {
         Thread t = new Thread() {
             @Override
             public void run() {
@@ -206,7 +206,6 @@ public class MainController {
             MainController.getInstance().updateListeners(new ErrorEvent(msg, DataSource.SERIAL));
             LogSaver.saveDownlink(msg, false);
         }
-
     }
 
     private class MailListener implements MailUpdateListener {
@@ -224,6 +223,5 @@ public class MainController {
             MainController.getInstance().updateListeners(new ErrorEvent(msg, DataSource.MAIL));
             LogSaver.saveIridium(msg);
         }
-
     }
 }

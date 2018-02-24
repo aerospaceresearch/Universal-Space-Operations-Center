@@ -33,7 +33,6 @@ import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import java.awt.Font;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 /**
  * <h1>MailUpdateListener</h1>
