@@ -135,11 +135,11 @@ public class GuiBuilder {
 
         // 
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
-            logTab.addFXMLTab("fxml/SerialPanel.fxml");
+            //logTab.addFXMLTab("fxml/SerialPanel.fxml");
         }
         // 
         if (Boolean.parseBoolean(config.getProperty("iridumPanel"))) {
-            logTab.addFXMLTab("fxml/IridiumPanel.fxml");
+            //logTab.addFXMLTab("fxml/IridiumPanel.fxml");
         }
         // 
         if (!logTab.getTabs().isEmpty()) {

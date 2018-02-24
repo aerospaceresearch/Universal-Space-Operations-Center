@@ -43,7 +43,10 @@ public enum DataType {
     INT16 (16),
     BIT (1),
     BIT3 (3),
-    BIT10 (10);
+    BIT10 (10),
+    BOOLEAN (1),
+    INTEGER (32),
+    FLOAT (32);
     
     
     private final int length;

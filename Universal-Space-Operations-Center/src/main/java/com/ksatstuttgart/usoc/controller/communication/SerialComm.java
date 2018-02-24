@@ -23,11 +23,10 @@
  */
 package com.ksatstuttgart.usoc.controller.communication;
 
+import com.ksatstuttgart.usoc.controller.communication.errorCorrection.Hamming;
 import com.ksatstuttgart.usoc.data.DataSource;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import java.awt.event.ActionEvent;
-import static java.lang.Thread.sleep;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,10 +50,11 @@ public class SerialComm {
     private SerialPort serialPort;
 
     private ArrayList<SerialListener> listener = new ArrayList<>();
-    private static final String[] BAUDRATES = {"38400", "57600"};
-    private static final String[] COMMANDS = {"Ping", "Testing", "Camtest", "Cameras", "Abort", "Prelaunch", "Active", "Reset", "LaunchMacro"};
+    private static final String[] BAUDRATES = {"38400", "57600", "112500"};
 
     private static SerialComm instance;
+
+    private boolean isUseHamming84 = true;
 
     public static SerialComm getInstance() {
         if (instance == null) {
@@ -64,27 +64,30 @@ public class SerialComm {
     }
 
     public void start(String sp, int baudrate) {
+        System.out.println("start SP");
         if (!sp.isEmpty()) {
             if (serialPort != null && serialPort.isOpened()) {
                 close();
             }
-            serialPort = new SerialPort(sp);//"/dev/tty.usbserial-A702WKDS");
+            //serialPort = new SerialPort("/dev/ttys001");
+            serialPort = new SerialPort(sp);
+            System.out.println("starting serial port!");
             try {
                 serialPort.openPort();//Open serial port //serialPort.setParams(9600, 8, 1, 0); 
                 serialPort.setParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
                 int mask = SerialPort.MASK_RXCHAR + SerialPort.MASK_CTS + SerialPort.MASK_DSR;//Prepare mask
                 serialPort.setEventsMask(mask);//Set mask
                 serialPort.addEventListener(new SerialPortReader());//Add SerialPortEventListener
-
+                System.out.println("connected!");
             } catch (SerialPortException e) {
-                //System.out.println(e);
+                e.printStackTrace();
                 error("Error: Couldn't open Serialport.\n");
             }
         }
     }
 
     public void close() {
-        try {   
+        try {
             serialPort.closePort();
         } catch (SerialPortException ex) {
             error("Error: Couldn't close Serialport.");
@@ -92,11 +95,14 @@ public class SerialComm {
     }
 
     public void send(String msg) {
-        if(!isOpen()){
+        if (!isOpen()) {
             error("Error: Serial port is not connected!");
             return;
         }
         try {
+            if (this.isUseHamming84) {
+                msg = Hamming.generate84Message(msg);
+            }
             serialPort.writeBytes(msg.getBytes(StandardCharsets.US_ASCII));
         } catch (SerialPortException ex) {
             error("Error: Couldn't send message: " + msg + ".");
@@ -104,14 +110,15 @@ public class SerialComm {
     }
 
     public static void sendAction(ActionEvent e) {
-        System.out.println(SerialCommand.valueOf(e.getActionCommand()).getCommand()+"0\n");
+        System.out.println(SerialCommand.valueOf(e.getActionCommand()).getCommand() + "0\n");
         if (SerialComm.getInstance().isOpen()) {
-            String command = SerialCommand.valueOf(e.getActionCommand()).getCommand()+"0\n";
+            String command = SerialCommand.valueOf(e.getActionCommand()).getCommand() + "0\n";
+            System.out.println("command: " + command);
             SerialComm.getInstance().send(command);
         }
     }
 
-    public ArrayList<String> getPorts() {
+    public List<String> getPorts() {
         ArrayList<String> al = new ArrayList<>();
         al.addAll(Arrays.asList(jssc.SerialPortList.getPortNames()));
         return al;
@@ -140,22 +147,66 @@ public class SerialComm {
     private class SerialPortReader implements SerialPortEventListener {
 
         String buffer = "";
+        String bufferB = "";
+
+        byte bufferByte, bufferByteB;
 
         @Override
         public void serialEvent(SerialPortEvent event) {
             if (event.isRXCHAR()) {//If data is available
                 try {
+                    boolean buffering = true;
+                    boolean isFirst = true;
                     for (byte c : serialPort.readBytes(event.getEventValue())) {
                         //every time a newLine char is read, send the previous chars 
                         //to all listeners
-                        if (c == '\n') {
+
+                        if (isUseHamming84) {
+                            //System.out.println("buffering byte: "+((char)c));
+                            if (buffering) {
+                                bufferByte = c;
+                                if (!isFirst) {
+                                    char b = (char) Hamming.receive84(bufferByteB, c);
+                                    //System.out.println("added bufferByteB: "+b);
+                                    bufferB += b;
+                                    if (b == '\n') {
+                                        messageReceived(new SerialEvent(bufferB, 
+                                                event.getPortName(),
+                                                System.currentTimeMillis(), 
+                                                DataSource.SERIAL));
+                                        //System.out.println(bufferB);
+                                        buffer = "";
+                                        bufferB = "";
+                                    }
+                                } else {
+                                    isFirst = false;
+                                }
+                                buffering = false;
+                            } else {
+                                bufferByteB = c;
+                                char b = (char) Hamming.receive84(bufferByte, c);
+                                //System.out.println("added bufferByte: "+b);
+                                buffer += b;
+                                buffering = true;
+                                if (b == '\n') {
+                                    messageReceived(new SerialEvent(buffer, 
+                                            event.getPortName(),
+                                            System.currentTimeMillis(), 
+                                            DataSource.SERIAL));
+                                    //System.out.println(buffer);
+                                    buffer = "";
+                                    bufferB = "";
+                                }
+                            }
+                        } else if (c == '\n') {
                             messageReceived(new SerialEvent(buffer, event.getPortName(),
                                     System.currentTimeMillis(), DataSource.SERIAL));
-                            System.out.println(buffer);
+                            //System.out.println(buffer);
                             buffer = "";
                         } else {
-                            buffer += (char)c;
+                            buffer += (char) c;
                         }
+
                     }
                 } catch (SerialPortException ex) {
                     error("Error: Couldn't read incoming Bytes.");
@@ -165,6 +216,7 @@ public class SerialComm {
     }
 
     private void messageReceived(SerialEvent e) {
+        System.out.println("message received: "+e.getMsg());
         for (SerialListener l : listener) {
             l.messageReceived(e);
         }
@@ -183,5 +235,5 @@ public class SerialComm {
     public void removeSerialListener(SerialListener l) {
         listener.remove(l);
     }
-
+    
 }

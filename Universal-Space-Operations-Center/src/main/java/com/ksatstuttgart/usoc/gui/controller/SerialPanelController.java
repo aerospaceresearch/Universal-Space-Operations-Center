@@ -30,6 +30,7 @@ import com.ksatstuttgart.usoc.data.ErrorEvent;
 import java.util.ArrayList;
 import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -53,7 +54,7 @@ public class SerialPanelController extends DataController {
     } 
 
     @FXML 
-    public void updatePortList(ArrayList<String> portList) { 
+    public void updatePortList(List<String> portList) { 
         if (comboBox2 != null) { 
             comboBox2.getItems().setAll(portList); 
         } 

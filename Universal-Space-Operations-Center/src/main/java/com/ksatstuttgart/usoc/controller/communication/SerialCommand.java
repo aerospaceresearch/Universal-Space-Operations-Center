@@ -35,7 +35,17 @@ public enum SerialCommand {
     DeactivateAscend ("4"),
     PerformSelfTest ("5"),
     Reboot ("6"),
-    Shutdown ("7");
+    Shutdown ("7"),
+    EnableTestCommands ("8"),
+    LightsOn ("9"),
+    LightsOff ("10"),
+    CamerasOn ("11"),
+    CamerasOff ("12"),
+    DriveForward ("13"),
+    DriveBackward ("14"),
+    StopDriving ("15"),
+    AdhesionOn ("16"),
+    AdhesionOff ("17");
     
     private String command;
     

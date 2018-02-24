@@ -24,6 +24,7 @@
 package com.ksatstuttgart.usoc.controller;
 
 import com.ksatstuttgart.usoc.data.message.Var;
+import org.json.JSONObject;
 
 /**
  * <h1>Util</h1>
@@ -207,5 +208,49 @@ public class Utility {
 
         //TODO: replace with throw new DataTypeNotSupportedException();
         return null;
+    }
+    
+    public static int byteToByte(int[] a){
+        int rb = 0;
+        for (int i = 0; i < 8; i++) {
+            rb = rb | (a[i] == 0 ? 0 : (int)Math.pow(2, 7-i)); 
+        }
+        return rb;
+    }
+    
+    public static int nibblesToByte(int[] a, int[] b){
+        int rb = 0;
+        for (int i = 0; i < b.length; i++) {
+            rb = rb | (b[i] == 0 ? 0 : (int)Math.pow(2, 3-i)); 
+        }
+        for (int i = 0; i < a.length; i++) {
+            rb = rb | (a[i] == 0 ? 0 : (int)Math.pow(2, 7-i));
+        }
+        return rb;
+    }
+
+    public static Object getVarFromJSON(Var var, JSONObject jsonObject) {
+        if(!jsonObject.has(var.getDataName())){
+            return null;
+        }
+        Object o = null;
+        
+        switch(var.getDataType()){
+            case BOOLEAN:
+                try{
+                    o = jsonObject.getBoolean(var.getDataName());
+                }catch(Exception e){
+                    o = jsonObject.getInt(var.getDataName()) == 1;
+                }
+                break;
+            case INTEGER:
+                o = jsonObject.getInt(var.getDataName());
+                break;
+            case FLOAT:
+                o = jsonObject.getFloat(var.getDataName());
+                break;
+        }
+        
+        return o;
     }
 }

@@ -29,6 +29,7 @@ import com.ksatstuttgart.usoc.data.message.dataPackage.Data;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.data.message.header.MetaData;
 import com.ksatstuttgart.usoc.data.message.header.MetaDataType;
+import org.json.JSONObject;
 
 /**
  * This class is as a controller for the messages received via the Iridium
@@ -104,6 +105,10 @@ public class MessageController {
                 parseSequential(content);
                 break;
             case BISECTION: //not supported yet
+                break;
+            case JSON: 
+                parseJSON(content);
+                break;
         }
 
         //throw new ProtocolNotSupportedException(messageStructure.getProtocol());
@@ -228,6 +233,54 @@ public class MessageController {
                 }
             }
 
+        }
+    }
+
+    /**
+     * This method parses the data of an Iridium Message that is using the
+     * SEQUENTIAL protocol type and saves the data in the respective Var objects
+     *
+     * @param content - A String representing the data received via the Iridium
+     * communication link with 1's and 0's
+     */
+    private void parseJSON(String content) {
+        System.out.println("parsing content:");
+        System.out.println(content);
+
+        if(content.isEmpty() || content.trim().charAt(0) != '{' 
+                || content.charAt(content.trim().length()-1) != '}'){
+            //not a JSON
+            //discart message
+            System.out.println("not a json string");
+            return;
+        }
+        //parse JSON
+        JSONObject jsonObject = new JSONObject(content);
+        
+        //for every sensor go through json object array as this is alsays smaller than the sensor array
+        
+        for (Sensor sensor : this.data.getData().getSensors()) {
+            for (Var var : sensor.getVars()) {
+                if(jsonObject.has("sensors")){
+                    //multiple values possible
+                    
+                    //TODO: currently not supported
+                } else {
+                    //only single values 
+                    //check if current var is contained in JSON
+                    if(jsonObject.has(var.getDataName())){
+                        System.out.println("json matches var: "+var.getDataName());
+                        //data found, check for time
+                        long time = System.currentTimeMillis();
+                        if(jsonObject.has("time")){
+                            //if time is send as well, use time from JSON
+                            time = jsonObject.getLong("time");
+                        } 
+                        
+                        var.addValue(time, Utility.getVarFromJSON(var, jsonObject));
+                    }
+                }
+            }
         }
     }
 

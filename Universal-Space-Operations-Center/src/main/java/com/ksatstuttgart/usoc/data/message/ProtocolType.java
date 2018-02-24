@@ -30,5 +30,6 @@ package com.ksatstuttgart.usoc.data.message;
 public enum ProtocolType {
     SEQUENTIAL,
     BISECTION,
+    JSON,
     NONE;
 }

@@ -18,7 +18,7 @@ Used conventions:
 	
 	
 -->
-<sbd340message protocol = "SEQUENTIAL">
+<sbd340message protocol = "BISECTION">
 	<header>
 		<metadata type="TIME">
 				<var start="0" datatype="UINT32" numpoints="1" unit="ms" isLittleEndian="TRUE"/>
