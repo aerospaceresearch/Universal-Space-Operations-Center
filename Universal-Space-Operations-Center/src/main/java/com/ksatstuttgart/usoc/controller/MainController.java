@@ -40,8 +40,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import javax.swing.JFileChooser;
-import static java.lang.Thread.sleep;
 import java.util.List;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -160,7 +158,6 @@ public class MainController {
                 while (true) {
                     try {
                         sp.updatePortList(SerialComm.getInstance().getPorts());
-                        System.out.println("checking ports");
                         Thread.sleep(500);
                     } catch (InterruptedException ex) {
                     }

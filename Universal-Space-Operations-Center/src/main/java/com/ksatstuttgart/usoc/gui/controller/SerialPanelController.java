@@ -23,68 +23,102 @@
  */
 package com.ksatstuttgart.usoc.gui.controller;
 
-import com.ksatstuttgart.usoc.controller.MessageController;
-import com.ksatstuttgart.usoc.controller.communication.SerialComm;
-import com.ksatstuttgart.usoc.data.DataSource;
-import com.ksatstuttgart.usoc.data.ErrorEvent;
-import java.util.ArrayList;
-import com.ksatstuttgart.usoc.data.SerialEvent;
-import com.ksatstuttgart.usoc.data.USOCEvent;
-import java.util.List;
+import java.net.URL;
+import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextArea;
+import javafx.fxml.Initializable;
 
-/**
- *
- * @author Victor
- */
-public class SerialPanelController extends DataController {
-    
-    @FXML private ComboBox comboBox1; 
-    @FXML private ComboBox comboBox2; 
-    @FXML private ComboBox comboBox3; 
+// Imports for serialLog or iridiumLog
+import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.controller.MessageController;
+import com.ksatstuttgart.usoc.data.DataSource;
+import com.ksatstuttgart.usoc.data.ErrorEvent;
+import com.ksatstuttgart.usoc.data.USOCEvent;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.ComboBox;
+
+// Specific imports for serialLog
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
+import com.ksatstuttgart.usoc.controller.communication.SerialCommand;
+import com.ksatstuttgart.usoc.data.SerialEvent;
+import java.util.List;
+
+/** 
+ * <h1>LogPanelController</h1>
+ * This class ensures the functionality of the LogPanel.
+ * <p>
+ * Apart from pre-programmed methods for the SerialLog and IridiumLog,
+ * a dummy method is written for each button of the individually designed
+ * tabs. These methods can be supplemented manually. Those method contents are
+ * recognized and will not be lost if the button label has been changed and the
+ * corresponding FXML structure and controller regenerated.
+ * The LogPanelController is generated automatically.
+ * 
+ * @author Victor Hertel
+ * @version 1.0
+*/
+public class SerialPanelController extends DataController implements Initializable { 
+
+    @FXML private ComboBox baudrateBox; 
+    @FXML private ComboBox portBox; 
+    @FXML private ComboBox commandBox; 
     @FXML private TextArea serialTextArea; 
 
     @FXML 
     public void setData() { 
-        comboBox1.getItems().setAll(SerialComm.getInstance().getAvailableBaudrates()); 
-        comboBox3.getItems().setAll(SerialComm.getInstance().getAvailableCommands()); 
+        baudrateBox.getItems().setAll(SerialComm.getInstance().getAvailableBaudrates()); 
+        commandBox.getItems().setAll(SerialComm.getInstance().getAvailableCommands()); 
     } 
 
     @FXML 
     public void updatePortList(List<String> portList) { 
-        if (comboBox2 != null) { 
-            comboBox2.getItems().setAll(portList); 
+        if (portBox != null) { 
+            portBox.getItems().setAll(portList); 
         } 
     } 
 
     @FXML 
     private void serialConnect(ActionEvent event) { 
         System.out.println("Connect button in serial log has been pressed!");
-        String port = comboBox2.getSelectionModel().getSelectedItem().toString();
-        int baudrate = Integer.parseInt(comboBox1.getSelectionModel().getSelectedItem().toString());
-        SerialComm.getInstance().start(port, baudrate); 
+        
+        if(!portBox.getSelectionModel().isEmpty() && !baudrateBox.getSelectionModel().isEmpty()){
+            String port = portBox.getSelectionModel().getSelectedItem().toString();
+            int baudrate = Integer.parseInt(baudrateBox.getSelectionModel().getSelectedItem().toString());
+
+            SerialComm.getInstance().start(port, baudrate);
+        }
     } 
 
-    @FXML 
+    @FXML
     private void serialSendCommand(ActionEvent event) { 
         System.out.println("Send Command button in serial log has been pressed!"); 
-        String output = comboBox3.getSelectionModel().getSelectedItem().toString(); 
-        SerialComm.getInstance().send(output);
-    }
-    
+        if(!commandBox.getSelectionModel().isEmpty()){
+            String output = commandBox.getSelectionModel().getSelectedItem().toString();
+            output = SerialCommand.valueOf(output).getCommand();
+            SerialComm.getInstance().send(output);
+        }
+    } 
+
     @Override
     public void updateData(MessageController msgController, USOCEvent ue) {
         if (ue instanceof SerialEvent) {
-            serialTextArea.setText(((SerialEvent)ue).getMsg());
+            serialTextArea.setText(serialTextArea.getText() + "\n" 
+                        + ((SerialEvent) ue).getMsg());
         } else if (ue instanceof ErrorEvent) {
             if (DataSource.SERIAL == ue.getDataSource()) {
-                serialTextArea.setText(((ErrorEvent) ue).getErrorMessage());
+                serialTextArea.setText(serialTextArea.getText() + "\n" 
+                        + ((ErrorEvent) ue).getErrorMessage());
             }
         } else {
             serialTextArea.setText(msgController.getData().toString());
         }
     }
+    
+    @Override 
+    public void initialize(URL url, ResourceBundle rb) { 
+        MainController.startPortThread(this);
+        MainController.getInstance().addDataUpdateListener(new DataController.UpdateListener());
+        setData();
+    } 
 }
