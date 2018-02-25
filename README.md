@@ -11,7 +11,7 @@ The goal for my GSOC development was to improve the existing ground station code
 The documentation of for this project can be found [here](https://github.com/aerospaceresearch/Universal-Space-Operations-Center/wiki)
 
 ## How To Contribute
-
+-   Create an **Issue** if none exists for the work you want to do and state what you want to do. If you want to work on an issue thats already open. Comment on that issue so that we know that you are working on it.
 -   **Fork** the project
 -   Add your code
 -   Create a **pull request**
