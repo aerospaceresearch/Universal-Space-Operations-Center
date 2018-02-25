@@ -24,6 +24,7 @@
 package com.ksatstuttgart.usoc;
 
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
 import com.ksatstuttgart.usoc.gui.setup.GuiBuilder;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -59,5 +60,10 @@ public class GroundSegment extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+        
+        //close serial communiction if it is open on window close
+        if(SerialComm.getInstance().isOpen()){
+            SerialComm.getInstance().close();
+        }
     }
 }
