@@ -160,6 +160,7 @@ public class MainController {
                 while (true) {
                     try {
                         sp.updatePortList(SerialComm.getInstance().getPorts());
+                        System.out.println("checking ports");
                         Thread.sleep(500);
                     } catch (InterruptedException ex) {
                     }

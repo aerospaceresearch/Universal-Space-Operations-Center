@@ -41,25 +41,27 @@ public class USOCTabPane extends TabPane {
         super();
     }
     
-    public void addFXMLTab(String resourcePath){
+    public void addFXMLTab(String resourcePath, String text){
         try {
             Tab tab = new Tab();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(resourcePath));
             Pane pane = fxmlLoader.load();
             tab.setContent(pane);
+            tab.setText(text);
             this.getTabs().add(tab);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
     
-    public void addFXMLTab(String resourcePath, DataController controller) {
+    public void addFXMLTab(String resourcePath, DataController controller, String text) {
         try {
             Tab tab = new Tab();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourcePath));
             fxmlLoader.setController(controller);
             Pane pane = fxmlLoader.load();
             tab.setContent(pane);
+            tab.setText(text);
             this.getTabs().add(tab);
         } catch (IOException ex) {
             ex.printStackTrace();

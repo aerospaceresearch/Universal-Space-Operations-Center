@@ -24,8 +24,6 @@
 package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.gui.controller.ChartController;
-import com.ksatstuttgart.usoc.gui.controller.IridiumPanelController;
-import com.ksatstuttgart.usoc.gui.controller.SerialPanelController;
 import com.ksatstuttgart.usoc.gui.controller.StatePanelController;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 import java.util.Properties;
@@ -135,11 +133,11 @@ public class GuiBuilder {
 
         // 
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
-            logTab.addFXMLTab("fxml/SerialPanel.fxml");
+            logTab.addFXMLTab("fxml/SerialPanel.fxml", "Serial Connection");
         }
         // 
         if (Boolean.parseBoolean(config.getProperty("iridumPanel"))) {
-            logTab.addFXMLTab("fxml/IridiumPanel.fxml");
+            logTab.addFXMLTab("fxml/IridiumPanel.fxml", "Iridium Connection");
         }
         // 
         if (!logTab.getTabs().isEmpty()) {
