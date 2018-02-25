@@ -84,7 +84,7 @@ public class GuiBuilder {
         ScrollPane chartScroll = new ScrollPane();
         GridPane chartGrid = new GridPane();
 
-        // 
+        // Adding charts
         int column = 0;
         int row = 0;
         int maxColumns = Integer.parseInt(config.getProperty("chartColumns"));
@@ -92,7 +92,7 @@ public class GuiBuilder {
         NumberAxis yAxis = new NumberAxis();
         ChartController chartController = new ChartController();
 
-        // 
+        // Setting 
         for (int i = 0; i < ConfigHandler.countItems("chartTitle", CONFIGPATH); i++) {
             //
             LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
@@ -108,14 +108,14 @@ public class GuiBuilder {
             }
         }
 
-        //
+        //Add chart to main tabs
         chartScroll.setContent(chartGrid);
         Tab chartTab = new Tab();
         chartTab.setText("Charts");
         chartTab.setContent(chartScroll);
         mainTab.getTabs().add(chartTab);
 
-        //
+        //TODO: Doesn't work yet with JavaFX -> doesn't close on window close
         if (Boolean.parseBoolean(config.getProperty("GNSS3dView"))) {
             Tab gnssTab = new Tab();
             StackPane gnssStack = new StackPane();
@@ -125,42 +125,45 @@ public class GuiBuilder {
             mainTab.getTabs().add(gnssTab);
         }
 
-        // 
+        //Add mainTab to the center
         mainBorder.setCenter(mainTab);
 
-        // 
+        // Create the log views
         USOCTabPane logTab = new USOCTabPane();
 
-        // 
+        
         if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
             logTab.addFXMLTab("fxml/SerialPanel.fxml", "Serial Connection");
-        }
-        // 
+        } 
+        //TODO: should be named something like Mail 
         if (Boolean.parseBoolean(config.getProperty("iridumPanel"))) {
             logTab.addFXMLTab("fxml/IridiumPanel.fxml", "Iridium Connection");
         }
-        // 
+        
+        // if not empty add the log view to the main pane
         if (!logTab.getTabs().isEmpty()) {
             mainBorder.setRight(logTab);
         }
 
-        // 
+        // Create the state view
         if (Boolean.parseBoolean(config.getProperty("statePanel"))) {
-            //
             ScrollPane stateScroll = new ScrollPane();
             StatePanelController statePanelController = new StatePanelController();
             VBox stateBox = new VBox();
+            stateBox.setSpacing(5);
             
-            //
+            // use config to create state view
             for (int i = 0; i < ConfigHandler.countItems("segmentTitle", CONFIGPATH); i++) {
-                // 
                 VBox vBox = new VBox();
                 GridPane stateGrid = new GridPane();
-                //
+                stateGrid.setVgap(5);
+                stateGrid.setHgap(5);
+                
                 column = 0;
                 row = 1;
+                //TODO: Make this not hardcoded
                 maxColumns = 2;
-                // 
+                
                 Label segmentTitle = new Label();
                 segmentTitle.setText(config.getProperty("segmentTitle[" + i + "]"));
                 stateGrid.add(segmentTitle, 0, 0);

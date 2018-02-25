@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.gui;
+package com.ksatstuttgart.usoc.gui.worldwind;
 
 import com.ksatstuttgart.usoc.controller.DataUpdateListener;
 import com.ksatstuttgart.usoc.controller.MainController;
