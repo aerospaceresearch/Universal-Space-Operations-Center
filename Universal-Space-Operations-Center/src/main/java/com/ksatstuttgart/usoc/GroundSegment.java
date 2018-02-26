@@ -42,8 +42,8 @@ import javafx.stage.Stage;
 public class GroundSegment extends Application {
 
     /**
-     * @param stage
-     * @param args the command line arguments
+     * Starts Application
+     * @param stage main stage
      */
     @Override
     public void start(Stage stage) {
@@ -52,6 +52,9 @@ public class GroundSegment extends Application {
         MainController.getInstance().setStage(stage);
 
         stage.setScene(GuiBuilder.createGUIFromConfig());
+        stage.setMinWidth(700);
+        stage.setWidth(900);
+        stage.setMinHeight(500);
         stage.show();
     }
 
@@ -61,7 +64,7 @@ public class GroundSegment extends Application {
     public static void main(String[] args) {
         launch(args);
         
-        //close serial communiction if it is open on window close
+        //close serial communication if it is open on window close
         if(SerialComm.getInstance().isOpen()){
             SerialComm.getInstance().close();
         }
