@@ -69,4 +69,13 @@ public class GroundSegment extends Application {
             SerialComm.getInstance().close();
         }
     }
+
+    // Closes all threads on Apllication close
+    // May not be the best solution in the long run,
+    // since this force closes all active threads
+    @Override
+    public void stop() throws Exception{
+        super.stop();
+        System.exit(0);
+    }
 }
