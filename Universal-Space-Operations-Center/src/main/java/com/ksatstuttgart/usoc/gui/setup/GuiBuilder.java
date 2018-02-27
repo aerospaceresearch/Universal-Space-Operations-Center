@@ -114,7 +114,7 @@ public class GuiBuilder {
         MenuBar menuBar = new MenuBar();
 
         // Create File Menu
-        Menu fileMenu = new Menu("Edit");
+        Menu editMenu = new Menu("Edit");
 
         // Load Protocol Menu Item
         Menu loadProtocolSubMenu = new Menu("Protocol");
@@ -158,10 +158,10 @@ public class GuiBuilder {
         });
 
         // Adds all menu items to file menu
-        fileMenu.getItems().addAll(loadProtocolSubMenu, quitMenuItem);
+        editMenu.getItems().addAll(loadProtocolSubMenu, new SeparatorMenuItem(), quitMenuItem);
 
         // Adds all Menus to Menubar
-        menuBar.getMenus().addAll(fileMenu);
+        menuBar.getMenus().addAll(editMenu);
 
         return menuBar;
     }
