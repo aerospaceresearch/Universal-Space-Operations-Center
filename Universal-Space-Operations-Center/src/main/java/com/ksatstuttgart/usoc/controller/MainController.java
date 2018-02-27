@@ -65,18 +65,29 @@ public class MainController {
     }
 
     public MainController() {
-        //TODO: remove this and somehow integrate this in the GUI or find better 
-        //place. This loads the xml structure for reading the messages received
-        //via the Iridium communication link
         listeners = new ArrayList<>();
 
-        SBD340 structure = XMLReader.getInstance()
-                .getMessageStructure("protocols/ROACH.xml");
+        // Loads defaultProtocol by default
+        // Can be changed on runtime in the UI
+        SBD340 structure =
+                loadProtocol("protocols/defaultProtocol.xml");
+
         messageController = new MessageController(structure);
 
         MailReceiver.getInstance().addMailUpdateListener(new MailListener());
         SerialComm.getInstance().addSerialListener(new RXListener());
     }
+
+    /**
+     * Loads a given protocol
+     * @param protocol
+     * @return
+     */
+    public SBD340 loadProtocol(String protocol) {
+        return XMLReader.getInstance()
+                .getMessageStructure(protocol);
+    }
+
 
     public void setStage(Stage stage) {
         this.stage = stage;

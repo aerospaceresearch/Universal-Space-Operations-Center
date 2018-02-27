@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.communication.SerialComm;
 import com.ksatstuttgart.usoc.gui.setup.GuiBuilder;
+import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

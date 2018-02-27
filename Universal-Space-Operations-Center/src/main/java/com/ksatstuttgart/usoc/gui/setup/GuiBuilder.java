@@ -27,14 +27,21 @@ import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.controller.ChartController;
 import com.ksatstuttgart.usoc.gui.controller.StatePanelController;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
+
+import java.io.File;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.*;
 import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
 
 /**
  * This class builds the GUI FXML structure based on input parameters in the properties file
@@ -67,6 +74,10 @@ public class GuiBuilder {
         BorderPane mainBorder = new BorderPane();
         mainBorder.setPrefSize(700,500);
 
+        // Create the MenuBar
+        MenuBar menuBar = createMenuBar();
+        mainBorder.setTop(menuBar);
+
         SplitPane mainFrameSplitPane = new SplitPane();
         mainFrameSplitPane.setDividerPositions(
                 0.15, 0.75
@@ -96,6 +107,63 @@ public class GuiBuilder {
 
         mainBorder.setCenter(mainFrameSplitPane);
         return new Scene(mainBorder);
+    }
+
+    private static MenuBar createMenuBar() {
+        // Main MenuBar
+        MenuBar menuBar = new MenuBar();
+
+        // Create File Menu
+        Menu fileMenu = new Menu("Edit");
+
+        // Load Protocol Menu Item
+        Menu loadProtocolSubMenu = new Menu("Protocol");
+
+        // Get List of Protocols in /protocols
+        List<String> protocols = getAvailableProtocols();
+
+        // Below condition should never happen
+        // By default, defaultProtocol is loaded
+        if (protocols.size() == 0) {
+            loadProtocolSubMenu.setDisable(true);
+        } else {
+            // Toggle Group ensures only one radio button is selected at a time
+            ToggleGroup group = new ToggleGroup();
+            for (final String protocol : protocols) {
+                RadioMenuItem radioMenuItem = new RadioMenuItem(protocol);
+                radioMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        MainController.getInstance()
+                                .loadProtocol("protocols/" + protocol);
+                        Alert a = new Alert(Alert.AlertType.INFORMATION,
+                                protocol, ButtonType.OK);
+                        a.setTitle("Success");
+                        a.setHeaderText("Protocol Loaded");
+                        a.showAndWait();
+                    }
+                });
+                group.getToggles().add(radioMenuItem);
+                loadProtocolSubMenu.getItems().add(radioMenuItem);
+            }
+        }
+
+        // Quit Menu Item
+        MenuItem quitMenuItem = new MenuItem("Quit");
+        quitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                quitApplication();
+            }
+        });
+
+        // Adds all menu items to file menu
+        fileMenu.getItems().addAll(loadProtocolSubMenu, quitMenuItem);
+
+        // Adds all Menus to Menubar
+        menuBar.getMenus().addAll(fileMenu);
+
+        return menuBar;
     }
 
 
@@ -227,6 +295,31 @@ public class GuiBuilder {
 
         logTab.minWidth(200);
         return logTab;
+    }
+
+    private static void quitApplication() {
+        Alert quitConfirmation = new Alert(Alert.AlertType.WARNING,
+                "Are you sure you want to quit?", ButtonType.YES, ButtonType.CANCEL);
+
+        quitConfirmation.setTitle("Exit Application?");
+        quitConfirmation.setHeaderText("Please Confirm.");
+        quitConfirmation.showAndWait();
+
+        if (quitConfirmation.getResult() == ButtonType.YES) {
+            MainController.getInstance().getStage().close();
+        }
+    }
+
+    private static List<String> getAvailableProtocols() {
+        List<String> availableProtocols = new LinkedList<>();
+
+        File[] allProtocols = new File("protocols/").listFiles();
+
+        for (File f : allProtocols) {
+            availableProtocols.add(f.getName());
+        }
+
+        return availableProtocols;
     }
 
 }
