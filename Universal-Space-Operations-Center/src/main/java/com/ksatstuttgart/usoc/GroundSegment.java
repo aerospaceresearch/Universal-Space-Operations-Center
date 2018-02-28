@@ -77,6 +77,8 @@ public class GroundSegment extends Application {
     @Override
     public void stop() throws Exception{
         super.stop();
+        //TODO temp fix for worldwind panels not closing on app stop
+        //TODO system.exit force closes all threads, but it is non optimal
         System.exit(0);
     }
 }
