@@ -23,6 +23,7 @@
  */
 package com.ksatstuttgart.usoc.gui.worldwind;
 
+import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.ErrorEvent;
 import com.ksatstuttgart.usoc.data.SerialEvent;
@@ -500,5 +501,11 @@ public class GNSSPanel extends DataPanel {
         }
 
         return center.distanceTo3(center.add3(f.multiply3(-maxDistance)));
+    }
+
+    public void closePanels() {
+        wwp_big.shutdown();
+        wwp_sideView.shutdown();
+        wwp_topView.shutdown();
     }
 }

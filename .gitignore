@@ -2,3 +2,4 @@
 .*
 !/.gitignore
 /Universal-Space-Operations-Center/nbproject/
+/Universal-Space-Operations-Center/*.iml

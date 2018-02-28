@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.controller.communication.SerialComm;
 import com.ksatstuttgart.usoc.gui.setup.GuiBuilder;
+import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -42,8 +43,8 @@ import javafx.stage.Stage;
 public class GroundSegment extends Application {
 
     /**
-     * @param stage
-     * @param args the command line arguments
+     * Starts Application
+     * @param stage main stage
      */
     @Override
     public void start(Stage stage) {
@@ -52,6 +53,9 @@ public class GroundSegment extends Application {
         MainController.getInstance().setStage(stage);
 
         stage.setScene(GuiBuilder.createGUIFromConfig());
+        stage.setMinWidth(700);
+        stage.setWidth(900);
+        stage.setMinHeight(500);
         stage.show();
     }
 
@@ -61,9 +65,20 @@ public class GroundSegment extends Application {
     public static void main(String[] args) {
         launch(args);
         
-        //close serial communiction if it is open on window close
+        //close serial communication if it is open on window close
         if(SerialComm.getInstance().isOpen()){
             SerialComm.getInstance().close();
         }
+    }
+
+    // Closes all threads on Apllication close
+    // May not be the best solution in the long run,
+    // since this force closes all active threads
+    @Override
+    public void stop() throws Exception{
+        super.stop();
+        //TODO temp fix for worldwind panels not closing on app stop
+        //TODO system.exit force closes all threads, but it is non optimal
+        System.exit(0);
     }
 }
