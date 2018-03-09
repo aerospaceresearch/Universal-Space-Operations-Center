@@ -25,7 +25,6 @@ package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.controller.ChartController;
-import com.ksatstuttgart.usoc.gui.controller.StatePanelController;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 
 import java.io.File;
@@ -35,6 +34,7 @@ import java.util.Properties;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -51,9 +51,11 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
@@ -184,64 +186,65 @@ public class GuiBuilder {
         return menuBar;
     }
 
-
     /**
      * Responsible for creating the State Panel
-     * @param config configuration properties
+     * @param config configuration Properties
      * @return ScrollPane
      */
     private static ScrollPane createStatePanel(Properties config) {
-        ScrollPane stateScroll = new ScrollPane();
-        StatePanelController statePanelController = new StatePanelController();
+        ScrollPane parentPane = new ScrollPane();
+
+        // All Segment Panes should be inside stateBox
         VBox stateBox = new VBox();
         stateBox.setSpacing(5);
-        stateBox.minWidth(70);
 
-        // use config to create state view
-        for (int i = 0; i < ConfigHandler.countItems("segmentTitle", CONFIG_PATH); i++) {
-            VBox vBox = new VBox();
-            GridPane stateGrid = new GridPane();
-            stateGrid.setVgap(5);
-            stateGrid.setHgap(5);
+        // Get number of segments from config
+        final int segmentCount =
+                ConfigHandler.countItems("segmentTitle", CONFIG_PATH);
 
-            int column = 0;
-            int row = 1;
-            //TODO: Make this not hardcoded
-            int maxColumns = 2;
+        // Adds each segment to statePane
+        for (int i = 0; i < segmentCount; i++) {
+            // Gets current segment title
+            final String segmentTitle =
+                    config.getProperty("segmentTitle[" + (i + 1) + "]");
 
-            Label segmentTitle = new Label();
-            segmentTitle.setText(config.getProperty("segmentTitle[" + i + "]"));
-            stateGrid.add(segmentTitle, 0, 0);
-            //
-            for (int j = 0; j < ConfigHandler.countItems("keyword[" + (i + 1) + "]", CONFIG_PATH); j++) {
-                //
-                Label label = new Label();
-                //
-                if (column == 0) {
-                    label.setText(config.getProperty("keyword[" + (i + 1) + "][" + (j + 1) + "]"));
+            // Gets all keywords for current segment
+            GridPane labelGrid = new GridPane();
+            final int labelCountInSegment =
+                    ConfigHandler.countItems("keyword[" + (i + 1) + "]", CONFIG_PATH);
+
+            // Keeps track of each segment's row and col
+            // Needs to start at one because GridPane.add() starts at 1 and not 0
+            int currentRow = 1;
+            int currentCol = 1;
+
+            for (int j = 0; j < labelCountInSegment; j++) {
+                if (currentCol == 5) {
+                    currentRow++;
+                    currentCol = 1;
                 }
-                //
-                if (column == 1) {
-                    //TODO: get variable name
-                    statePanelController.addLabel(label, "Test");
-                }
-                //
-                stateGrid.add(label, column, row);
-                //
-                column++;
-                if (column > (maxColumns-1)) {
-                    row++;
-                    column = 0;
-                }
+
+                Label label =
+                        new Label(config.getProperty("keyword[" + (i + 1) + "][" + (j + 1) + "]"));
+                GridPane.setHgrow(label, Priority.SOMETIMES);
+                GridPane.setVgrow(label, Priority.SOMETIMES);
+                GridPane.setHalignment(label, HPos.CENTER);
+                labelGrid.add(label, currentCol, currentRow);
+
+                currentCol++;
             }
 
-            vBox.getChildren().add(stateGrid);
-            stateBox.getChildren().add(vBox);
+            // Each titledPane holds information about a single segment
+            TitledPane titledPane = new TitledPane(segmentTitle, labelGrid);
+            titledPane.setCollapsible(false);
+            stateBox.getChildren().add(titledPane);
         }
 
-        stateScroll.setContent(stateBox);
-        stateScroll.setFitToWidth(true);
-        return stateScroll;
+        parentPane.setMinWidth(200);
+        parentPane.setFitToWidth(true);
+        parentPane.setFitToHeight(true);
+        parentPane.setContent(stateBox);
+        return parentPane;
     }
 
     /**
@@ -312,7 +315,7 @@ public class GuiBuilder {
             logTab.addFXMLTab("fxml/SerialPanel.fxml", "Serial Connection");
         }
         //TODO: should be named something like Mail
-        if (Boolean.parseBoolean(config.getProperty("iridumPanel"))) {
+        if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
             logTab.addFXMLTab("fxml/IridiumPanel.fxml", "Iridium Connection");
         }
 
