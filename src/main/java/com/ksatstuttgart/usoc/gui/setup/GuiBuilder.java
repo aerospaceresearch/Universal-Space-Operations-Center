@@ -25,7 +25,6 @@ package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.controller.ChartController;
-import com.ksatstuttgart.usoc.gui.controller.StatePanelController;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 
 import java.io.File;
@@ -36,13 +35,29 @@ import java.util.Properties;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TabPane.TabClosingPolicy;
-import javafx.scene.layout.*;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 /**
  * This class builds the GUI FXML structure based on input parameters in the properties file
@@ -171,6 +186,11 @@ public class GuiBuilder {
         return menuBar;
     }
 
+    /**
+     * Responsible for creating the State Panel
+     * @param config configuration Properties
+     * @return ScrollPane
+     */
     private static ScrollPane createStatePanel(Properties config) {
         ScrollPane parentPane = new ScrollPane();
 
@@ -295,7 +315,7 @@ public class GuiBuilder {
             logTab.addFXMLTab("fxml/SerialPanel.fxml", "Serial Connection");
         }
         //TODO: should be named something like Mail
-        if (Boolean.parseBoolean(config.getProperty("iridumPanel"))) {
+        if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
             logTab.addFXMLTab("fxml/IridiumPanel.fxml", "Iridium Connection");
         }
 
