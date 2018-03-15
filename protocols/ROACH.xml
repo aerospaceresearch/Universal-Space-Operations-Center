@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Iridium SBD 340B sequential message prototype
+Used conventions: 
+	First bit is 0, not 1
+	System event numbers are uint8, list of event descriptors is stored in a separate xml file. System events can be: Iridium FSM freeze, TC has detected open circuit, GPS sees no satellite, etc. The 4 event with the highest priority are sent, this number can increase in later iterations.
+	As the default endianness for AVR MCUs is little endian, this is the default for datapoints.
+	Bytewerte:
+	TIME: 4B
+	MSGNUMBER: 1B
+	GNSS: 	140B (7*20)
+	IMU:  	162B
+	PSDIG1:	4B
+	PSDIG2: 4B
+	GPSTIME: 4B
+	TEMPERATURE 12B
+	VBAT 1B
+	
+	
+-->
+<sbd340message protocol = "JSON">
+    <data>
+        <sensor type="TEMPERATURE" name="CPU Temp">
+            <var dataname="ct" datatype="FLOAT" unit="°C"/>
+        </sensor>
+        <sensor type="LOAD" name="CPU Load">
+            <var dataname="cl" datatype="FLOAT" unit="%"/>
+        </sensor>
+        <sensor type="LOAD" name="RAM Load">
+            <var dataname="rl" datatype="FLOAT" unit="%"/>
+        </sensor>
+        <sensor type="LOAD" name="Memory Load">
+            <var dataname="ml" datatype="FLOAT" unit="%"/>
+        </sensor>
+        <sensor type="DISTANCE" name="Distance 1">
+            <var dataname="d1" datatype="FLOAT" unit="mm"/>
+        </sensor>
+        <sensor type="DISTANCE" name="Distance 2">
+            <var dataname="d2" datatype="FLOAT" unit="mm"/>
+        </sensor>
+        <sensor type="DISTANCE" name="Distance 3">
+            <var dataname="d3" datatype="FLOAT" unit="mm"/>
+        </sensor>
+        <sensor type="DISTANCE" name="Distance 4">
+            <var dataname="d4" datatype="FLOAT" unit="mm"/>
+        </sensor>
+        <sensor type="STATE" name="OBC State">
+            <var dataname="mo" datatype="INTEGER" unit=""/>
+        </sensor>
+        <sensor type="STATE" name="Rover State">
+            <var dataname="mr" datatype="INTEGER" unit=""/>
+        </sensor>
+        <sensor type="PING" name="Rover Ping">
+            <var dataname="rp" datatype="BOOLEAN" unit=""/>
+        </sensor>
+        <sensor type="STATE" name="LO Signal">
+            <var dataname="lo" datatype="BOOLEAN" unit=""/>
+        </sensor>
+        <sensor type="STATE" name="SODS Signal">
+            <var dataname="sods" datatype="BOOLEAN" unit=""/>
+        </sensor>
+        <sensor type="STATE" name="SOE Signal">
+            <var dataname="soe" datatype="BOOLEAN" unit=""/>
+        </sensor>
+        <sensor type="STATE" name="HV on Rover">
+            <var dataname="hv" datatype="BOOLEAN" unit=""/>
+        </sensor>
+        <sensor type="STATE" name="Simulation Mode">
+            <var dataname="sm" datatype="BOOLEAN" unit=""/>
+        </sensor>
+        <sensor type="STATE" name="Rover Attached">
+            <var dataname="rovatt" datatype="BOOLEAN" unit=""/>
+        </sensor>
+    </data>
+</sbd340message>

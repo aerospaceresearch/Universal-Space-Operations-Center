@@ -1,4 +1,17 @@
-/Universal-Space-Operations-Center/target/
+# IntelliJ IDEA configuration files
+.idea/
+*.iml
+
+# NetBeans configuration files
+nbproject/
+
+# Build Output
+target/
+
 .*
-!/.gitignore
-/Universal-Space-Operations-Center/nbproject/
+!.gitignore
+
+# Log Files
+*.log
+
+
