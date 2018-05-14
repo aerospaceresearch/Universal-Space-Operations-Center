@@ -34,10 +34,15 @@ import java.util.List;
 import java.util.Properties;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -46,7 +51,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 /**
  * This class builds the GUI FXML structure based on input parameters in the properties file
@@ -171,6 +180,82 @@ public class GuiBuilder {
     }
 
     /**
+     * Creates the initial window that is presented to the user
+     * when launching the application
+     *
+     * @return a new scene that needs to be added to the stage
+     */
+    public static Scene createInitialWindow() {
+        VBox parentLayout = new VBox();
+        Label header = new Label("Please select an option:");
+        header.autosize();
+
+        HBox buttonLayout = new HBox();
+
+        Button newLayoutBtn = new Button("New Layout");
+        Button loadLayoutBtn = new Button("Import Layout");
+        Button defaultLayoutBtn = new Button("Default Layout");
+
+        // Sets Click Listeners (Event handlers) for all the buttons
+        newLayoutBtn.setOnAction(newLayoutBtnEventHandler());
+        loadLayoutBtn.setOnAction(loadLayoutBtnEventHandler());
+        defaultLayoutBtn.setOnAction(defaultLayoutBtnEventHandler());
+
+        buttonLayout.setSpacing(20);
+        buttonLayout.setAlignment(Pos.CENTER);
+        buttonLayout.getChildren().addAll(newLayoutBtn, loadLayoutBtn, defaultLayoutBtn);
+
+        parentLayout.getChildren().addAll(header, buttonLayout);
+        parentLayout.setSpacing(20);
+        parentLayout.setAlignment(Pos.CENTER);
+
+        parentLayout.setPadding(new Insets(10));
+
+        Scene initialWindowPopup = new Scene(parentLayout);
+        MainController.getInstance().getStage().setTitle("Universal Space Operations Center");
+        return initialWindowPopup;
+    }
+
+    /**
+     * Click Listener/Event Handler for the New Layout Button
+     * @return EventHandler
+     */
+    private static EventHandler newLayoutBtnEventHandler() {
+        return new EventHandler() {
+            @Override
+            public void handle(Event event) {
+                //TODO Implement event handler
+            }
+        };
+    }
+
+    /**
+     * Click Listener/Event Handler for the Load Layout Button
+     * @return EventHandler
+     */
+    private static EventHandler<ActionEvent> loadLayoutBtnEventHandler() {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                //TODO Implement event handler
+            }
+        };
+    }
+
+    /**
+     * Click Listener/Event Handler for the Default Layout Button
+     * @return EventHandler
+     */
+    private static EventHandler<ActionEvent> defaultLayoutBtnEventHandler() {
+        return new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                //TODO Implement event handler
+            }
+        };
+    }
+
+    /**
      * Gets a list of protocol names inside the protocols/ folder
      * @return list of available protocols
      */
@@ -185,5 +270,4 @@ public class GuiBuilder {
 
         return availableProtocols;
     }
-
 }
