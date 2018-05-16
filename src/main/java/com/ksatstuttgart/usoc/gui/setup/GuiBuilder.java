@@ -56,6 +56,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import sun.applet.Main;
 
 /**
  * This class builds the GUI FXML structure based on input parameters in the properties file
@@ -224,7 +225,8 @@ public class GuiBuilder {
         return new EventHandler() {
             @Override
             public void handle(Event event) {
-                //TODO Implement event handler
+                MainController.getInstance().getStage()
+                        .getScene().setRoot(new LayoutCreator());
             }
         };
     }
