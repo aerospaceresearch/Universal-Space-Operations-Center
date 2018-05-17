@@ -151,17 +151,23 @@ public class LayoutCreator extends VBox {
 
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setEditable(false);
+        treeView.getSelectionModel().select(0);
 
         treeView.getSelectionModel().selectedItemProperty()
                 .addListener(new ChangeListener<TreeItem<String>>() {
                     @Override
                     public void changed(ObservableValue<? extends TreeItem<String>> observableValue,
                                         TreeItem<String> oldValue, TreeItem<String> newValue) {
-                        Pane oldPane = componentsMap.get(oldValue.getValue());
-                        Pane newPane = componentsMap.get(newValue.getValue());
+                        Pane oldPane;
+                        if (oldValue != null) {
+                            oldPane = componentsMap.get(oldValue.getValue());
+                            horizontalLayout.getChildren().remove(oldPane);
+                        }
 
-                        horizontalLayout.getChildren().remove(oldPane);
-                        horizontalLayout.getChildren().add(newPane);
+                        Pane newPane = componentsMap.get(newValue.getValue());
+                        if(newPane != null) {
+                            horizontalLayout.getChildren().add(newPane);
+                        }
                     }
                 });
 
