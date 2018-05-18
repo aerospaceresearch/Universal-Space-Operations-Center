@@ -9,11 +9,19 @@ import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,16 +53,45 @@ public class LayoutCreator extends VBox {
     private Map<String, Pane> componentsMap = new HashMap<>();
 
     /**
+     * Properties Pane Title
+     */
+    private static final String PROPERTIES_PANE_TITLE = "Properties";
+
+    /**
+     * General Pane Title
+     */
+    private static final String GENERAL_PANE_TITLE = "General";
+
+    /**
+     * Panels Pane Title
+     */
+    private static final String PANELS_PANE_TITLE = "Panels";
+
+    /**
+     * State Panel Pane Title
+     */
+    private static final String STATE_PANE_TITLE = "State Panel";
+
+    /**
+     * USOC Panel Pane Title
+     */
+    private static final String USOC_PANE_TITLE = "USOC Panel";
+
+    /**
+     * Log Panel Pane Title
+     */
+    private static final String LOG_PANE_TITLE = "Log Panel";
+
+    /**
      * Holds the tree view and the right side Pane
      */
-    private FlowPane horizontalLayout = new FlowPane();
+    private BorderPane middleLayout = new BorderPane();
 
     /**
      * Creates a new instance of the Layout Creator Class
      */
     public LayoutCreator() {
         setProperties();
-        //TODO instantiate right side panels
         createRightPanes();
         prepareComponents();
     }
@@ -63,10 +100,13 @@ public class LayoutCreator extends VBox {
      * Sets Scene/Window Properties
      */
     private void setProperties() {
-        MainController.getInstance().getStage().setTitle(SCENE_TITLE);
-        MainController.getInstance().getStage().setMinWidth(WINDOW_WIDTH);
-        MainController.getInstance().getStage().setMinHeight(WINDOW_HEIGHT);
-        MainController.getInstance().getStage().setResizable(false);
+        Stage mainStage = MainController.getInstance().getStage();
+
+        mainStage.setTitle(SCENE_TITLE);
+        mainStage.setMinWidth(WINDOW_WIDTH);
+        mainStage.setMinHeight(WINDOW_HEIGHT);
+        mainStage.setResizable(false);
+        mainStage.centerOnScreen();
 
         setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(10, 0, 10, 30));
@@ -78,7 +118,34 @@ public class LayoutCreator extends VBox {
      * Creates all Right Side Panes
      */
     private void createRightPanes() {
-        //TODO Create Panes
+        createEmptyPanes();
+        createGeneralPane();
+    }
+
+    /**
+     * Creates Panes that are not supposed to show anything
+     */
+    private void createEmptyPanes() {
+        componentsMap.put(PROPERTIES_PANE_TITLE, new Pane());
+        componentsMap.put(PANELS_PANE_TITLE, new Pane());
+    }
+
+    /**
+     * Creates the General Pane
+     */
+    private void createGeneralPane() {
+        Pane generalPane = new Pane();
+
+        VBox paneLayout = new VBox();
+
+        paneLayout.getChildren().add(new Label("General"));
+        paneLayout.setPadding(new Insets(30));
+        paneLayout.setFillWidth(true);
+
+        generalPane.getChildren().add(paneLayout);
+        setPaneProperties(generalPane);
+
+        componentsMap.put(GENERAL_PANE_TITLE, generalPane);
     }
 
     /**
@@ -107,15 +174,14 @@ public class LayoutCreator extends VBox {
      * (Tree View and right pane)
      */
     private void preparePanels() {
-        horizontalLayout = new FlowPane();
-        horizontalLayout.setAlignment(Pos.BASELINE_LEFT);
+        middleLayout = new BorderPane();
 
         Group treeViewPanel = prepareTreeViewPane();
 
-        horizontalLayout.getChildren().add(treeViewPanel);
+        middleLayout.setLeft(treeViewPanel);
         //TODO Add General properties pane
 
-        getChildren().add(horizontalLayout);
+        getChildren().add(middleLayout);
     }
 
     /**
@@ -158,21 +224,30 @@ public class LayoutCreator extends VBox {
                     @Override
                     public void changed(ObservableValue<? extends TreeItem<String>> observableValue,
                                         TreeItem<String> oldValue, TreeItem<String> newValue) {
-                        Pane oldPane;
-                        if (oldValue != null) {
-                            oldPane = componentsMap.get(oldValue.getValue());
-                            horizontalLayout.getChildren().remove(oldPane);
+
+                        Pane oldPane = componentsMap.get(oldValue.getValue());
+
+                        if (oldPane != null) {
+                           middleLayout.getChildren().remove(oldPane);
                         }
 
                         Pane newPane = componentsMap.get(newValue.getValue());
                         if(newPane != null) {
-                            horizontalLayout.getChildren().add(newPane);
+                            middleLayout.setCenter(newPane);
+                            middleLayout.setMargin(newPane, new Insets(0, 30, 0, 10));
                         }
                     }
                 });
 
+        treeView.setPrefSize(150, -1);
+
         treeViewGroup.getChildren().add(treeView);
 
         return treeViewGroup;
+    }
+
+    private void setPaneProperties(Pane pane) {
+        pane.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
     }
 }
