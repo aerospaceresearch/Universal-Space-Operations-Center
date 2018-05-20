@@ -1,12 +1,15 @@
 package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Border;
@@ -46,11 +49,11 @@ public class LayoutCreator extends VBox {
     private static final int WINDOW_HEIGHT = 520;
 
     /**
-     * Holds all right side panes
-     * Used to properly change the right panel contents
-     * when a TreeItem is clicked
+     * Default Pane Border
      */
-    private Map<String, Pane> componentsMap = new HashMap<>();
+    private static final Border DEFAULT_PANE_BORDER =
+            new Border(new BorderStroke(Color.DARKGRAY,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
      * Properties Pane Title
@@ -81,6 +84,13 @@ public class LayoutCreator extends VBox {
      * Log Panel Pane Title
      */
     private static final String LOG_PANE_TITLE = "Log Panel";
+
+    /**
+     * Holds all right side panes
+     * Used to properly change the right panel contents
+     * when a TreeItem is clicked
+     */
+    private Map<String, Node> componentsMap = new HashMap<>();
 
     /**
      * Holds the tree view and the right side Pane
@@ -118,34 +128,10 @@ public class LayoutCreator extends VBox {
      * Creates all Right Side Panes
      */
     private void createRightPanes() {
-        createEmptyPanes();
-        createGeneralPane();
-    }
-
-    /**
-     * Creates Panes that are not supposed to show anything
-     */
-    private void createEmptyPanes() {
         componentsMap.put(PROPERTIES_PANE_TITLE, new Pane());
         componentsMap.put(PANELS_PANE_TITLE, new Pane());
-    }
-
-    /**
-     * Creates the General Pane
-     */
-    private void createGeneralPane() {
-        Pane generalPane = new Pane();
-
-        VBox paneLayout = new VBox();
-
-        paneLayout.getChildren().add(new Label("General"));
-        paneLayout.setPadding(new Insets(30));
-        paneLayout.setFillWidth(true);
-
-        generalPane.getChildren().add(paneLayout);
-        setPaneProperties(generalPane);
-
-        componentsMap.put(GENERAL_PANE_TITLE, generalPane);
+        componentsMap.put(GENERAL_PANE_TITLE, prepareGeneralPane());
+        componentsMap.put(STATE_PANE_TITLE, prepareStatePane());
     }
 
     /**
@@ -179,7 +165,7 @@ public class LayoutCreator extends VBox {
         Group treeViewPanel = prepareTreeViewPane();
 
         middleLayout.setLeft(treeViewPanel);
-        //TODO Add General properties pane
+        //TODO SetGeneral properties pane as default
 
         getChildren().add(middleLayout);
     }
@@ -194,22 +180,22 @@ public class LayoutCreator extends VBox {
         //TODO Make background transparent
 
         // Root Item (Properties)
-        TreeItem<String> rootItem = new TreeItem<>("Properties");
+        TreeItem<String> rootItem = new TreeItem<>(PROPERTIES_PANE_TITLE);
 
         // General Item
-        TreeItem<String> generalItem = new TreeItem<>("General");
+        TreeItem<String> generalItem = new TreeItem<>(GENERAL_PANE_TITLE);
 
         // Panel Item
-        TreeItem<String> panelItem = new TreeItem<>("Panels");
+        TreeItem<String> panelItem = new TreeItem<>(PANELS_PANE_TITLE);
 
         // State Panel
-        TreeItem<String> statePanelItem = new TreeItem<>("State Panel");
+        TreeItem<String> statePanelItem = new TreeItem<>(STATE_PANE_TITLE);
 
         // USOC Panel
-        TreeItem<String> usocPanelItem = new TreeItem<>("USOC Panel");
+        TreeItem<String> usocPanelItem = new TreeItem<>(USOC_PANE_TITLE);
 
         // Log Panel
-        TreeItem<String> logPanelItem = new TreeItem<>("Log Panel");
+        TreeItem<String> logPanelItem = new TreeItem<>(LOG_PANE_TITLE);
 
         rootItem.setExpanded(true);
         panelItem.getChildren().addAll(statePanelItem, usocPanelItem, logPanelItem);
@@ -225,16 +211,16 @@ public class LayoutCreator extends VBox {
                     public void changed(ObservableValue<? extends TreeItem<String>> observableValue,
                                         TreeItem<String> oldValue, TreeItem<String> newValue) {
 
-                        Pane oldPane = componentsMap.get(oldValue.getValue());
+                        Node oldNode = componentsMap.get(oldValue.getValue());
 
-                        if (oldPane != null) {
-                           middleLayout.getChildren().remove(oldPane);
+                        if (oldNode != null) {
+                           middleLayout.getChildren().remove(oldNode);
                         }
 
-                        Pane newPane = componentsMap.get(newValue.getValue());
-                        if(newPane != null) {
-                            middleLayout.setCenter(newPane);
-                            middleLayout.setMargin(newPane, new Insets(0, 30, 0, 10));
+                        Node newNode = componentsMap.get(newValue.getValue());
+                        if(newNode != null) {
+                            middleLayout.setCenter(newNode);
+                            middleLayout.setMargin(newNode, new Insets(0, 30, 0, 10));
                         }
                     }
                 });
@@ -246,8 +232,26 @@ public class LayoutCreator extends VBox {
         return treeViewGroup;
     }
 
-    private void setPaneProperties(Pane pane) {
-        pane.setBorder(new Border(new BorderStroke(Color.DARKGRAY,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+    /**
+     * Creates the General Pane
+     * @return generalPane
+     */
+    private Pane prepareGeneralPane() {
+        GeneralPane pane = new GeneralPane();
+        pane.setBorder(DEFAULT_PANE_BORDER);
+
+        return pane;
+    }
+
+    /**
+     * Create the State Panel Pane
+     * @return statePane
+     */
+    private ScrollPane prepareStatePane() {
+        ScrollPane statePane = new ScrollPane(new Label("Test"));
+        statePane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        statePane.setBorder(DEFAULT_PANE_BORDER);
+
+        return statePane;
     }
 }
