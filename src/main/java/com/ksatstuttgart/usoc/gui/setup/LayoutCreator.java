@@ -2,6 +2,7 @@ package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
+import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -9,7 +10,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Border;
@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -177,8 +178,6 @@ public class LayoutCreator extends VBox {
     private Group prepareTreeViewPane() {
         Group treeViewGroup = new Group();
 
-        //TODO Make background transparent
-
         // Root Item (Properties)
         TreeItem<String> rootItem = new TreeItem<>(PROPERTIES_PANE_TITLE);
 
@@ -198,12 +197,13 @@ public class LayoutCreator extends VBox {
         TreeItem<String> logPanelItem = new TreeItem<>(LOG_PANE_TITLE);
 
         rootItem.setExpanded(true);
+        panelItem.setExpanded(true);
         panelItem.getChildren().addAll(statePanelItem, usocPanelItem, logPanelItem);
         rootItem.getChildren().addAll(generalItem, panelItem);
 
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setEditable(false);
-        treeView.getSelectionModel().select(0);
+        treeView.getSelectionModel().select(1);
 
         treeView.getSelectionModel().selectedItemProperty()
                 .addListener(new ChangeListener<TreeItem<String>>() {
@@ -247,11 +247,10 @@ public class LayoutCreator extends VBox {
      * Create the State Panel Pane
      * @return statePane
      */
-    private ScrollPane prepareStatePane() {
-        ScrollPane statePane = new ScrollPane(new Label("Test"));
-        statePane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        statePane.setBorder(DEFAULT_PANE_BORDER);
+    private Pane prepareStatePane() {
+        StatePanelPane statePanelPane = new StatePanelPane();
+        statePanelPane.setBorder(DEFAULT_PANE_BORDER);
 
-        return statePane;
+        return statePanelPane;
     }
 }
