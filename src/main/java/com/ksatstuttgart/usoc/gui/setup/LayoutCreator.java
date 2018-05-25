@@ -173,6 +173,7 @@ public class LayoutCreator extends VBox {
 
     /**
      * Prepares Tree View pane
+     *
      * @return Group containing the TreeView
      */
     private Group prepareTreeViewPane() {
@@ -203,22 +204,19 @@ public class LayoutCreator extends VBox {
 
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setEditable(false);
-        treeView.getSelectionModel().select(1);
-
         treeView.getSelectionModel().selectedItemProperty()
                 .addListener(new ChangeListener<TreeItem<String>>() {
                     @Override
                     public void changed(ObservableValue<? extends TreeItem<String>> observableValue,
                                         TreeItem<String> oldValue, TreeItem<String> newValue) {
 
-                        Node oldNode = componentsMap.get(oldValue.getValue());
-
-                        if (oldNode != null) {
-                           middleLayout.getChildren().remove(oldNode);
+                        if (oldValue != null) {
+                            Node oldNode = componentsMap.get(oldValue.getValue());
+                            middleLayout.getChildren().remove(oldNode);
                         }
 
                         Node newNode = componentsMap.get(newValue.getValue());
-                        if(newNode != null) {
+                        if (newNode != null) {
                             middleLayout.setCenter(newNode);
                             middleLayout.setMargin(newNode, new Insets(0, 30, 0, 10));
                         }
@@ -234,6 +232,7 @@ public class LayoutCreator extends VBox {
 
     /**
      * Creates the General Pane
+     *
      * @return generalPane
      */
     private Pane prepareGeneralPane() {
@@ -245,6 +244,7 @@ public class LayoutCreator extends VBox {
 
     /**
      * Create the State Panel Pane
+     *
      * @return statePane
      */
     private Pane prepareStatePane() {

@@ -49,8 +49,8 @@ public class StatePanelPane extends BorderPane {
     private void preparePane() {
         // Create and add first row to list
         KeywordRow firstRow = new KeywordRow(xCounter, yCounter);
-
         keywordRowList.add(firstRow);
+        yCounter++;
         final VBox keyWordsPaneBox = new VBox(firstRow);
         keyWordsPaneBox.setSpacing(5);
 
@@ -67,6 +67,12 @@ public class StatePanelPane extends BorderPane {
                 KeywordRow lastRow = keywordRowList.get(keywordRowList.size() - 1);
                 keywordRowList.remove(lastRow);
                 keyWordsPaneBox.getChildren().remove(lastRow);
+                if (yCounter == 0) {
+                    yCounter = 3;
+                    xCounter--;
+                } else {
+                    yCounter--;
+                }
 
                 if (keywordRowList.size() == 1) {
                     minusButton.setDisable(true);
