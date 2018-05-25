@@ -2,6 +2,7 @@ package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
+import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -133,6 +134,7 @@ public class LayoutCreator extends VBox {
         componentsMap.put(PANELS_PANE_TITLE, new Pane());
         componentsMap.put(GENERAL_PANE_TITLE, prepareGeneralPane());
         componentsMap.put(STATE_PANE_TITLE, prepareStatePane());
+        componentsMap.put(LOG_PANE_TITLE, prepareLogPane());
     }
 
     /**
@@ -252,5 +254,12 @@ public class LayoutCreator extends VBox {
         statePanelPane.setBorder(DEFAULT_PANE_BORDER);
 
         return statePanelPane;
+    }
+
+    private Pane prepareLogPane() {
+        LogPane logPane = new LogPane();
+        logPane.setBorder(DEFAULT_PANE_BORDER);
+
+        return logPane;
     }
 }

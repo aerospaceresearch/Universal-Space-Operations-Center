@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -22,6 +23,12 @@ import java.util.List;
 public class StatePanelPane extends BorderPane {
 
     /**
+     * Enabled checkbox
+     */
+    private final CheckBox enabledCheckBox =
+            new CheckBox("Enabled");
+
+    /**
      * List that holds all active rows presented to the user
      */
     private List<KeywordRow> keywordRowList = new ArrayList<>();
@@ -37,6 +44,12 @@ public class StatePanelPane extends BorderPane {
     private int yCounter = 0;
 
     /**
+     * Default Node Padding
+     */
+    private static final Insets DEFAULT_PADDING =
+            new Insets(20);
+
+    /**
      * Creates a State Panel Pane
      */
     public StatePanelPane() {
@@ -47,6 +60,8 @@ public class StatePanelPane extends BorderPane {
      * Prepares component
      */
     private void preparePane() {
+        enabledCheckBox.setPadding(DEFAULT_PADDING);
+
         // Create and add first row to list
         KeywordRow firstRow = new KeywordRow(xCounter, yCounter);
         keywordRowList.add(firstRow);
@@ -55,7 +70,7 @@ public class StatePanelPane extends BorderPane {
         keyWordsPaneBox.setSpacing(5);
 
         ScrollPane keywordsPane = new ScrollPane(keyWordsPaneBox);
-        keywordsPane.setPadding(new Insets(20));
+        keywordsPane.setPadding(DEFAULT_PADDING);
         keywordsPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
         final Button minusButton = new Button("-");
@@ -102,10 +117,11 @@ public class StatePanelPane extends BorderPane {
         });
 
         HBox buttonBox = new HBox(plusButton, minusButton);
-        buttonBox.setPadding(new Insets(10));
+        buttonBox.setPadding(DEFAULT_PADDING);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         buttonBox.setSpacing(20);
 
+        setTop(enabledCheckBox);
         setCenter(keywordsPane);
         setBottom(buttonBox);
     }
