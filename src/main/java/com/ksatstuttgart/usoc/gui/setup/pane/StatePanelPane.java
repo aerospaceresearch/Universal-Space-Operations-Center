@@ -73,8 +73,8 @@ public class StatePanelPane extends BorderPane {
         keywordsPane.setPadding(DEFAULT_PADDING);
         keywordsPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        final Button minusButton = new Button("-");
-        minusButton.setPrefSize(30, 30);
+        final Button minusButton = new Button("Remove Keyword");
+        minusButton.setPrefSize(150, 30);
         minusButton.setDisable(true);
         minusButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -96,8 +96,8 @@ public class StatePanelPane extends BorderPane {
             }
         });
 
-        Button plusButton = new Button("+");
-        plusButton.setPrefSize(30, 30);
+        Button plusButton = new Button("Add Keyword");
+        plusButton.setPrefSize(150, 30);
         plusButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

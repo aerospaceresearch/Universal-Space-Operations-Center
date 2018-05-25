@@ -4,6 +4,7 @@ import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
+import com.ksatstuttgart.usoc.gui.setup.pane.USOCPane;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -21,7 +22,6 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -134,6 +134,7 @@ public class LayoutCreator extends VBox {
         componentsMap.put(PANELS_PANE_TITLE, new Pane());
         componentsMap.put(GENERAL_PANE_TITLE, prepareGeneralPane());
         componentsMap.put(STATE_PANE_TITLE, prepareStatePane());
+        componentsMap.put(USOC_PANE_TITLE, prepareUSOCPane());
         componentsMap.put(LOG_PANE_TITLE, prepareLogPane());
     }
 
@@ -245,7 +246,7 @@ public class LayoutCreator extends VBox {
     }
 
     /**
-     * Create the State Panel Pane
+     * Creates the State Panel Pane
      *
      * @return statePane
      */
@@ -256,6 +257,23 @@ public class LayoutCreator extends VBox {
         return statePanelPane;
     }
 
+    /**
+     * Creates the USOC Panel Pane
+     *
+     * @return usocPane
+     */
+    private BorderPane prepareUSOCPane() {
+        USOCPane usocPane = new USOCPane();
+        usocPane.setBorder(DEFAULT_PANE_BORDER);
+
+        return usocPane;
+    }
+
+    /**
+     * Creates the Log Panel Pane
+     *
+     * @return logPane
+     */
     private Pane prepareLogPane() {
         LogPane logPane = new LogPane();
         logPane.setBorder(DEFAULT_PANE_BORDER);
