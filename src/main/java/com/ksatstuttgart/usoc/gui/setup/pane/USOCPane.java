@@ -186,7 +186,7 @@ class ChartRow extends GridPane {
      * Sets Component Properties
      */
     private void setProperties() {
-        setPadding(new Insets(5, 0, 5, 0));
+        setPadding(new Insets(5, 20, 5, 20));
         setHgap(50);
         setVgap(10);
         setAlignment(Pos.CENTER);

@@ -1,21 +1,24 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Creates and prepares the StatePanel Pane
@@ -23,31 +26,53 @@ import java.util.List;
 public class StatePanelPane extends BorderPane {
 
     /**
+     * Default Node Padding
+     */
+    private static final Insets DEFAULT_PADDING =
+            new Insets(20);
+
+    /**
+     * Segment List View
+     */
+    private ListView<String> segmentListView = new ListView<>();
+
+    /**
+     * Keyword List View
+     */
+    private ListView<String> keywordListView = new ListView<>();
+
+    /**
+     * Segment Map
+     */
+    private Map<String, List<String>> segmentMap =
+            new HashMap<>();
+    /**
      * Enabled checkbox
      */
     private final CheckBox enabledCheckBox =
             new CheckBox("Enabled");
 
     /**
-     * List that holds all active rows presented to the user
+     * Add Segment Button
      */
-    private List<KeywordRow> keywordRowList = new ArrayList<>();
+    private final Button addSegmentBtn =
+            new Button("Add Segment");
+    /**
+     * Delete Segment Button
+     */
+    private final Button delSegmentBtn =
+            new Button("Remove Segment");
+    /**
+     * Add Keyword Button
+     */
+    private final Button addKeywordBtn =
+            new Button("Add Keyword");
 
     /**
-     * Keeps track of the x position of each keyword
+     * Delete Keyword Button
      */
-    private int xCounter = 0;
-
-    /**
-     * Keeps track of the y position of each keyword
-     */
-    private int yCounter = 0;
-
-    /**
-     * Default Node Padding
-     */
-    private static final Insets DEFAULT_PADDING =
-            new Insets(20);
+    private final Button delKeywordBtn =
+            new Button("Remove Keyword");
 
     /**
      * Creates a State Panel Pane
@@ -62,125 +87,165 @@ public class StatePanelPane extends BorderPane {
     private void preparePane() {
         enabledCheckBox.setPadding(DEFAULT_PADDING);
 
-        // Create and add first row to list
-        KeywordRow firstRow = new KeywordRow(xCounter, yCounter);
-        keywordRowList.add(firstRow);
-        yCounter++;
-        final VBox keyWordsPaneBox = new VBox(firstRow);
-        keyWordsPaneBox.setSpacing(5);
-
-        ScrollPane keywordsPane = new ScrollPane(keyWordsPaneBox);
-        keywordsPane.setPadding(DEFAULT_PADDING);
-        keywordsPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-
-        final Button minusButton = new Button("Remove Keyword");
-        minusButton.setPrefSize(150, 30);
-        minusButton.setDisable(true);
-        minusButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                KeywordRow lastRow = keywordRowList.get(keywordRowList.size() - 1);
-                keywordRowList.remove(lastRow);
-                keyWordsPaneBox.getChildren().remove(lastRow);
-                if (yCounter == 0) {
-                    yCounter = 3;
-                    xCounter--;
-                } else {
-                    yCounter--;
-                }
-
-                if (keywordRowList.size() == 1) {
-                    minusButton.setDisable(true);
-                }
-
-            }
-        });
-
-        Button plusButton = new Button("Add Keyword");
-        plusButton.setPrefSize(150, 30);
-        plusButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                KeywordRow row = new KeywordRow(xCounter, yCounter);
-                if (yCounter == 3) {
-                    yCounter = 0;
-                    xCounter++;
-                } else {
-                    yCounter++;
-                }
-
-                keywordRowList.add(row);
-                keyWordsPaneBox.getChildren().add(row);
-
-                minusButton.setDisable(false);
-            }
-        });
-
-        HBox buttonBox = new HBox(plusButton, minusButton);
-        buttonBox.setPadding(DEFAULT_PADDING);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        buttonBox.setSpacing(20);
-
         setTop(enabledCheckBox);
-        setCenter(keywordsPane);
-        setBottom(buttonBox);
-    }
-}
-
-/**
- * Represents a Row with a label and a textfield
- */
-class KeywordRow extends HBox {
-
-    /**
-     * Keyword Label (example: Keyword[1][2]
-     */
-    private Label keywordLbl = new Label();
-
-    /**
-     * Keyword User Input
-     */
-    private TextField keywordValueTextField = new TextField();
-
-    /**
-     * Keyword Text Field column count
-     */
-    private static final int COLUMN_COUNT = 10;
-
-    /**
-     * Spacing between label and text field
-     */
-    private static final int SPACING = 70;
-
-    /**
-     * Constructs an new KeyWord row with a given x and y coordinate
-     * @param x x position of the keyword in the grid
-     * @param y y position of the keyword in the grid
-     */
-    protected KeywordRow(int x, int y) {
-        keywordLbl.setText(String.format("Keyword[%d][%d]", x, y));
-        prepareRow();
+        setCenter(prepareCenter());
+        setBottom(prepareBottom());
     }
 
     /**
-     * Prepares row
+     * Prepare Center Node
+     *
+     * @return center node
      */
-    private void prepareRow() {
-        keywordValueTextField.setPromptText("Value");
-        keywordValueTextField.setPrefColumnCount(COLUMN_COUNT);
+    private Node prepareCenter() {
+        GridPane centerPane = new GridPane();
 
-        keywordLbl.setFont(new Font("Verdana", 15));
+        centerPane.setPadding(DEFAULT_PADDING);
+        centerPane.setAlignment(Pos.CENTER);
+        centerPane.setHgap(70);
 
-        setAlignment(Pos.CENTER);
-        setSpacing(SPACING);
-        getChildren().addAll(keywordLbl, keywordValueTextField);
+        // Segment List View
+        segmentListView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+
+            keywordListView.getItems().clear();
+            if (newValue == null) {
+                return;
+            }
+
+            List<String> newKeywordList = segmentMap.get(newValue);
+
+            keywordListView.getItems().addAll(newKeywordList);
+        });
+        segmentListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        segmentListView.setItems(FXCollections.observableArrayList());
+        segmentListView.setMaxHeight(170);
+        segmentListView.setEditable(false);
+
+        VBox segmentBox = new VBox(new Label("Segments"), segmentListView);
+        segmentBox.setSpacing(10);
+
+        // Keyword List View
+        keywordListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        keywordListView.setItems(FXCollections.observableArrayList());
+        keywordListView.setMaxHeight(170);
+
+        VBox keywordBox = new VBox(new Label("Keywords"), keywordListView);
+        keywordBox.setSpacing(10);
+
+        centerPane.add(segmentBox, 0, 0);
+        centerPane.add(keywordBox, 1, 0);
+
+        return centerPane;
     }
 
     /**
-     * Gets the text field value
-     * @return text field value
+     * Prepare Bottom Node
+     *
+     * @return bottom node
      */
-    protected String getKeywordValue() {
-        return keywordValueTextField.getText();
+    private Node prepareBottom() {
+        GridPane buttonPane = new GridPane();
+
+        buttonPane.setAlignment(Pos.CENTER);
+        buttonPane.setPadding(DEFAULT_PADDING);
+        buttonPane.setVgap(10);
+        buttonPane.setHgap(100);
+
+        addSegmentBtn.setPrefWidth(150);
+        delSegmentBtn.setPrefWidth(150);
+        addKeywordBtn.setPrefWidth(150);
+        delKeywordBtn.setPrefWidth(150);
+
+        addSegmentBtn.setOnAction(actionEvent -> {
+            String input = showDialog("Input Dialog", "Add Segment",
+                    "Please insert segment title");
+
+            if (input == null) {
+                return;
+            }
+
+            if (segmentMap.containsKey(input)) {
+                return;
+            }
+
+            segmentListView.getItems().add(input);
+            segmentMap.put(input, new ArrayList<>());
+        });
+
+        delSegmentBtn.setOnAction(actionEvent -> {
+            String selectedItem = segmentListView.getSelectionModel().getSelectedItem();
+
+            if (selectedItem != null) {
+                segmentListView.getItems().remove(selectedItem);
+                segmentMap.remove(selectedItem);
+                keywordListView.getItems().clear();
+            }
+        });
+
+        addKeywordBtn.setOnAction(actionEvent -> {
+            String selectedSegment = segmentListView.getSelectionModel().getSelectedItem();
+            if (selectedSegment == null) {
+                return;
+            }
+
+            String input = showDialog("Input Dialog", "Add Keyword",
+                    "Please insert keyword value");
+
+            if (input == null) {
+                return;
+            }
+
+            List<String> segmentKeywordList = segmentMap.get(selectedSegment);
+
+            if (segmentKeywordList.contains(input)) {
+                return;
+            }
+
+            segmentKeywordList.add(input);
+            keywordListView.getItems().add(input);
+        });
+
+        delKeywordBtn.setOnAction(actionEvent -> {
+            String selectedKeyword = keywordListView.getSelectionModel().getSelectedItem();
+
+            if (selectedKeyword == null) {
+                return;
+            }
+
+            String selectedSegment = segmentListView.getSelectionModel().getSelectedItem();
+
+            keywordListView.getItems().remove(selectedKeyword);
+            segmentMap.get(selectedSegment).remove(selectedKeyword);
+        });
+
+        buttonPane.add(addSegmentBtn, 0, 0);
+        buttonPane.add(delSegmentBtn, 0, 1);
+        buttonPane.add(addKeywordBtn, 1, 0);
+        buttonPane.add(delKeywordBtn, 1, 1);
+
+        return buttonPane;
+    }
+
+    /**
+     * Shows an input dialog
+     *
+     * @param title       dialog title
+     * @param header      dialog header
+     * @param contentText content
+     * @return input value or null if user cancelled dialog
+     */
+    private String showDialog(String title, String header, String contentText) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+        dialog.setContentText(contentText);
+
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            return result.get().trim();
+        }
+
+        return null;
     }
 }

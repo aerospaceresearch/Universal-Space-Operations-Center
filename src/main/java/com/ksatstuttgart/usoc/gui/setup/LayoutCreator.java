@@ -5,8 +5,6 @@ import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.USOCPane;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -207,24 +205,19 @@ public class LayoutCreator extends VBox {
 
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setEditable(false);
-        treeView.getSelectionModel().selectedItemProperty()
-                .addListener(new ChangeListener<TreeItem<String>>() {
-                    @Override
-                    public void changed(ObservableValue<? extends TreeItem<String>> observableValue,
-                                        TreeItem<String> oldValue, TreeItem<String> newValue) {
+        treeView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 
-                        if (oldValue != null) {
-                            Node oldNode = componentsMap.get(oldValue.getValue());
-                            middleLayout.getChildren().remove(oldNode);
-                        }
+            if (oldValue != null) {
+                Node oldNode = componentsMap.get(oldValue.getValue());
+                middleLayout.getChildren().remove(oldNode);
+            }
 
-                        Node newNode = componentsMap.get(newValue.getValue());
-                        if (newNode != null) {
-                            middleLayout.setCenter(newNode);
-                            middleLayout.setMargin(newNode, new Insets(0, 30, 0, 10));
-                        }
-                    }
-                });
+            Node newNode = componentsMap.get(newValue.getValue());
+            if (newNode != null) {
+                middleLayout.setCenter(newNode);
+                middleLayout.setMargin(newNode, new Insets(0, 30, 0, 10));
+            }
+        });
 
         treeView.setPrefSize(150, -1);
 
