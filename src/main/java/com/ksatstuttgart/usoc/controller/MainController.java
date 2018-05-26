@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -50,10 +52,13 @@ import javafx.stage.Stage;
  */
 public class MainController {
 
+    private static MainController instance;
+
     private final MessageController messageController;
 
-    private static MainController instance;
     private Stage stage;
+
+    private Properties properties;
 
     private ArrayList<DataUpdateListener> listeners;
 
@@ -66,6 +71,7 @@ public class MainController {
 
     public MainController() {
         listeners = new ArrayList<>();
+        properties = new Properties();
 
         // Loads defaultProtocol by default
         // Can be changed on runtime in the UI
@@ -88,11 +94,26 @@ public class MainController {
                 .getMessageStructure(protocol);
     }
 
+    /**
+     * Gets Configuration class
+     * @return
+     */
+    public Properties getProperties() {
+        return properties;
+    }
 
+    /**
+     * Sets a new Stage
+     * @param stage new stage
+     */
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    /**
+     * Gets current stage
+     * @return current stage
+     */
     public Stage getStage() {
         return this.stage;
     }

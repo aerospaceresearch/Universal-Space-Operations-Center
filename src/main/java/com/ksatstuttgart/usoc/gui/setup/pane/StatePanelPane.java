@@ -1,5 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -23,7 +25,7 @@ import java.util.Optional;
 /**
  * Creates and prepares the StatePanel Pane
  */
-public class StatePanelPane extends BorderPane {
+public class StatePanelPane extends BorderPane implements Parseable {
 
     /**
      * Default Node Padding
@@ -247,5 +249,10 @@ public class StatePanelPane extends BorderPane {
         }
 
         return null;
+    }
+
+    @Override
+    public void writeToPOJO(Properties pojoClass) {
+
     }
 }

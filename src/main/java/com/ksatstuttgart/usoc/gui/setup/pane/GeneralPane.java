@@ -1,5 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -17,7 +19,7 @@ import javafx.scene.layout.VBox;
 /**
  * Creates and prepares the GeneralPane
  */
-public class GeneralPane extends Pane {
+public class GeneralPane extends Pane implements Parseable {
 
     /**
      * Experiment Name Text Field
@@ -101,5 +103,24 @@ public class GeneralPane extends Pane {
         VBox generalPaneLayout = new VBox(experimentNameBox, windowSize, resizableCheckBox);
 
         getChildren().add(generalPaneLayout);
+    }
+
+    @Override
+    public void writeToPOJO(Properties pojoClass) {
+        boolean fullScreen = fullScreenCheckBox.isSelected();
+
+        pojoClass.setFullScreen(fullScreen);
+
+        if (!fullScreen) {
+            try {
+                pojoClass.setWidth(Integer.parseInt(windowWidth.getText()));
+                pojoClass.setWidth(Integer.parseInt(windowHeight.getText()));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("General: Window Size must be numerical");
+            }
+        }
+
+        pojoClass.setResizable(resizableCheckBox.isSelected());
+
     }
 }

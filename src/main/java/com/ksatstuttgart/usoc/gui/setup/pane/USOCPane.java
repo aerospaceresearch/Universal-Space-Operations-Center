@@ -1,5 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,7 +22,7 @@ import java.util.List;
 /**
  * USOC Panel Pane (Charts + GNSS View)
  */
-public class USOCPane extends BorderPane {
+public class USOCPane extends BorderPane implements Parseable {
 
     /**
      * Default Node Padding
@@ -89,7 +91,7 @@ public class USOCPane extends BorderPane {
         labelTextFieldPane.add(new Label("Chart Columns"), 0, 0);
         labelTextFieldPane.add(chartColumnsTextField, 1, 0);
         chartColumnsTextField.setPrefColumnCount(3);
-        topPane.add(labelTextFieldPane, 0, 1);
+        topPane.add(labelTextFieldPane, 2, 0);
 
         topPane.setPadding(DEFAULT_PADDING);
 
@@ -149,6 +151,11 @@ public class USOCPane extends BorderPane {
         buttonBox.setSpacing(20);
 
         setBottom(buttonBox);
+    }
+
+    @Override
+    public void writeToPOJO(Properties pojoClass) {
+
     }
 }
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.gui.setup;
+package com.ksatstuttgart.usoc.gui.setup.configuration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

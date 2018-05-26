@@ -1,6 +1,8 @@
 package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
@@ -9,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -18,9 +21,7 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -31,7 +32,7 @@ import java.util.Map;
 /**
  * The Layout Creator Window
  */
-public class LayoutCreator extends VBox {
+public class LayoutCreator extends BorderPane {
 
     /**
      * Window Title
@@ -46,7 +47,7 @@ public class LayoutCreator extends VBox {
     /**
      * Window Height
      */
-    private static final int WINDOW_HEIGHT = 520;
+    private static final int WINDOW_HEIGHT = 570;
 
     /**
      * Default Pane Border
@@ -90,12 +91,7 @@ public class LayoutCreator extends VBox {
      * Used to properly change the right panel contents
      * when a TreeItem is clicked
      */
-    private Map<String, Node> componentsMap = new HashMap<>();
-
-    /**
-     * Holds the tree view and the right side Pane
-     */
-    private BorderPane middleLayout = new BorderPane();
+    private Map<String, Parseable> componentsMap = new HashMap<>();
 
     /**
      * Creates a new instance of the Layout Creator Class
@@ -118,18 +114,15 @@ public class LayoutCreator extends VBox {
         mainStage.setResizable(false);
         mainStage.centerOnScreen();
 
-        setAlignment(Pos.CENTER_LEFT);
         setPadding(new Insets(10, 0, 10, 30));
-        setSpacing(10);
-        setVgrow(this, Priority.ALWAYS);
     }
 
     /**
      * Creates all Right Side Panes
      */
     private void createRightPanes() {
-        componentsMap.put(PROPERTIES_PANE_TITLE, new Pane());
-        componentsMap.put(PANELS_PANE_TITLE, new Pane());
+        componentsMap.put(PROPERTIES_PANE_TITLE, null);
+        componentsMap.put(PANELS_PANE_TITLE, null);
         componentsMap.put(GENERAL_PANE_TITLE, prepareGeneralPane());
         componentsMap.put(STATE_PANE_TITLE, prepareStatePane());
         componentsMap.put(USOC_PANE_TITLE, prepareUSOCPane());
@@ -143,8 +136,9 @@ public class LayoutCreator extends VBox {
         // Prepare Header
         prepareHeader();
 
-        // Prepare Left and Right Panel
-        preparePanels();
+        setLeft(prepareTreeViewPane());
+
+        prepareBottom();
     }
 
     /**
@@ -154,22 +148,27 @@ public class LayoutCreator extends VBox {
         Label headerLabel = new Label("Elements");
         headerLabel.setAlignment(Pos.CENTER_LEFT);
         headerLabel.setFont(new Font(25));
-        getChildren().add(headerLabel);
+
+        setTop(headerLabel);
+        setMargin(headerLabel, new Insets(20));
     }
 
-    /**
-     * Prepares Left and Right Panel
-     * (Tree View and right pane)
-     */
-    private void preparePanels() {
-        middleLayout = new BorderPane();
+    private void prepareBottom() {
+        Button confirmButton = new Button("Confirm");
+        confirmButton.setAlignment(Pos.CENTER);
+        confirmButton.setPrefWidth(200);
+        confirmButton.setOnAction(actionEvent -> {
+            Properties properties = MainController.getInstance().getProperties();
+            for (Parseable parseableComponent : componentsMap.values()) {
+                parseableComponent.writeToPOJO(properties);
+            }
+        });
 
-        Group treeViewPanel = prepareTreeViewPane();
+        HBox buttonBox = new HBox(confirmButton);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        middleLayout.setLeft(treeViewPanel);
-        //TODO SetGeneral properties pane as default
-
-        getChildren().add(middleLayout);
+        setBottom(buttonBox);
+        setMargin(buttonBox, new Insets(20));
     }
 
     /**
@@ -208,18 +207,17 @@ public class LayoutCreator extends VBox {
         treeView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
 
             if (oldValue != null) {
-                Node oldNode = componentsMap.get(oldValue.getValue());
-                middleLayout.getChildren().remove(oldNode);
+                setCenter(null);
             }
 
-            Node newNode = componentsMap.get(newValue.getValue());
+            Node newNode = (Node) componentsMap.get(newValue.getValue());
             if (newNode != null) {
-                middleLayout.setCenter(newNode);
-                middleLayout.setMargin(newNode, new Insets(0, 30, 0, 10));
+                setCenter(newNode);
+                setMargin(newNode, new Insets(0, 30, 0, 10));
             }
         });
 
-        treeView.setPrefSize(150, -1);
+        treeView.setMaxWidth(150);
 
         treeViewGroup.getChildren().add(treeView);
 
@@ -231,7 +229,7 @@ public class LayoutCreator extends VBox {
      *
      * @return generalPane
      */
-    private Pane prepareGeneralPane() {
+    private Parseable prepareGeneralPane() {
         GeneralPane pane = new GeneralPane();
         pane.setBorder(DEFAULT_PANE_BORDER);
 
@@ -243,7 +241,7 @@ public class LayoutCreator extends VBox {
      *
      * @return statePane
      */
-    private Pane prepareStatePane() {
+    private Parseable prepareStatePane() {
         StatePanelPane statePanelPane = new StatePanelPane();
         statePanelPane.setBorder(DEFAULT_PANE_BORDER);
 
@@ -255,7 +253,7 @@ public class LayoutCreator extends VBox {
      *
      * @return usocPane
      */
-    private BorderPane prepareUSOCPane() {
+    private Parseable prepareUSOCPane() {
         USOCPane usocPane = new USOCPane();
         usocPane.setBorder(DEFAULT_PANE_BORDER);
 
@@ -267,7 +265,7 @@ public class LayoutCreator extends VBox {
      *
      * @return logPane
      */
-    private Pane prepareLogPane() {
+    private Parseable prepareLogPane() {
         LogPane logPane = new LogPane();
         logPane.setBorder(DEFAULT_PANE_BORDER);
 

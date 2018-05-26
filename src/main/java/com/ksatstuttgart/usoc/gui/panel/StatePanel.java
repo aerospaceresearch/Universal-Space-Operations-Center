@@ -1,6 +1,6 @@
 package com.ksatstuttgart.usoc.gui.panel;
 
-import com.ksatstuttgart.usoc.gui.setup.ConfigHandler;
+import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;

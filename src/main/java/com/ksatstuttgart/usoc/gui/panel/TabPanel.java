@@ -1,7 +1,7 @@
 package com.ksatstuttgart.usoc.gui.panel;
 
 import com.ksatstuttgart.usoc.gui.controller.ChartController;
-import com.ksatstuttgart.usoc.gui.setup.ConfigHandler;
+import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
