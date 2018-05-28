@@ -1,7 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
 import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
-import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
@@ -9,7 +9,7 @@ import javafx.scene.layout.GridPane;
 /**
  * Creates and prepares the LogPanel Pane
  */
-public class LogPane extends GridPane implements Parseable {
+public class LogPane extends GridPane implements Parsable {
 
     /**
      * Pane enabled CheckBox

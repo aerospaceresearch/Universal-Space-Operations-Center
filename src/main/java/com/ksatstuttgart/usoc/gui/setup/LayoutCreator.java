@@ -2,7 +2,7 @@ package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
-import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
@@ -91,7 +91,7 @@ public class LayoutCreator extends BorderPane {
      * Used to properly change the right panel contents
      * when a TreeItem is clicked
      */
-    private Map<String, Parseable> componentsMap = new HashMap<>();
+    private Map<String, Parsable> componentsMap = new HashMap<>();
 
     /**
      * Creates a new instance of the Layout Creator Class
@@ -159,8 +159,8 @@ public class LayoutCreator extends BorderPane {
         confirmButton.setPrefWidth(200);
         confirmButton.setOnAction(actionEvent -> {
             Properties properties = MainController.getInstance().getProperties();
-            for (Parseable parseableComponent : componentsMap.values()) {
-                parseableComponent.writeToPOJO(properties);
+            for (Parsable parsableComponent : componentsMap.values()) {
+                parsableComponent.writeToPOJO(properties);
             }
         });
 
@@ -229,7 +229,7 @@ public class LayoutCreator extends BorderPane {
      *
      * @return generalPane
      */
-    private Parseable prepareGeneralPane() {
+    private Parsable prepareGeneralPane() {
         GeneralPane pane = new GeneralPane();
         pane.setBorder(DEFAULT_PANE_BORDER);
 
@@ -241,7 +241,7 @@ public class LayoutCreator extends BorderPane {
      *
      * @return statePane
      */
-    private Parseable prepareStatePane() {
+    private Parsable prepareStatePane() {
         StatePanelPane statePanelPane = new StatePanelPane();
         statePanelPane.setBorder(DEFAULT_PANE_BORDER);
 
@@ -253,7 +253,7 @@ public class LayoutCreator extends BorderPane {
      *
      * @return usocPane
      */
-    private Parseable prepareUSOCPane() {
+    private Parsable prepareUSOCPane() {
         USOCPane usocPane = new USOCPane();
         usocPane.setBorder(DEFAULT_PANE_BORDER);
 
@@ -265,7 +265,7 @@ public class LayoutCreator extends BorderPane {
      *
      * @return logPane
      */
-    private Parseable prepareLogPane() {
+    private Parsable prepareLogPane() {
         LogPane logPane = new LogPane();
         logPane.setBorder(DEFAULT_PANE_BORDER);
 

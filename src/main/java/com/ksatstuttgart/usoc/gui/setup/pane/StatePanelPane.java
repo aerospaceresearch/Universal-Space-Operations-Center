@@ -1,7 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
 import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
-import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * Creates and prepares the StatePanel Pane
  */
-public class StatePanelPane extends BorderPane implements Parseable {
+public class StatePanelPane extends BorderPane implements Parsable {
 
     /**
      * Default Node Padding

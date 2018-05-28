@@ -206,7 +206,6 @@ public class MainController {
     }
 
     private class RXListener implements SerialListener {
-
         String buffer = "";
 
         @Override

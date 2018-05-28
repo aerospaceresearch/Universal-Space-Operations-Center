@@ -1,7 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
-import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * USOC Panel Pane (Charts + GNSS View)
  */
-public class USOCPane extends BorderPane implements Parseable {
+public class USOCPane extends BorderPane implements Parsable {
 
     /**
      * Default Node Padding
@@ -118,16 +118,13 @@ public class USOCPane extends BorderPane implements Parseable {
         final Button minusButton = new Button("Remove Chart");
         minusButton.setPrefSize(150, 30);
         minusButton.setDisable(true);
-        minusButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ChartRow lastRow = chartRowList.remove(chartRowList.size() - 1);
+        minusButton.setOnAction(actionEvent -> {
+            ChartRow lastRow = chartRowList.remove(chartRowList.size() - 1);
 
-                chartBox.getChildren().remove(lastRow);
+            chartBox.getChildren().remove(lastRow);
 
-                if (chartRowList.size() == 0) {
-                    minusButton.setDisable(true);
-                }
+            if (chartRowList.size() == 0) {
+                minusButton.setDisable(true);
             }
         });
 
@@ -153,69 +150,74 @@ public class USOCPane extends BorderPane implements Parseable {
         setBottom(buttonBox);
     }
 
+    /**
+     * Writes properties to respective POJO Class
+     * @param pojoClass POJO Class to set properties
+     */
     @Override
     public void writeToPOJO(Properties pojoClass) {
 
     }
+
+    /**
+     * Represents a Chart Row (Chart Title + xLabel + yLabel)
+     */
+    private class ChartRow extends GridPane {
+
+        /**
+         * Chart Title Text Field
+         */
+        private TextField chartTitleTextField = new TextField();
+
+        /**
+         * xLabel Text Field
+         */
+        private TextField xLabelTextField = new TextField();
+
+        /**
+         * yLabel Text Field
+         */
+        private TextField yLabelTextField = new TextField();
+
+        /**
+         * Creates and prepares a ChartRow with a given index
+         *
+         * @param index position of ChartRow in the chartRowList
+         */
+        protected ChartRow(int index) {
+            setProperties();
+            prepareComponent(index);
+        }
+
+        /**
+         * Sets Component Properties
+         */
+        private void setProperties() {
+            setPadding(new Insets(5, 20, 5, 20));
+            setHgap(50);
+            setVgap(10);
+            setAlignment(Pos.CENTER);
+
+            chartTitleTextField.setPrefColumnCount(10);
+            xLabelTextField.setPrefColumnCount(5);
+            yLabelTextField.setPrefColumnCount(5);
+
+            chartTitleTextField.setPromptText("Title");
+            xLabelTextField.setPromptText("x Label");
+            yLabelTextField.setPromptText("y Label");
+        }
+
+        /**
+         * Adds Fields to Component
+         *
+         * @param index index of chartRow
+         */
+        private void prepareComponent(int index) {
+            add(new Label(String.format("Chart[%d]", index)), 0, 0);
+            add(chartTitleTextField, 1, 0);
+            add(xLabelTextField, 2, 0);
+            add(yLabelTextField, 2, 1);
+        }
+    }
 }
 
-/**
- * Represents a Chart Row (Chart Title + xLabel + yLabel)
- */
-class ChartRow extends GridPane {
-
-    /**
-     * Chart Title Text Field
-     */
-    private TextField chartTitleTextField = new TextField();
-
-    /**
-     * xLabel Text Field
-     */
-    private TextField xLabelTextField = new TextField();
-
-    /**
-     * yLabel Text Field
-     */
-    private TextField yLabelTextField = new TextField();
-
-    /**
-     * Creates and prepares a ChartRow with a given index
-     *
-     * @param index position of ChartRow in the chartRowList
-     */
-    protected ChartRow(int index) {
-        setProperties();
-        prepareComponent(index);
-    }
-
-    /**
-     * Sets Component Properties
-     */
-    private void setProperties() {
-        setPadding(new Insets(5, 20, 5, 20));
-        setHgap(50);
-        setVgap(10);
-        setAlignment(Pos.CENTER);
-
-        chartTitleTextField.setPrefColumnCount(10);
-        xLabelTextField.setPrefColumnCount(5);
-        yLabelTextField.setPrefColumnCount(5);
-
-        chartTitleTextField.setPromptText("Title");
-        xLabelTextField.setPromptText("x Label");
-        yLabelTextField.setPromptText("y Label");
-    }
-
-    /**
-     * Adds Fields to Component
-     *
-     * @param index index of chartRow
-     */
-    private void prepareComponent(int index) {
-        add(new Label(String.format("Chart[%d]", index)), 0, 0);
-        add(chartTitleTextField, 1, 0);
-        add(xLabelTextField, 2, 0);
-        add(yLabelTextField, 2, 1);
-    }
-}

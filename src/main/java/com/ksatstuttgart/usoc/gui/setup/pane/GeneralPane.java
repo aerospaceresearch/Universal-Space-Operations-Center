@@ -1,9 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
-import com.ksatstuttgart.usoc.gui.setup.configuration.Parseable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
@@ -19,7 +17,7 @@ import javafx.scene.layout.VBox;
 /**
  * Creates and prepares the GeneralPane
  */
-public class GeneralPane extends Pane implements Parseable {
+public class GeneralPane extends Pane implements Parsable {
 
     /**
      * Experiment Name Text Field
@@ -75,19 +73,16 @@ public class GeneralPane extends Pane implements Parseable {
         windowHeight.setPromptText("Height");
         windowWidth.setPrefColumnCount(5);
         windowWidth.setPromptText("Width");
-        fullScreenCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue,
-                                Boolean oldValue, Boolean newValue) {
-                if (newValue.booleanValue() == true) {
-                    windowWidth.setDisable(true);
-                    windowHeight.setDisable(true);
-                } else {
-                    windowWidth.setDisable(false);
-                    windowHeight.setDisable(false);
-                }
-            }
-        });
+        fullScreenCheckBox.selectedProperty().addListener(
+                (observableValue, oldValue, newValue) -> {
+                    if (newValue.booleanValue() == true) {
+                        windowWidth.setDisable(true);
+                        windowHeight.setDisable(true);
+                    } else {
+                        windowWidth.setDisable(false);
+                        windowHeight.setDisable(false);
+                    }
+                });
 
         Region nodeSeparator = new Region();
         nodeSeparator.setPrefWidth(150);
@@ -107,14 +102,14 @@ public class GeneralPane extends Pane implements Parseable {
 
     @Override
     public void writeToPOJO(Properties pojoClass) {
-        boolean fullScreen = fullScreenCheckBox.isSelected();
+        boolean fullScreenSelected = fullScreenCheckBox.isSelected();
 
-        pojoClass.setFullScreen(fullScreen);
+        pojoClass.setFullScreen(fullScreenSelected);
 
-        if (!fullScreen) {
+        if (!fullScreenSelected) {
             try {
                 pojoClass.setWidth(Integer.parseInt(windowWidth.getText()));
-                pojoClass.setWidth(Integer.parseInt(windowHeight.getText()));
+                pojoClass.setHeight(Integer.parseInt(windowHeight.getText()));
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("General: Window Size must be numerical");
             }
