@@ -115,26 +115,11 @@ public class USOCPane extends BorderPane implements Parsable {
      * Prepares Bottom Region of the BorderPane
      */
     private void prepareBot() {
-        final Button minusButton = new Button("Remove Chart");
-        minusButton.setPrefSize(150, 30);
-        minusButton.setDisable(true);
-        minusButton.setOnAction(actionEvent -> {
-            ChartRow lastRow = chartRowList.remove(chartRowList.size() - 1);
-
-            chartBox.getChildren().remove(lastRow);
-
-            if (chartRowList.size() == 0) {
-                minusButton.setDisable(true);
-            }
-        });
-
         Button plusButton = new Button("Add Chart");
         plusButton.setPrefSize(150, 30);
         plusButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                minusButton.setDisable(false);
-
                 ChartRow newRow = new ChartRow(chartRowList.size());
 
                 chartBox.getChildren().add(newRow);
@@ -142,7 +127,7 @@ public class USOCPane extends BorderPane implements Parsable {
             }
         });
 
-        HBox buttonBox = new HBox(plusButton, minusButton);
+        HBox buttonBox = new HBox(plusButton);
         buttonBox.setPadding(DEFAULT_PADDING);
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
         buttonBox.setSpacing(20);
@@ -164,6 +149,8 @@ public class USOCPane extends BorderPane implements Parsable {
      */
     private class ChartRow extends GridPane {
 
+        private Label chartLabel;
+
         /**
          * Chart Title Text Field
          */
@@ -178,6 +165,11 @@ public class USOCPane extends BorderPane implements Parsable {
          * yLabel Text Field
          */
         private TextField yLabelTextField = new TextField();
+
+        /**
+         * Deletes Chart Row from the grid
+         */
+        private Button deleteButton = new Button("Delete");
 
         /**
          * Creates and prepares a ChartRow with a given index
@@ -205,6 +197,12 @@ public class USOCPane extends BorderPane implements Parsable {
             chartTitleTextField.setPromptText("Title");
             xLabelTextField.setPromptText("x Label");
             yLabelTextField.setPromptText("y Label");
+
+            deleteButton.setOnAction(actionEvent -> {
+                chartRowList.remove(this);
+                chartBox.getChildren().remove(this);
+                updateChartNumbers();
+            });
         }
 
         /**
@@ -213,10 +211,30 @@ public class USOCPane extends BorderPane implements Parsable {
          * @param index index of chartRow
          */
         private void prepareComponent(int index) {
-            add(new Label(String.format("Chart[%d]", index)), 0, 0);
+            this.chartLabel = new Label(String.format("Chart[%d]", index));
+            add(chartLabel, 0, 0);
+            add(deleteButton, 1, 1);
             add(chartTitleTextField, 1, 0);
             add(xLabelTextField, 2, 0);
             add(yLabelTextField, 2, 1);
+        }
+
+        /**
+         * Updates all chart numbers
+         */
+        private void updateChartNumbers() {
+            for (int i = 0; i < chartRowList.size(); i++) {
+                ChartRow row = chartRowList.get(i);
+                row.updateLabel(String.format("Chart[%d]", i));
+            }
+        }
+
+        /**
+         * Updates Chart Label
+         * @param text new label contents
+         */
+        private void updateLabel(String text) {
+            chartLabel.setText(text);
         }
     }
 }
