@@ -1,7 +1,9 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
-import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.USOCPaneProperties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -137,11 +139,32 @@ public class USOCPane extends BorderPane implements Parsable {
 
     /**
      * Writes properties to respective POJO Class
+     *
      * @param pojoClass POJO Class to set properties
      */
     @Override
-    public void writeToPOJO(Properties pojoClass) {
+    public void writeToPOJO(GeneralProperties pojoClass) {
+        USOCPaneProperties properties = pojoClass.getUsocPaneProperties();
 
+        properties.setEnabled(enabledCheckBox.isSelected());
+        properties.setGnssEnabled(gnssCheckBox.isSelected());
+        try {
+            properties.setChartColumns(Integer.parseInt(chartColumnsTextField.getText()));
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Chart columns value must be numeric.");
+        }
+
+        List<Chart> charts = new ArrayList<>();
+        for (int i = 0; i < chartRowList.size(); i++) {
+            ChartRow chartRow = chartRowList.get(i);
+
+            Chart chart = new Chart(chartRow.getChartTitle(),
+                    chartRow.getXLabel(), chartRow.getYLabel());
+
+            charts.add(chart);
+        }
+
+        properties.setCharts(charts);
     }
 
     /**
@@ -182,7 +205,7 @@ public class USOCPane extends BorderPane implements Parsable {
         }
 
         /**
-         * Sets Component Properties
+         * Sets Component GeneralProperties
          */
         private void setProperties() {
             setPadding(new Insets(5, 20, 5, 20));
@@ -231,10 +254,27 @@ public class USOCPane extends BorderPane implements Parsable {
 
         /**
          * Updates Chart Label
+         *
          * @param text new label contents
          */
         private void updateLabel(String text) {
             chartLabel.setText(text);
+        }
+
+        /**
+         * Retrieves chart title text field value
+         * @return chart title
+         */
+        private String getChartTitle() {
+            return chartTitleTextField.getText();
+        }
+
+        private String getXLabel() {
+            return xLabelTextField.getText();
+        }
+
+        private String getYLabel() {
+            return yLabelTextField.getText();
         }
     }
 }

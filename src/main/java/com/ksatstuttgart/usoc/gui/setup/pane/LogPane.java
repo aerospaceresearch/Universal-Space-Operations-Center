@@ -1,6 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.LogPaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
@@ -45,7 +46,7 @@ public class LogPane extends GridPane implements Parsable {
     }
 
     /**
-     * Sets Pane Properties
+     * Sets Pane GeneralProperties
      */
     private void setProperties() {
         setPadding(DEFAULT_PADDING);
@@ -63,7 +64,11 @@ public class LogPane extends GridPane implements Parsable {
     }
 
     @Override
-    public void writeToPOJO(Properties pojoClass) {
+    public void writeToPOJO(GeneralProperties pojoClass) {
+        LogPaneProperties properties = pojoClass.getLogPaneProperties();
 
+        properties.setEnabled(enabledCheckBox.isSelected());
+        properties.setSerialPanelEnabled(serialPanelCheckBox.isSelected());
+        properties.setIridiumPanelEnabled(iridiumPanelCheckBox.isSelected());
     }
 }

@@ -42,7 +42,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -58,7 +58,7 @@ public class MainController {
 
     private Stage stage;
 
-    private Properties properties;
+    private GeneralProperties generalProperties;
 
     private ArrayList<DataUpdateListener> listeners;
 
@@ -71,7 +71,7 @@ public class MainController {
 
     public MainController() {
         listeners = new ArrayList<>();
-        properties = new Properties();
+        generalProperties = new GeneralProperties();
 
         // Loads defaultProtocol by default
         // Can be changed on runtime in the UI
@@ -98,8 +98,8 @@ public class MainController {
      * Gets Configuration class
      * @return
      */
-    public Properties getProperties() {
-        return properties;
+    public GeneralProperties getGeneralProperties() {
+        return generalProperties;
     }
 
     /**

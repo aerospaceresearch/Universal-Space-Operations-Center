@@ -1,9 +1,9 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration;
 
 /**
- * POJO class for the General Properties
+ * POJO class for the General GeneralProperties
  */
-public class Properties {
+public class GeneralProperties {
 
     private String layoutName;
 
@@ -20,6 +20,12 @@ public class Properties {
     private USOCPaneProperties usocPaneProperties;
 
     private LogPaneProperties logPaneProperties;
+
+    public GeneralProperties() {
+        statePaneProperties = new StatePaneProperties();
+        usocPaneProperties = new USOCPaneProperties();
+        logPaneProperties = new LogPaneProperties();
+    }
 
     public String getLayoutName() {
         return layoutName;

@@ -1,7 +1,9 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
+import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -252,7 +254,20 @@ public class StatePanelPane extends BorderPane implements Parsable {
     }
 
     @Override
-    public void writeToPOJO(Properties pojoClass) {
+    public void writeToPOJO(GeneralProperties pojoClass) {
+        StatePaneProperties properties = pojoClass.getStatePaneProperties();
 
+        properties.setEnabled(enabledCheckBox.isSelected());
+
+        List<Segment> segments = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : segmentMap.entrySet()) {
+            String segmentName = entry.getKey();
+            List<String> keywords = entry.getValue();
+
+            Segment segment = new Segment(segmentName, keywords);
+            segments.add(segment);
+        }
+
+        properties.setSegments(segments);
     }
 }

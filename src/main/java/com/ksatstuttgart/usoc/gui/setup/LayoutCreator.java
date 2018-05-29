@@ -1,7 +1,8 @@
 package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
-import com.ksatstuttgart.usoc.gui.setup.configuration.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
+import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
@@ -11,8 +12,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Border;
@@ -57,9 +60,9 @@ public class LayoutCreator extends BorderPane {
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * Properties Pane Title
+     * GeneralProperties Pane Title
      */
-    private static final String PROPERTIES_PANE_TITLE = "Properties";
+    private static final String PROPERTIES_PANE_TITLE = "GeneralProperties";
 
     /**
      * General Pane Title
@@ -103,7 +106,7 @@ public class LayoutCreator extends BorderPane {
     }
 
     /**
-     * Sets Scene/Window Properties
+     * Sets Scene/Window GeneralProperties
      */
     private void setProperties() {
         Stage mainStage = MainController.getInstance().getStage();
@@ -158,10 +161,22 @@ public class LayoutCreator extends BorderPane {
         confirmButton.setAlignment(Pos.CENTER);
         confirmButton.setPrefWidth(200);
         confirmButton.setOnAction(actionEvent -> {
-            Properties properties = MainController.getInstance().getProperties();
+            GeneralProperties generalProperties = MainController.getInstance().getGeneralProperties();
+
             for (Parsable parsableComponent : componentsMap.values()) {
-                parsableComponent.writeToPOJO(properties);
+                if (parsableComponent != null) {
+                    parsableComponent.writeToPOJO(generalProperties);
+                }
             }
+
+            ConfigHandler.writeConfigurationFile();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Layout Saved");
+            alert.setHeaderText(null);
+            alert.setContentText("Your custom layout has been saved!");
+
+            alert.showAndWait();
         });
 
         HBox buttonBox = new HBox(confirmButton);
@@ -179,7 +194,7 @@ public class LayoutCreator extends BorderPane {
     private Group prepareTreeViewPane() {
         Group treeViewGroup = new Group();
 
-        // Root Item (Properties)
+        // Root Item (GeneralProperties)
         TreeItem<String> rootItem = new TreeItem<>(PROPERTIES_PANE_TITLE);
 
         // General Item

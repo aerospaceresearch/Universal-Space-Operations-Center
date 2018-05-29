@@ -23,6 +23,11 @@
  */
 package com.ksatstuttgart.usoc.gui.setup.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ksatstuttgart.usoc.controller.MainController;
+
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -37,6 +42,9 @@ import java.util.Properties;
  * @version 2.0
  */
 public class ConfigHandler {
+
+    private static final String LAYOUT_ROOT_FOLDER_PATH =
+            "layouts/";
 
     /**
      * The number of elements of the transmitted keyword is counted according to the USOC syntax in the associated
@@ -61,7 +69,7 @@ public class ConfigHandler {
 
      
     /**
-     * All values ​​of the configuration file are read out and returned as a Java Properties structure.
+     * All values ​​of the configuration file are read out and returned as a Java GeneralProperties structure.
      *
      * @param path
      * @return
@@ -137,5 +145,25 @@ public class ConfigHandler {
         }
 
         return syntaxCheck;
+    }
+
+    public static void writeConfigurationFile() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        GeneralProperties pojo = MainController.getInstance().getGeneralProperties();
+
+        String layoutName = pojo.getLayoutName();
+
+        // TODO Validate layout name
+
+        String filePath = LAYOUT_ROOT_FOLDER_PATH + layoutName + ".json";
+
+        try {
+            mapper.writeValue(new File(filePath), pojo);
+        } catch (IOException e) {
+            //TODO implement logger
+            e.printStackTrace();
+        }
     }
 }

@@ -9,10 +9,10 @@
 
     <name>Universal-Space-Operations-Center</name>
 
-    <properties>
+    <generalProperties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>com.ksatstuttgart.usoc.GroundSegment</mainClass>
-    </properties>
+    </generalProperties>
 
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
