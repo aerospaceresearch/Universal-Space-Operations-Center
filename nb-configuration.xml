@@ -6,14 +6,14 @@ The configuration is intended to be shared among all the users of project and
 therefore it is assumed to be part of version control checkout.
 Without this configuration present, some functionality in the IDE may be limited or fail altogether.
 -->
-    <generalProperties xmlns="http://www.netbeans.org/ns/maven-generalProperties-data/1">
+    <propertiesConfiguration xmlns="http://www.netbeans.org/ns/maven-propertiesConfiguration-data/1">
         <!--
-GeneralProperties that influence various parts of the IDE, especially code formatting and the like.
-You can copy and paste the single generalProperties, into the pom.xml file and the IDE will pick them up.
+PropertiesConfiguration that influence various parts of the IDE, especially code formatting and the like.
+You can copy and paste the single propertiesConfiguration, into the pom.xml file and the IDE will pick them up.
 That way multiple projects can share the same settings (useful for formatting rules for example).
 Any value defined here will override the pom.xml file value but is only applicable to the current project.
 -->
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
         <netbeans.hint.license>mit</netbeans.hint.license>
-    </generalProperties>
+    </propertiesConfiguration>
 </project-shared-configuration>

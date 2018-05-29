@@ -2,12 +2,16 @@ package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
-import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.USOCPane;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -15,7 +19,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Border;
@@ -27,8 +30,11 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,9 +66,9 @@ public class LayoutCreator extends BorderPane {
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * GeneralProperties Pane Title
+     * PropertiesConfiguration Pane Title
      */
-    private static final String PROPERTIES_PANE_TITLE = "GeneralProperties";
+    private static final String PROPERTIES_PANE_TITLE = "Properties";
 
     /**
      * General Pane Title
@@ -106,10 +112,12 @@ public class LayoutCreator extends BorderPane {
     }
 
     /**
-     * Sets Scene/Window GeneralProperties
+     * Sets Scene/Window PropertiesConfiguration
      */
     private void setProperties() {
         Stage mainStage = MainController.getInstance().getStage();
+
+        loadProtocolFile(mainStage);
 
         mainStage.setTitle(SCENE_TITLE);
         mainStage.setMinWidth(WINDOW_WIDTH);
@@ -121,7 +129,21 @@ public class LayoutCreator extends BorderPane {
     }
 
     /**
+     * Shows a file chooser and loads the selected protocol
+     * @param stage current stage
+     */
+    private void loadProtocolFile(Stage stage) {
+        // Load protocol beforehand
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Protocol File");
+        File protocolFile = fileChooser.showOpenDialog(stage);
+
+        MainController.getInstance().loadProtocol(protocolFile.getPath());
+    }
+
+    /**
      * Creates all Right Side Panes
+
      */
     private void createRightPanes() {
         componentsMap.put(PROPERTIES_PANE_TITLE, null);
@@ -156,20 +178,34 @@ public class LayoutCreator extends BorderPane {
         setMargin(headerLabel, new Insets(20));
     }
 
+    /**
+     * Prepares Bottom Component
+     */
     private void prepareBottom() {
         Button confirmButton = new Button("Confirm");
         confirmButton.setAlignment(Pos.CENTER);
         confirmButton.setPrefWidth(200);
         confirmButton.setOnAction(actionEvent -> {
-            GeneralProperties generalProperties = MainController.getInstance().getGeneralProperties();
+            PropertiesConfiguration propertiesConfiguration
+                    = MainController.getInstance().getPropertiesConfiguration();
 
-            for (Parsable parsableComponent : componentsMap.values()) {
-                if (parsableComponent != null) {
-                    parsableComponent.writeToPOJO(generalProperties);
+            try {
+                for (Parsable parsableComponent : componentsMap.values()) {
+                    if (parsableComponent != null) {
+                        parsableComponent.writeToPOJO(propertiesConfiguration);
+                    }
                 }
-            }
 
-            ConfigHandler.writeConfigurationFile();
+                ConfigHandler.writeConfigurationFile();
+            } catch (IOException | IllegalArgumentException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error creating layout");
+                alert.setHeaderText(null);
+                alert.setContentText(e.getMessage());
+
+                alert.showAndWait();
+                return;
+            }
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Layout Saved");
@@ -177,6 +213,8 @@ public class LayoutCreator extends BorderPane {
             alert.setContentText("Your custom layout has been saved!");
 
             alert.showAndWait();
+
+            MainController.getInstance().getStage().setScene(GuiBuilder.createMainScene());
         });
 
         HBox buttonBox = new HBox(confirmButton);
@@ -194,7 +232,7 @@ public class LayoutCreator extends BorderPane {
     private Group prepareTreeViewPane() {
         Group treeViewGroup = new Group();
 
-        // Root Item (GeneralProperties)
+        // Root Item (PropertiesConfiguration)
         TreeItem<String> rootItem = new TreeItem<>(PROPERTIES_PANE_TITLE);
 
         // General Item
@@ -219,18 +257,19 @@ public class LayoutCreator extends BorderPane {
 
         TreeView<String> treeView = new TreeView<>(rootItem);
         treeView.setEditable(false);
-        treeView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+        treeView.getSelectionModel().selectedItemProperty()
+                .addListener((observableValue, oldValue, newValue) -> {
 
-            if (oldValue != null) {
-                setCenter(null);
-            }
+                    if (oldValue != null) {
+                        LayoutCreator.this.setCenter(null);
+                    }
 
-            Node newNode = (Node) componentsMap.get(newValue.getValue());
-            if (newNode != null) {
-                setCenter(newNode);
-                setMargin(newNode, new Insets(0, 30, 0, 10));
-            }
-        });
+                    Node newNode = (Node) componentsMap.get(newValue.getValue());
+                    if (newNode != null) {
+                        LayoutCreator.this.setCenter(newNode);
+                        setMargin(newNode, new Insets(0, 30, 0, 10));
+                    }
+                });
 
         treeView.setMaxWidth(150);
 

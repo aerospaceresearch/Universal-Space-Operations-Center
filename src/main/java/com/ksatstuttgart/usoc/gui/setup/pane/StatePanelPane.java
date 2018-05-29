@@ -1,10 +1,15 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
+import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
 import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -109,19 +114,25 @@ public class StatePanelPane extends BorderPane implements Parsable {
         centerPane.setHgap(70);
 
         // Segment List View
-        segmentListView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newValue) -> {
+        segmentListView.getSelectionModel().selectedItemProperty()
+                .addListener(new ChangeListener<String>() {
+                    @Override
+                    public void changed(ObservableValue<? extends String> observableValue,
+                                        String oldValue, String newValue) {
 
-            keywordListView.getItems().clear();
-            if (newValue == null) {
-                return;
-            }
+                        keywordListView.getItems().clear();
+                        if (newValue == null) {
+                            return;
+                        }
 
-            List<String> newKeywordList = segmentMap.get(newValue);
+                        List<String> newKeywordList = segmentMap.get(newValue);
 
-            keywordListView.getItems().addAll(newKeywordList);
-        });
+                        keywordListView.getItems().addAll(newKeywordList);
+                    }
+                });
         segmentListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        segmentListView.setItems(FXCollections.observableArrayList());
+        ObservableList<String> segmentOservableList = FXCollections.observableArrayList();
+        segmentListView.setItems(segmentOservableList);
         segmentListView.setMaxHeight(170);
         segmentListView.setEditable(false);
 
@@ -130,7 +141,8 @@ public class StatePanelPane extends BorderPane implements Parsable {
 
         // Keyword List View
         keywordListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        keywordListView.setItems(FXCollections.observableArrayList());
+        ObservableList<String> keywordOservableList = FXCollections.observableArrayList();
+        keywordListView.setItems(keywordOservableList);
         keywordListView.setMaxHeight(170);
 
         VBox keywordBox = new VBox(new Label("Keywords"), keywordListView);
@@ -161,7 +173,7 @@ public class StatePanelPane extends BorderPane implements Parsable {
         delKeywordBtn.setPrefWidth(150);
 
         addSegmentBtn.setOnAction(actionEvent -> {
-            String input = showDialog("Input Dialog", "Add Segment",
+            String input = StatePanelPane.this.showDialog("Input Dialog", "Add Segment",
                     "Please insert segment title");
 
             if (input == null) {
@@ -173,7 +185,7 @@ public class StatePanelPane extends BorderPane implements Parsable {
             }
 
             segmentListView.getItems().add(input);
-            segmentMap.put(input, new ArrayList<>());
+            segmentMap.put(input, new ArrayList<String>());
         });
 
         delSegmentBtn.setOnAction(actionEvent -> {
@@ -195,7 +207,7 @@ public class StatePanelPane extends BorderPane implements Parsable {
             String input = showDialog("Input Dialog", "Add Keyword",
                     "Please insert keyword value");
 
-            if (input == null) {
+            if (input == null || input.isEmpty()) {
                 return;
             }
 
@@ -254,7 +266,7 @@ public class StatePanelPane extends BorderPane implements Parsable {
     }
 
     @Override
-    public void writeToPOJO(GeneralProperties pojoClass) {
+    public void writeToPOJO(PropertiesConfiguration pojoClass) {
         StatePaneProperties properties = pojoClass.getStatePaneProperties();
 
         properties.setEnabled(enabledCheckBox.isSelected());

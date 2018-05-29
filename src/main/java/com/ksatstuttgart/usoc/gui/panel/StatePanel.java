@@ -1,6 +1,8 @@
 package com.ksatstuttgart.usoc.gui.panel;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
+import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -9,64 +11,54 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.Properties;
+import java.util.List;
 
 /**
  * State Panel
  */
 public class StatePanel extends ScrollPane {
 
-    /**
-     * Config file relative path
-     */
-    private static final String CONFIG_PATH = "config/config.properties";
+    private StatePaneProperties properties;
 
     /**
      * Creates an instance of the State Panel
-     * @param config configuration file containing all GUI properties
      */
-    public StatePanel(Properties config) {
-        //TODO Read JSON File and set needed parameters and values
-        prepareComponents(config);
+    public StatePanel() {
+        properties = MainController.getInstance()
+                .getPropertiesConfiguration().getStatePaneProperties();
+        prepareComponents();
     }
 
     /**
      * Sets up components and prepares layouts
-     * @param config configuration file containing all GUI properties
      */
-    private void prepareComponents(Properties config) {
+    private void prepareComponents() {
         // All Segment Panes should be inside stateBox
         VBox stateBox = new VBox();
         stateBox.setSpacing(5);
 
-        // Get number of segments from config
-        final int segmentCount =
-                ConfigHandler.countItems("segmentTitle", CONFIG_PATH);
 
         // Adds each segment to statePane
-        for (int i = 0; i < segmentCount; i++) {
+        for (Segment segment : properties.getSegments()) {
             // Gets current segment title
-            final String segmentTitle =
-                    config.getProperty("segmentTitle[" + (i + 1) + "]");
+            final String segmentTitle = segment.getName();
 
             // Gets all keywords for current segment
             GridPane labelGrid = new GridPane();
-            final int labelCountInSegment =
-                    ConfigHandler.countItems("keyword[" + (i + 1) + "]", CONFIG_PATH);
+            List<String> keywords = segment.getKeywords();
 
             // Keeps track of each segment's row and col
             // Needs to start at one because GridPane.add() starts at 1 and not 0
             int currentRow = 1;
             int currentCol = 1;
 
-            for (int j = 0; j < labelCountInSegment; j++) {
+            for (String keyword : keywords) {
                 if (currentCol == 5) {
                     currentRow++;
                     currentCol = 1;
                 }
 
-                Label label =
-                        new Label(config.getProperty("keyword[" + (i + 1) + "][" + (j + 1) + "]"));
+                Label label = new Label(keyword);
                 GridPane.setHgrow(label, Priority.SOMETIMES);
                 GridPane.setVgrow(label, Priority.SOMETIMES);
                 GridPane.setHalignment(label, HPos.CENTER);

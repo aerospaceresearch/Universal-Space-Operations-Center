@@ -1,7 +1,9 @@
 package com.ksatstuttgart.usoc.gui.panel;
 
+import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.controller.ChartController;
-import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
+import com.ksatstuttgart.usoc.gui.setup.configuration.USOCPaneProperties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
 import com.ksatstuttgart.usoc.gui.worldwind.GNSSPanel;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -11,32 +13,29 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
-import java.util.Properties;
-
 /**
  * Tab Panel
  */
-public class TabPanel extends TabPane {
+public class USOCPanel extends TabPane {
 
     /**
-     * Config file relative path
+     * Properties class
      */
-    private static final String CONFIG_PATH = "config/config.properties";
+    private USOCPaneProperties properties;
 
     /**
      * Creates an instance of the Tab Panel
-     * @param config configuration file containing all GUI properties
      */
-    public TabPanel(Properties config) {
-        //TODO Read JSON File and set needed parameters and values
-        prepareComponents(config);
+    public USOCPanel() {
+        properties = MainController.getInstance()
+                .getPropertiesConfiguration().getUsocPaneProperties();
+        prepareComponents();
     }
 
     /**
      * Sets up components and prepares layouts
-     * @param config configuration file containing all GUI properties
      */
-    private void prepareComponents(Properties config) {
+    private void prepareComponents() {
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
         minWidth(320);
 
@@ -49,22 +48,22 @@ public class TabPanel extends TabPane {
         GridPane chartGrid = new GridPane();
         int column = 0;
         int row = 0;
-        int maxColumns = Integer.parseInt(config.getProperty("chartColumns"));
+        int maxColumns = properties.getChartColumns();
         NumberAxis xAxis = new NumberAxis();
         NumberAxis yAxis = new NumberAxis();
         ChartController chartController = new ChartController();
 
         // Setting
-        for (int i = 0; i < ConfigHandler.countItems("chartTitle", CONFIG_PATH); i++) {
+        for (Chart chart : properties.getCharts()) {
             //
-            LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
-            chart.setTitle(config.getProperty("chartTitle[" + (i+1) + "]"));
-            chartController.addChart(chart);
-            chartGrid.add(chart, column, row);
+            LineChart<Number, Number> lineChart = new LineChart<>(xAxis, yAxis);
+            lineChart.setTitle(chart.getTitle());
+            chartController.addChart(lineChart);
+            chartGrid.add(lineChart, column, row);
 
             //
             column++;
-            if (column > (maxColumns-1)) {
+            if (column > (maxColumns - 1)) {
                 row++;
                 column = 0;
             }
@@ -75,11 +74,11 @@ public class TabPanel extends TabPane {
         Tab chartTab = new Tab();
         chartTab.setText("Charts");
         chartTab.setContent(chartScroll);
-        
+
         getTabs().add(chartTab);
 
         //TODO: Doesn't work yet with JavaFX -> doesn't close on window close
-        if (Boolean.parseBoolean(config.getProperty("GNSS3dView"))) {
+        if (properties.isGnssEnabled()) {
             Tab gnssTab = new Tab();
             StackPane gnssStack = new StackPane();
             GNSSPanel.addGNSSPaneltoStackPane(gnssStack);

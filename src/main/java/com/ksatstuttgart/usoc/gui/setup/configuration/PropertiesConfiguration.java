@@ -1,11 +1,11 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration;
 
 /**
- * POJO class for the General GeneralProperties
+ * POJO class for the General PropertiesConfiguration
  */
-public class GeneralProperties {
+public class PropertiesConfiguration {
 
-    private String layoutName;
+    private String experimentName;
 
     private boolean fullScreen;
 
@@ -21,18 +21,18 @@ public class GeneralProperties {
 
     private LogPaneProperties logPaneProperties;
 
-    public GeneralProperties() {
+    public PropertiesConfiguration() {
         statePaneProperties = new StatePaneProperties();
         usocPaneProperties = new USOCPaneProperties();
         logPaneProperties = new LogPaneProperties();
     }
 
-    public String getLayoutName() {
-        return layoutName;
+    public String getExperimentName() {
+        return experimentName;
     }
 
-    public void setLayoutName(String layoutName) {
-        this.layoutName = layoutName;
+    public void setExperimentName(String experimentName) {
+        this.experimentName = experimentName;
     }
 
     public boolean isFullScreen() {

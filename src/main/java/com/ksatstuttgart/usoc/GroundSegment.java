@@ -48,14 +48,8 @@ public class GroundSegment extends Application {
      */
     @Override
     public void start(Stage stage) {
-
         //Setting the stage for the MainController
         MainController.getInstance().setStage(stage);
-
-        /*stage.setScene(GuiBuilder.createGUIFromConfig());
-        stage.setMinWidth(700);
-        stage.setWidth(900);
-        stage.setMinHeight(500);*/
 
         stage.setScene(GuiBuilder.createInitialWindow());
         stage.show();

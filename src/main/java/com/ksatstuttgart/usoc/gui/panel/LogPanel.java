@@ -1,8 +1,8 @@
 package com.ksatstuttgart.usoc.gui.panel;
 
+import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.USOCTabPane;
-
-import java.util.Properties;
+import com.ksatstuttgart.usoc.gui.setup.configuration.LogPaneProperties;
 
 /**
  * Log Panel
@@ -10,27 +10,32 @@ import java.util.Properties;
 public class LogPanel extends USOCTabPane {
 
     /**
-     * Creates an instance of the Log Panel
-     * @param config configuration file containing all GUI properties
+     * Properties Class
      */
-    public LogPanel(Properties config) {
-        //TODO Read JSON File and set needed parameters and values
-        prepareComponents(config);
+    private LogPaneProperties properties;
+
+    /**
+     * Creates an instance of the Log Panel
+     */
+    public LogPanel() {
+        properties = MainController.getInstance()
+                .getPropertiesConfiguration().getLogPaneProperties();
+        prepareComponents();
     }
 
     /**
      * Sets up components and prepares layouts
-     * @param config configuration file containing all GUI properties
      */
-    private void prepareComponents(Properties config) {
-        if (Boolean.parseBoolean(config.getProperty("serialPanel"))) {
+    private void prepareComponents() {
+        if (properties.isSerialPanelEnabled()) {
             addFXMLTab("fxml/SerialPanel.fxml", "Serial Connection");
         }
 
         //TODO: should be named something like Mail
-        if (Boolean.parseBoolean(config.getProperty("iridiumPanel"))) {
+        if (properties.isIridiumPanelEnabled()) {
             addFXMLTab("fxml/IridiumPanel.fxml", "Iridium Connection");
         }
+
         minWidth(200);
     }
 }

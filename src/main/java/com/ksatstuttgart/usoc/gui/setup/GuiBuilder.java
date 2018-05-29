@@ -26,14 +26,13 @@ package com.ksatstuttgart.usoc.gui.setup;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.panel.LogPanel;
 import com.ksatstuttgart.usoc.gui.panel.StatePanel;
-import com.ksatstuttgart.usoc.gui.panel.TabPanel;
+import com.ksatstuttgart.usoc.gui.panel.USOCPanel;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
+import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -64,25 +63,20 @@ import javafx.scene.layout.VBox;
  * @version 2.0
  */
 public class GuiBuilder {
-
-    /**
-     * Config file relative path
-     */
-    private static final String CONFIG_PATH = "config/config.properties";
     
     /**
-     * Creates the main scene that will be added
-     * to the Stage
+     * Creates the main application scene
      * @return Scene
      */
-    public static Scene createGUIFromConfig() {
+    public static Scene createMainScene() {
         // Loads the configuration file
-        Properties config = ConfigHandler.getAllValues(CONFIG_PATH);
+        PropertiesConfiguration properties = MainController.getInstance().getPropertiesConfiguration();
 
         // Sets experiment title as Stage title
         MainController.getInstance().getStage()
-                .setTitle(config.getProperty("experimentName"));
+                .setTitle(properties.getExperimentName());
 
+        //TODO set either fullscreen or fixed size
         // Sets the BorderPane of the MainFrame
         BorderPane mainBorder = new BorderPane();
         mainBorder.setPrefSize(700,500);
@@ -97,17 +91,17 @@ public class GuiBuilder {
         );
 
         // Create the State Panel
-        if (Boolean.parseBoolean(config.getProperty("statePanel"))) {
-            ScrollPane statePanel = new StatePanel(config);
+        if (properties.getStatePaneProperties().isEnabled()) {
+            ScrollPane statePanel = new StatePanel();
             mainFrameSplitPane.getItems().add(statePanel);
         }
 
         // Create the Charts Panel
-        // The TabPanel (Contains Charts and GNSS)
-        mainFrameSplitPane.getItems().add(new TabPanel(config));
+        // The USOCPanel (Contains Charts and GNSS)
+        mainFrameSplitPane.getItems().add(new USOCPanel());
 
         // Create the Log Panel
-        USOCTabPane logPanel = new LogPanel(config);
+        USOCTabPane logPanel = new LogPanel();
         // if not empty add the log view to the main pane
         if (!logPanel.getTabs().isEmpty()) {
             mainFrameSplitPane.getItems().add(logPanel);
@@ -162,12 +156,8 @@ public class GuiBuilder {
 
         // Quit Menu Item
         MenuItem quitMenuItem = new MenuItem("Quit");
-        quitMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                MainController.getInstance().getStage().close();
-            }
-        });
+        quitMenuItem.setOnAction(actionEvent ->
+                MainController.getInstance().getStage().close());
 
         // Adds all menu items to file menu
         editMenu.getItems().addAll(loadProtocolSubMenu, new SeparatorMenuItem(), quitMenuItem);
@@ -220,13 +210,8 @@ public class GuiBuilder {
      * @return EventHandler
      */
     private static EventHandler newLayoutBtnEventHandler() {
-        return new EventHandler() {
-            @Override
-            public void handle(Event event) {
-                MainController.getInstance().getStage()
-                        .getScene().setRoot(new LayoutCreator());
-            }
-        };
+        return event -> MainController.getInstance().getStage()
+                .getScene().setRoot(new LayoutCreator());
     }
 
     /**

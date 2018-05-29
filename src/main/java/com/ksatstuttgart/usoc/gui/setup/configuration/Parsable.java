@@ -9,5 +9,5 @@ public interface Parsable {
      * Set all defined properties to a POJO Class
      * @param pojoClass POJO Class to set properties
      */
-    void writeToPOJO(GeneralProperties pojoClass);
+    void writeToPOJO(PropertiesConfiguration pojoClass);
 }

@@ -1,11 +1,9 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.GeneralProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
+import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
 import com.ksatstuttgart.usoc.gui.setup.configuration.USOCPaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -119,14 +117,11 @@ public class USOCPane extends BorderPane implements Parsable {
     private void prepareBot() {
         Button plusButton = new Button("Add Chart");
         plusButton.setPrefSize(150, 30);
-        plusButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                ChartRow newRow = new ChartRow(chartRowList.size());
+        plusButton.setOnAction(actionEvent -> {
+            ChartRow newRow = new ChartRow(chartRowList.size());
 
-                chartBox.getChildren().add(newRow);
-                chartRowList.add(newRow);
-            }
+            chartBox.getChildren().add(newRow);
+            chartRowList.add(newRow);
         });
 
         HBox buttonBox = new HBox(plusButton);
@@ -143,7 +138,7 @@ public class USOCPane extends BorderPane implements Parsable {
      * @param pojoClass POJO Class to set properties
      */
     @Override
-    public void writeToPOJO(GeneralProperties pojoClass) {
+    public void writeToPOJO(PropertiesConfiguration pojoClass) {
         USOCPaneProperties properties = pojoClass.getUsocPaneProperties();
 
         properties.setEnabled(enabledCheckBox.isSelected());
@@ -205,7 +200,7 @@ public class USOCPane extends BorderPane implements Parsable {
         }
 
         /**
-         * Sets Component GeneralProperties
+         * Sets Component PropertiesConfiguration
          */
         private void setProperties() {
             setPadding(new Insets(5, 20, 5, 20));
@@ -222,9 +217,9 @@ public class USOCPane extends BorderPane implements Parsable {
             yLabelTextField.setPromptText("y Label");
 
             deleteButton.setOnAction(actionEvent -> {
-                chartRowList.remove(this);
-                chartBox.getChildren().remove(this);
-                updateChartNumbers();
+                chartRowList.remove(ChartRow.this);
+                chartBox.getChildren().remove(ChartRow.this);
+                ChartRow.this.updateChartNumbers();
             });
         }
 
@@ -263,16 +258,27 @@ public class USOCPane extends BorderPane implements Parsable {
 
         /**
          * Retrieves chart title text field value
+         *
          * @return chart title
          */
         private String getChartTitle() {
             return chartTitleTextField.getText();
         }
 
+        /**
+         * Gets xLabel Text Field Value
+         *
+         * @return xLabel
+         */
         private String getXLabel() {
             return xLabelTextField.getText();
         }
 
+        /**
+         * Gets yLabel Text Field Value
+         *
+         * @return yLabel
+         */
         private String getYLabel() {
             return yLabelTextField.getText();
         }

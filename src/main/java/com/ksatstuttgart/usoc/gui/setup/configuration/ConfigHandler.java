@@ -43,6 +43,9 @@ import java.util.Properties;
  */
 public class ConfigHandler {
 
+    /**
+     * Directory where all layouts are saved by default
+     */
     private static final String LAYOUT_ROOT_FOLDER_PATH =
             "layouts/";
 
@@ -69,7 +72,7 @@ public class ConfigHandler {
 
      
     /**
-     * All values ​​of the configuration file are read out and returned as a Java GeneralProperties structure.
+     * All values ​​of the configuration file are read out and returned as a Java PropertiesConfiguration structure.
      *
      * @param path
      * @return
@@ -147,23 +150,26 @@ public class ConfigHandler {
         return syntaxCheck;
     }
 
-    public static void writeConfigurationFile() {
+    /**
+     * Writes all properties from PropertiesConfiguration class to a JSON file
+     * using Jackson's object mapper
+     * @throws IOException in case file could not be created
+     */
+    public static void writeConfigurationFile() throws IOException{
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        GeneralProperties pojo = MainController.getInstance().getGeneralProperties();
+        PropertiesConfiguration pojo = MainController.getInstance().getPropertiesConfiguration();
 
-        String layoutName = pojo.getLayoutName();
+        String layoutName = pojo.getExperimentName();
 
-        // TODO Validate layout name
+        if (layoutName.isEmpty()) {
+            throw new IllegalArgumentException("Illegal layout name. File could not be created");
+        }
 
         String filePath = LAYOUT_ROOT_FOLDER_PATH + layoutName + ".json";
 
-        try {
-            mapper.writeValue(new File(filePath), pojo);
-        } catch (IOException e) {
-            //TODO implement logger
-            e.printStackTrace();
-        }
+        mapper.writeValue(new File(filePath), pojo);
+
     }
 }
