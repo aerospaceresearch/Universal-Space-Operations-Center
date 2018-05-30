@@ -1,0 +1,22 @@
+{
+  "experimentName" : "Default",
+  "fullScreen" : false,
+  "width" : 800,
+  "height" : 700,
+  "resizable" : false,
+  "statePaneProperties" : {
+    "enabled" : true,
+    "segments" : [ ]
+  },
+  "usocPaneProperties" : {
+    "enabled" : true,
+    "gnssEnabled" : true,
+    "chartColumns" : 2,
+    "charts" : [ ]
+  },
+  "logPaneProperties" : {
+    "enabled" : true,
+    "serialPanelEnabled" : true,
+    "iridiumPanelEnabled" : true
+  }
+}
