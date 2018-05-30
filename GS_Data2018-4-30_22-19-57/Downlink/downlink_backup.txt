@@ -1,0 +1,1 @@
+Error: Serial port is not connected!

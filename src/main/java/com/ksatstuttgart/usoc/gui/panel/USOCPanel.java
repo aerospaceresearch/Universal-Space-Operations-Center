@@ -28,7 +28,7 @@ public class USOCPanel extends TabPane {
      */
     public USOCPanel() {
         properties = MainController.getInstance()
-                .getPropertiesConfiguration().getUsocPaneProperties();
+                .getLayout().getUsocPaneProperties();
         prepareComponents();
     }
 

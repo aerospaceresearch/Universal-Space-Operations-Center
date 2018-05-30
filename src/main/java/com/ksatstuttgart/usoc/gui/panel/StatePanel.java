@@ -25,7 +25,7 @@ public class StatePanel extends ScrollPane {
      */
     public StatePanel() {
         properties = MainController.getInstance()
-                .getPropertiesConfiguration().getStatePaneProperties();
+                .getLayout().getStatePaneProperties();
         prepareComponents();
     }
 

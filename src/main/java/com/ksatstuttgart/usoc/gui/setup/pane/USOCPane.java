@@ -1,7 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
-import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
 import com.ksatstuttgart.usoc.gui.setup.configuration.USOCPaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
 import javafx.geometry.Insets;
@@ -138,7 +138,7 @@ public class USOCPane extends BorderPane implements Parsable {
      * @param pojoClass POJO Class to set properties
      */
     @Override
-    public void writeToPOJO(PropertiesConfiguration pojoClass) {
+    public void writeToPOJO(Layout pojoClass) {
         USOCPaneProperties properties = pojoClass.getUsocPaneProperties();
 
         properties.setEnabled(enabledCheckBox.isSelected());
@@ -200,7 +200,7 @@ public class USOCPane extends BorderPane implements Parsable {
         }
 
         /**
-         * Sets Component PropertiesConfiguration
+         * Sets Component Layout
          */
         private void setProperties() {
             setPadding(new Insets(5, 20, 5, 20));

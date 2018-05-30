@@ -1,9 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
@@ -108,7 +106,7 @@ public class GeneralPane extends Pane implements Parsable {
      * @param pojoClass POJO Class to set properties
      */
     @Override
-    public void writeToPOJO(PropertiesConfiguration pojoClass) {
+    public void writeToPOJO(Layout pojoClass) {
         pojoClass.setExperimentName(experimentNameTextField.getText().trim());
 
         boolean fullScreenSelected = fullScreenCheckBox.isSelected();

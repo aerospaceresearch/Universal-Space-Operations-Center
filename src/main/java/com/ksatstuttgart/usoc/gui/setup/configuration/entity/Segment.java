@@ -8,6 +8,9 @@ public class Segment {
 
     private List<String> keywords;
 
+    public Segment() {
+    }
+
     public Segment(String name, List<String> keywords) {
         this.name = name;
         this.keywords = keywords;

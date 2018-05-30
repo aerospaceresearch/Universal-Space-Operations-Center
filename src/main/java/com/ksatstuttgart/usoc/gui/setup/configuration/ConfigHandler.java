@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc.gui.setup.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ksatstuttgart.usoc.controller.MainController;
+import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +37,6 @@ import java.util.Properties;
 
 /**
  * This class communicates with the properties file.
- *
  *
  * @author Victor Hertel
  * @version 2.0
@@ -70,9 +70,9 @@ public class ConfigHandler {
         return numberOfItems;
     }
 
-     
+
     /**
-     * All values ​​of the configuration file are read out and returned as a Java PropertiesConfiguration structure.
+     * All values ​​of the configuration file are read out and returned as a Java Layout structure.
      *
      * @param path
      * @return
@@ -151,15 +151,16 @@ public class ConfigHandler {
     }
 
     /**
-     * Writes all properties from PropertiesConfiguration class to a JSON file
+     * Writes all properties from Layout class to a JSON file
      * using Jackson's object mapper
+     *
      * @throws IOException in case file could not be created
      */
-    public static void writeConfigurationFile() throws IOException{
+    public static void writeConfigurationFile() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        PropertiesConfiguration pojo = MainController.getInstance().getPropertiesConfiguration();
+        Layout pojo = MainController.getInstance().getLayout();
 
         String layoutName = pojo.getExperimentName();
 
@@ -170,6 +171,30 @@ public class ConfigHandler {
         String filePath = LAYOUT_ROOT_FOLDER_PATH + layoutName + ".json";
 
         mapper.writeValue(new File(filePath), pojo);
+    }
 
+    /**
+     * Gets a given JSON File and instantiates a POJO class
+     *
+     * @throws IOException in case there was an error reading
+     *                     the given file
+     */
+    public static void readConfigurationFile() throws IOException {
+        // Show File Open Dialog
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Layout File");
+        fileChooser.setInitialDirectory(new File("layouts/"));
+        fileChooser.setSelectedExtensionFilter(
+                new FileChooser.ExtensionFilter("JSON", "*.json"));
+        File configFile =
+                fileChooser.showOpenDialog(MainController.getInstance().getStage());
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Layout configuration = objectMapper.readValue(configFile,
+                Layout.class);
+
+        MainController.getInstance().setLayout(configuration);
     }
 }

@@ -8,6 +8,10 @@ public class Chart {
 
     private String yLabel;
 
+    public Chart() {
+
+    }
+
     public Chart(String title, String xLabel, String yLabel) {
         this.title = title;
         this.xLabel = xLabel;

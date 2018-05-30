@@ -19,7 +19,7 @@ public class LogPanel extends USOCTabPane {
      */
     public LogPanel() {
         properties = MainController.getInstance()
-                .getPropertiesConfiguration().getLogPaneProperties();
+                .getLayout().getLogPaneProperties();
         prepareComponents();
     }
 

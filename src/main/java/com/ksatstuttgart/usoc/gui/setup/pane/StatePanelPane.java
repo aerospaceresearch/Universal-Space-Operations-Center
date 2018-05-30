@@ -1,15 +1,13 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
-import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
 import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -266,7 +264,7 @@ public class StatePanelPane extends BorderPane implements Parsable {
     }
 
     @Override
-    public void writeToPOJO(PropertiesConfiguration pojoClass) {
+    public void writeToPOJO(Layout pojoClass) {
         StatePaneProperties properties = pojoClass.getStatePaneProperties();
 
         properties.setEnabled(enabledCheckBox.isSelected());

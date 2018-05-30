@@ -1,9 +1,9 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration;
 
 /**
- * POJO class for the General PropertiesConfiguration
+ * POJO class for the General Layout
  */
-public class PropertiesConfiguration {
+public class Layout {
 
     private String experimentName;
 
@@ -21,7 +21,7 @@ public class PropertiesConfiguration {
 
     private LogPaneProperties logPaneProperties;
 
-    public PropertiesConfiguration() {
+    public Layout() {
         statePaneProperties = new StatePaneProperties();
         usocPaneProperties = new USOCPaneProperties();
         logPaneProperties = new LogPaneProperties();

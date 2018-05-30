@@ -23,9 +23,9 @@
  */
 package com.ksatstuttgart.usoc.controller;
 
-import com.ksatstuttgart.usoc.controller.communication.SerialComm;
-import com.ksatstuttgart.usoc.controller.communication.MailUpdateListener;
 import com.ksatstuttgart.usoc.controller.communication.MailReceiver;
+import com.ksatstuttgart.usoc.controller.communication.MailUpdateListener;
+import com.ksatstuttgart.usoc.controller.communication.SerialComm;
 import com.ksatstuttgart.usoc.controller.communication.SerialListener;
 import com.ksatstuttgart.usoc.controller.xml.XMLReader;
 import com.ksatstuttgart.usoc.data.DataSource;
@@ -35,6 +35,10 @@ import com.ksatstuttgart.usoc.data.SerialEvent;
 import com.ksatstuttgart.usoc.data.USOCEvent;
 import com.ksatstuttgart.usoc.data.message.SBD340;
 import com.ksatstuttgart.usoc.gui.controller.SerialPanelController;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -42,12 +46,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
 /**
- *
  * @author valentinstarlinger
  */
 public class MainController {
@@ -58,7 +57,7 @@ public class MainController {
 
     private Stage stage;
 
-    private PropertiesConfiguration propertiesConfiguration;
+    private Layout layout;
 
     private ArrayList<DataUpdateListener> listeners;
 
@@ -71,7 +70,7 @@ public class MainController {
 
     public MainController() {
         listeners = new ArrayList<>();
-        propertiesConfiguration = new PropertiesConfiguration();
+        layout = new Layout();
 
         // Loads defaultProtocol by default
         // Can be changed on runtime in the UI
@@ -86,6 +85,7 @@ public class MainController {
 
     /**
      * Loads a given protocol
+     *
      * @param protocol
      * @return
      */
@@ -96,14 +96,25 @@ public class MainController {
 
     /**
      * Gets Configuration class
+     *
      * @return
      */
-    public PropertiesConfiguration getPropertiesConfiguration() {
-        return propertiesConfiguration;
+    public Layout getLayout() {
+        return layout;
+    }
+
+    /**
+     * Sets new Configuration Class
+     *
+     * @param layout
+     */
+    public void setLayout(Layout layout) {
+        this.layout = layout;
     }
 
     /**
      * Sets a new Stage
+     *
      * @param stage new stage
      */
     public void setStage(Stage stage) {
@@ -112,6 +123,7 @@ public class MainController {
 
     /**
      * Gets current stage
+     *
      * @return current stage
      */
     public Stage getStage() {
@@ -182,7 +194,7 @@ public class MainController {
             System.out.println("something wrong happend when adding the file");
         }
     }
-    
+
     public static void startPortThread(final SerialPanelController sp) {
         Thread t = new Thread() {
             @Override

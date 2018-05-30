@@ -1,17 +1,14 @@
 package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.gui.MainWindow;
 import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
-import com.ksatstuttgart.usoc.gui.setup.configuration.PropertiesConfiguration;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.pane.GeneralPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.LogPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.StatePanelPane;
 import com.ksatstuttgart.usoc.gui.setup.pane.USOCPane;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -66,7 +63,7 @@ public class LayoutCreator extends BorderPane {
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
     /**
-     * PropertiesConfiguration Pane Title
+     * Layout Pane Title
      */
     private static final String PROPERTIES_PANE_TITLE = "Properties";
 
@@ -112,7 +109,7 @@ public class LayoutCreator extends BorderPane {
     }
 
     /**
-     * Sets Scene/Window PropertiesConfiguration
+     * Sets Scene/Window Layout
      */
     private void setProperties() {
         Stage mainStage = MainController.getInstance().getStage();
@@ -186,13 +183,13 @@ public class LayoutCreator extends BorderPane {
         confirmButton.setAlignment(Pos.CENTER);
         confirmButton.setPrefWidth(200);
         confirmButton.setOnAction(actionEvent -> {
-            PropertiesConfiguration propertiesConfiguration
-                    = MainController.getInstance().getPropertiesConfiguration();
+            Layout layout
+                    = MainController.getInstance().getLayout();
 
             try {
                 for (Parsable parsableComponent : componentsMap.values()) {
                     if (parsableComponent != null) {
-                        parsableComponent.writeToPOJO(propertiesConfiguration);
+                        parsableComponent.writeToPOJO(layout);
                     }
                 }
 
@@ -214,7 +211,7 @@ public class LayoutCreator extends BorderPane {
 
             alert.showAndWait();
 
-            MainController.getInstance().getStage().setScene(GuiBuilder.createMainScene());
+            MainController.getInstance().getStage().getScene().setRoot(new MainWindow());
         });
 
         HBox buttonBox = new HBox(confirmButton);
@@ -232,7 +229,7 @@ public class LayoutCreator extends BorderPane {
     private Group prepareTreeViewPane() {
         Group treeViewGroup = new Group();
 
-        // Root Item (PropertiesConfiguration)
+        // Root Item (Layout)
         TreeItem<String> rootItem = new TreeItem<>(PROPERTIES_PANE_TITLE);
 
         // General Item
