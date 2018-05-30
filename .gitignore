@@ -15,6 +15,8 @@ target/
 *.log
 
 # Layout configuration files
+!layouts/Default.json
 layouts/
+
 
 

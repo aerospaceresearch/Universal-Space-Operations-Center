@@ -179,17 +179,7 @@ public class ConfigHandler {
      * @throws IOException in case there was an error reading
      *                     the given file
      */
-    public static void readConfigurationFile() throws IOException {
-        // Show File Open Dialog
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Layout File");
-        fileChooser.setInitialDirectory(new File("layouts/"));
-        fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("JSON", "*.json"));
-        File configFile =
-                fileChooser.showOpenDialog(MainController.getInstance().getStage());
-
-
+    public static void readConfigurationFile(File configFile) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
 
         Layout configuration = objectMapper.readValue(configFile,

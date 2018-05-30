@@ -12,7 +12,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -75,8 +77,17 @@ public class InitialWindow extends VBox {
      */
     private EventHandler<ActionEvent> loadLayoutBtnEventHandler() {
         return actionEvent -> {
+            // Show File Open Dialog
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Layout File");
+            fileChooser.setInitialDirectory(new File("layouts/"));
+            fileChooser.setSelectedExtensionFilter(
+                    new FileChooser.ExtensionFilter("JSON", "*.json"));
+            File configFile =
+                    fileChooser.showOpenDialog(MainController.getInstance().getStage());
+
             try {
-                ConfigHandler.readConfigurationFile();
+                ConfigHandler.readConfigurationFile(configFile);
             } catch (IOException e) {
                 Alert a = new Alert(Alert.AlertType.ERROR);
                 a.setTitle("Error");
@@ -97,7 +108,15 @@ public class InitialWindow extends VBox {
      */
     private static EventHandler<ActionEvent> defaultLayoutBtnEventHandler() {
         return actionEvent -> {
-            //TODO Implement event handler
+            try {
+                ConfigHandler.readConfigurationFile(new File("layouts/default.json"));
+            } catch (IOException e) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setTitle("Error");
+                a.setContentText("The default configuration layout seems to have been deleted / corrupted");
+                a.showAndWait();
+                return;
+            }
         };
     }
 }
