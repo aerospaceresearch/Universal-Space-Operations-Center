@@ -103,6 +103,14 @@ public class LayoutCreator extends BorderPane {
      * Creates a new instance of the Layout Creator Class
      */
     public LayoutCreator() {
+
+        try {
+            loadProtocolFile();
+        } catch (NullPointerException e) {
+            // User canceled action
+            return;
+        }
+
         setProperties();
         createRightPanes();
         prepareComponents();
@@ -113,8 +121,6 @@ public class LayoutCreator extends BorderPane {
      */
     private void setProperties() {
         Stage mainStage = MainController.getInstance().getStage();
-
-        loadProtocolFile(mainStage);
 
         mainStage.setTitle(SCENE_TITLE);
         mainStage.setMinWidth(WINDOW_WIDTH);
@@ -127,9 +133,10 @@ public class LayoutCreator extends BorderPane {
 
     /**
      * Shows a file chooser and loads the selected protocol
-     * @param stage current stage
      */
-    private void loadProtocolFile(Stage stage) {
+    private void loadProtocolFile() {
+        Stage stage = MainController.getInstance().getStage();
+
         // Load protocol beforehand
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Protocol File");
@@ -140,7 +147,6 @@ public class LayoutCreator extends BorderPane {
 
     /**
      * Creates all Right Side Panes
-
      */
     private void createRightPanes() {
         componentsMap.put(PROPERTIES_PANE_TITLE, null);

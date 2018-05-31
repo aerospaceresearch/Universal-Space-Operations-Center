@@ -25,9 +25,9 @@ public class GeneralPane extends Pane implements Parsable {
     private final TextField experimentNameTextField = new TextField();
 
     /**
-     * Full Screen CheckBox
+     * Maximized CheckBox
      */
-    private final CheckBox fullScreenCheckBox = new CheckBox("Full Screen");
+    private final CheckBox maximizedCheckBox = new CheckBox("Maximized");
 
     /**
      * Window Width Text Field
@@ -73,7 +73,7 @@ public class GeneralPane extends Pane implements Parsable {
         windowHeight.setPromptText("Height");
         windowWidth.setPrefColumnCount(5);
         windowWidth.setPromptText("Width");
-        fullScreenCheckBox.selectedProperty().addListener(
+        maximizedCheckBox.selectedProperty().addListener(
                 (observableValue, oldValue, newValue) -> {
                     if (newValue.booleanValue() == true) {
                         windowWidth.setDisable(true);
@@ -88,7 +88,7 @@ public class GeneralPane extends Pane implements Parsable {
         nodeSeparator.setPrefWidth(150);
         HBox.setHgrow(nodeSeparator, Priority.ALWAYS);
 
-        HBox windowSize = new HBox(fullScreenCheckBox, nodeSeparator, windowWidth, windowHeight);
+        HBox windowSize = new HBox(maximizedCheckBox, nodeSeparator, windowWidth, windowHeight);
 
         windowSize.setPadding(DEFAULT_PADDING);
         windowSize.setSpacing(10);
@@ -109,11 +109,11 @@ public class GeneralPane extends Pane implements Parsable {
     public void writeToPOJO(Layout pojoClass) {
         pojoClass.setExperimentName(experimentNameTextField.getText().trim());
 
-        boolean fullScreenSelected = fullScreenCheckBox.isSelected();
+        boolean isMaximized = maximizedCheckBox.isSelected();
 
-        pojoClass.setFullScreen(fullScreenSelected);
+        pojoClass.setMaximized(isMaximized);
 
-        if (!fullScreenSelected) {
+        if (!isMaximized) {
             try {
                 pojoClass.setWidth(Integer.parseInt(windowWidth.getText()));
                 pojoClass.setHeight(Integer.parseInt(windowHeight.getText()));

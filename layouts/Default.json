@@ -1,9 +1,9 @@
 {
   "experimentName" : "Default",
-  "fullScreen" : false,
-  "width" : 800,
-  "height" : 700,
-  "resizable" : false,
+  "maximized" : true,
+  "width" : 0,
+  "height" : 0,
+  "resizable" : true,
   "statePaneProperties" : {
     "enabled" : true,
     "segments" : [ ]

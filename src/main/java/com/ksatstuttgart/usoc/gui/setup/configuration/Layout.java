@@ -7,7 +7,7 @@ public class Layout {
 
     private String experimentName;
 
-    private boolean fullScreen;
+    private boolean maximized;
 
     private int width;
 
@@ -35,12 +35,12 @@ public class Layout {
         this.experimentName = experimentName;
     }
 
-    public boolean isFullScreen() {
-        return fullScreen;
+    public boolean isMaximized() {
+        return maximized;
     }
 
-    public void setFullScreen(boolean fullScreen) {
-        this.fullScreen = fullScreen;
+    public void setMaximized(boolean maximized) {
+        this.maximized = maximized;
     }
 
     public int getWidth() {

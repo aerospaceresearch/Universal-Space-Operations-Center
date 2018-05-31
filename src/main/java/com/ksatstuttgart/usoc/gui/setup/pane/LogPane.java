@@ -3,6 +3,8 @@ package com.ksatstuttgart.usoc.gui.setup.pane;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.LogPaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
@@ -58,6 +60,15 @@ public class LogPane extends GridPane implements Parsable {
      * Prepares Pane Components
      */
     private void prepareComponents() {
+        enabledCheckBox.setSelected(true);
+        enabledCheckBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            boolean selected = newValue;
+
+            // If the component is not enabled/selected, deactivates both checkboxes
+            serialPanelCheckBox.setDisable(!selected);
+            iridiumPanelCheckBox.setDisable(!selected);
+        });
+
         add(enabledCheckBox, 0, 0);
         add(serialPanelCheckBox, 0, 1);
         add(iridiumPanelCheckBox, 1, 1);

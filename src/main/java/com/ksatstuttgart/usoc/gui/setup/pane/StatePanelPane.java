@@ -93,6 +93,14 @@ public class StatePanelPane extends BorderPane implements Parsable {
      */
     private void preparePane() {
         enabledCheckBox.setPadding(DEFAULT_PADDING);
+        enabledCheckBox.setSelected(true);
+        enabledCheckBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            boolean enabled = newValue;
+
+            // If the component is not enabled/selected, deactivates both checkboxes
+            getCenter().setDisable(!enabled);
+            getBottom().setDisable(!enabled);
+        });
 
         setTop(enabledCheckBox);
         setCenter(prepareCenter());

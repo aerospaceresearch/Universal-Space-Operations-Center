@@ -25,7 +25,17 @@ import java.io.IOException;
 public class InitialWindow extends VBox {
 
     public InitialWindow() {
+        setProperties();
         createWindow();
+    }
+
+    /**
+     * Set Window Properties
+     */
+    private void setProperties() {
+        setSpacing(20);
+        setAlignment(Pos.CENTER);
+        setPadding(new Insets(10));
     }
 
     /**
@@ -52,10 +62,6 @@ public class InitialWindow extends VBox {
         buttonLayout.getChildren().addAll(newLayoutBtn, loadLayoutBtn, defaultLayoutBtn);
 
         getChildren().addAll(header, buttonLayout);
-        setSpacing(20);
-        setAlignment(Pos.CENTER);
-
-        setPadding(new Insets(10));
 
         MainController.getInstance().getStage().setTitle("Universal Space Operations Center");
     }

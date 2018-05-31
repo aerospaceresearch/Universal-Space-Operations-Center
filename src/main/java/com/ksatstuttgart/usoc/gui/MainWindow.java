@@ -8,6 +8,8 @@ import com.ksatstuttgart.usoc.gui.setup.USOCTabPane;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
@@ -19,6 +21,8 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -31,7 +35,39 @@ import java.util.List;
 public class MainWindow extends BorderPane {
 
     public MainWindow() {
-        createWindow();
+        // Loads the configuration file
+        Layout properties = MainController.getInstance().getLayout();
+
+        setProperties(properties);
+        createWindow(properties);
+    }
+
+    /**
+     * Sets Window Properties
+     */
+    private void setProperties(Layout properties) {
+        // Gets main stage
+        Stage mainStage = MainController.getInstance().getStage();
+
+        // Sets experiment title as Stage title
+        mainStage.setTitle(properties.getExperimentName());
+
+        // Handles window size
+        double width;
+        double height;
+        if (properties.isMaximized()) {
+            Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+            width = screenSize.getWidth();
+            height = screenSize.getHeight();
+        } else {
+            width = properties.getWidth();
+            height = properties.getHeight();
+        }
+        mainStage.setWidth(width);
+        mainStage.setHeight(height);
+
+        // Handles window resizable
+        mainStage.setResizable(properties.isResizable());
     }
 
     /**
@@ -39,18 +75,7 @@ public class MainWindow extends BorderPane {
      *
      * @return Scene
      */
-    private void createWindow() {
-        // Loads the configuration file
-        Layout properties = MainController.getInstance().getLayout();
-
-        // Sets experiment title as Stage title
-        MainController.getInstance().getStage()
-                .setTitle(properties.getExperimentName());
-
-        //TODO set either fullscreen or fixed size
-        // Sets the BorderPane of the MainFrame
-        setPrefSize(700, 500);
-
+    private void createWindow(Layout properties) {
         // Create the MenuBar
         setTop(prepareMenuBar());
 

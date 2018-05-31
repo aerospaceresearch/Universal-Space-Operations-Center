@@ -4,6 +4,8 @@ import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.configuration.USOCPaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -81,6 +83,17 @@ public class USOCPane extends BorderPane implements Parsable {
         GridPane topPane = new GridPane();
         topPane.setHgap(30);
         topPane.setVgap(10);
+
+        enabledCheckBox.setSelected(true);
+        enabledCheckBox.selectedProperty().addListener((observableValue, oldValue, newValue) -> {
+            boolean enabled = newValue;
+
+            // If the component is not enabled/selected, deactivates both checkboxes
+            gnssCheckBox.setDisable(!enabled);
+            chartColumnsTextField.setDisable(!enabled);
+            getCenter().setDisable(!enabled);
+            getBottom().setDisable(!enabled);
+        });
 
         topPane.add(enabledCheckBox, 0, 0);
         topPane.add(gnssCheckBox, 1, 0);
