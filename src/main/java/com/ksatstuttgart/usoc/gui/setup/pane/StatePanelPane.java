@@ -1,11 +1,10 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.AssignDataWindow;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -19,7 +18,9 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,13 +74,19 @@ public class StatePanelPane extends BorderPane implements Parsable {
      * Add Keyword Button
      */
     private final Button addKeywordBtn =
-            new Button("Add Keyword");
+            new Button("Add");
 
     /**
      * Delete Keyword Button
      */
     private final Button delKeywordBtn =
-            new Button("Remove Keyword");
+            new Button("Remove");
+
+    /**
+     * Assign Data to State Keyword Button
+     */
+    private final Button assignDataBtn =
+            new Button("Assign Data");
 
     /**
      * Creates a State Panel Pane
@@ -121,24 +128,22 @@ public class StatePanelPane extends BorderPane implements Parsable {
 
         // Segment List View
         segmentListView.getSelectionModel().selectedItemProperty()
-                .addListener(new ChangeListener<String>() {
-                    @Override
-                    public void changed(ObservableValue<? extends String> observableValue,
-                                        String oldValue, String newValue) {
+                .addListener((observableValue, oldValue, newValue) -> {
 
-                        keywordListView.getItems().clear();
-                        if (newValue == null) {
-                            return;
-                        }
-
-                        List<String> newKeywordList = segmentMap.get(newValue);
-
-                        keywordListView.getItems().addAll(newKeywordList);
+                    keywordListView.getItems().clear();
+                    if (newValue == null) {
+                        return;
                     }
+
+                    List<String> newKeywordList = segmentMap.get(newValue);
+
+                    keywordListView.getItems().addAll(newKeywordList);
                 });
+
         segmentListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        ObservableList<String> segmentOservableList = FXCollections.observableArrayList();
-        segmentListView.setItems(segmentOservableList);
+
+        ObservableList<String> stringObservableList = FXCollections.observableArrayList();
+        segmentListView.setItems(stringObservableList);
         segmentListView.setMaxHeight(170);
         segmentListView.setEditable(false);
 
@@ -147,8 +152,8 @@ public class StatePanelPane extends BorderPane implements Parsable {
 
         // Keyword List View
         keywordListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        ObservableList<String> keywordOservableList = FXCollections.observableArrayList();
-        keywordListView.setItems(keywordOservableList);
+        ObservableList<String> keywordObservableList = FXCollections.observableArrayList();
+        keywordListView.setItems(keywordObservableList);
         keywordListView.setMaxHeight(170);
 
         VBox keywordBox = new VBox(new Label("Keywords"), keywordListView);
@@ -175,8 +180,9 @@ public class StatePanelPane extends BorderPane implements Parsable {
 
         addSegmentBtn.setPrefWidth(150);
         delSegmentBtn.setPrefWidth(150);
-        addKeywordBtn.setPrefWidth(150);
-        delKeywordBtn.setPrefWidth(150);
+        addKeywordBtn.setPrefWidth(70);
+        delKeywordBtn.setPrefWidth(75);
+        assignDataBtn.setPrefWidth(150);
 
         addSegmentBtn.setOnAction(actionEvent -> {
             String input = StatePanelPane.this.showDialog("Input Dialog", "Add Segment",
@@ -191,7 +197,8 @@ public class StatePanelPane extends BorderPane implements Parsable {
             }
 
             segmentListView.getItems().add(input);
-            segmentMap.put(input, new ArrayList<String>());
+            segmentMap.put(input, new ArrayList<>());
+            segmentListView.getSelectionModel().select(input);
         });
 
         delSegmentBtn.setOnAction(actionEvent -> {
@@ -225,6 +232,7 @@ public class StatePanelPane extends BorderPane implements Parsable {
 
             segmentKeywordList.add(input);
             keywordListView.getItems().add(input);
+            keywordListView.getSelectionModel().select(input);
         });
 
         delKeywordBtn.setOnAction(actionEvent -> {
@@ -240,10 +248,23 @@ public class StatePanelPane extends BorderPane implements Parsable {
             segmentMap.get(selectedSegment).remove(selectedKeyword);
         });
 
+        assignDataBtn.setOnAction(actionEvent -> {
+            if (keywordListView.getSelectionModel().getSelectedItems().isEmpty()) {
+                return;
+            }
+
+            AssignDataWindow window = new AssignDataWindow();
+
+            window.show();
+        });
+
+        HBox addDelKeywordBox = new HBox(addKeywordBtn, delKeywordBtn);
+        addDelKeywordBox.setSpacing(5);
+
         buttonPane.add(addSegmentBtn, 0, 0);
         buttonPane.add(delSegmentBtn, 0, 1);
-        buttonPane.add(addKeywordBtn, 1, 0);
-        buttonPane.add(delKeywordBtn, 1, 1);
+        buttonPane.add(addDelKeywordBox, 1, 0);
+        buttonPane.add(assignDataBtn, 1, 1);
 
         return buttonPane;
     }

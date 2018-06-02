@@ -24,21 +24,20 @@
 package com.ksatstuttgart.usoc.data;
 
 /**
- *
  * @author valentinstarlinger
  */
 public class USOCEvent {
     protected DataSource dataSource;
-    
-    public USOCEvent(DataSource dataSource){
+
+    public USOCEvent(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-    
-    public DataSource getDataSource(){
+
+    public DataSource getDataSource() {
         return this.dataSource;
     }
-    
-    public void setDataSource(DataSource dataSource){
+
+    public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 }

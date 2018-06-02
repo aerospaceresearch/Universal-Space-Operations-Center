@@ -24,19 +24,18 @@
 package com.ksatstuttgart.usoc.data;
 
 /**
- *
  * @author valentinstarlinger
  */
-public class ErrorEvent extends USOCEvent{
-    
+public class ErrorEvent extends USOCEvent {
+
     private final String errorMsg;
-    
-    public ErrorEvent(String msg, DataSource dataSource){
+
+    public ErrorEvent(String msg, DataSource dataSource) {
         super(dataSource);
         this.errorMsg = msg;
     }
-    
-    public String getErrorMessage(){
+
+    public String getErrorMessage() {
         return errorMsg;
     }
 }

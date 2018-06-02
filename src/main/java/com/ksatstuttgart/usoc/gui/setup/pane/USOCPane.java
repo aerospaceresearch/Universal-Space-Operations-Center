@@ -1,5 +1,6 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
+import com.ksatstuttgart.usoc.gui.AssignDataWindow;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.configuration.USOCPaneProperties;
@@ -180,6 +181,9 @@ public class USOCPane extends BorderPane implements Parsable {
      */
     private class ChartRow extends GridPane {
 
+        /**
+         * Chart Label
+         */
         private Label chartLabel;
 
         /**
@@ -196,6 +200,11 @@ public class USOCPane extends BorderPane implements Parsable {
          * yLabel Text Field
          */
         private TextField yLabelTextField = new TextField();
+
+        /**
+         * Assign data to chart button
+         */
+        private Button assignDataButton = new Button("Assign Data");
 
         /**
          * Deletes Chart Row from the grid
@@ -229,6 +238,11 @@ public class USOCPane extends BorderPane implements Parsable {
             xLabelTextField.setPromptText("x Label");
             yLabelTextField.setPromptText("y Label");
 
+            assignDataButton.setOnAction(actionEvent -> {
+                AssignDataWindow window = new AssignDataWindow();
+                window.show();
+            });
+
             deleteButton.setOnAction(actionEvent -> {
                 chartRowList.remove(ChartRow.this);
                 chartBox.getChildren().remove(ChartRow.this);
@@ -244,7 +258,12 @@ public class USOCPane extends BorderPane implements Parsable {
         private void prepareComponent(int index) {
             this.chartLabel = new Label(String.format("Chart[%d]", index));
             add(chartLabel, 0, 0);
-            add(deleteButton, 1, 1);
+
+            // Contains assignDataButton and Delete Button
+            HBox assignDeleteBox = new HBox(assignDataButton, deleteButton);
+            assignDeleteBox.setSpacing(5);
+            add(assignDeleteBox, 1, 1);
+
             add(chartTitleTextField, 1, 0);
             add(xLabelTextField, 2, 0);
             add(yLabelTextField, 2, 1);

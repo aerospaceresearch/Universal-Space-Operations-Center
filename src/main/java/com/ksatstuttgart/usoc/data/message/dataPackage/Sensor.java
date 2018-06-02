@@ -92,6 +92,17 @@ public class Sensor {
         vars.add(dataPoint);
     }
 
+    public Var getVarByName(String name) {
+        for (Var v :
+                vars) {
+            if (v.getDataName().equals(name)) {
+                return v;
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         String s = "Sensor name: " + this.getSensorName() + " (Type: " + this.type + ")\n";

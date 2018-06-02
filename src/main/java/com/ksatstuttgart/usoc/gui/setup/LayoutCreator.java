@@ -140,6 +140,12 @@ public class LayoutCreator extends BorderPane {
         // Load protocol beforehand
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Protocol File");
+        fileChooser.setInitialDirectory(new File("protocols/"));
+        FileChooser.ExtensionFilter xmlExtension =
+                new FileChooser.ExtensionFilter("XML", "*.xml");
+        fileChooser.getExtensionFilters().add(xmlExtension);
+        fileChooser.setSelectedExtensionFilter(xmlExtension);
+
         File protocolFile = fileChooser.showOpenDialog(stage);
 
         MainController.getInstance().loadProtocol(protocolFile.getPath());

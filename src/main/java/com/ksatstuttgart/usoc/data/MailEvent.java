@@ -23,11 +23,10 @@
  */
 package com.ksatstuttgart.usoc.data;
 
-import java.util.Arrays;
 import javax.mail.Address;
+import java.util.Arrays;
 
 /**
- *
  * @author valentinstarlinger
  */
 public class MailEvent extends USOCEvent {

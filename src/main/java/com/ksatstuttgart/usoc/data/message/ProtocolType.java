@@ -24,7 +24,6 @@
 package com.ksatstuttgart.usoc.data.message;
 
 /**
- *
  * @author valentinstarlinger
  */
 public enum ProtocolType {

@@ -47,20 +47,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Main Controller class
+ *
  * @author valentinstarlinger
  */
 public class MainController {
 
+    /**
+     * Instance of Main Controller
+     */
     private static MainController instance;
 
+    /**
+     * Message Controller
+     */
     private final MessageController messageController;
 
+    /**
+     * Current stage
+     */
     private Stage stage;
 
+    /**
+     * POJO Class that stores all window properties
+     */
     private Layout layout;
 
+    /**
+     * List of Data Listeners
+     */
     private ArrayList<DataUpdateListener> listeners;
 
+    /**
+     * Creates an instance of MainController if it doesnt exist
+     *
+     * @return existing instance
+     */
     public static MainController getInstance() {
         if (instance == null) {
             instance = new MainController();
@@ -68,6 +90,9 @@ public class MainController {
         return instance;
     }
 
+    /**
+     * Instantiates all needed components
+     */
     public MainController() {
         listeners = new ArrayList<>();
         layout = new Layout();
@@ -130,24 +155,47 @@ public class MainController {
         return this.stage;
     }
 
+    /**
+     * Gets Message Controller
+     *
+     * @return current Message Controller
+     */
     public MessageController getMessageController() {
         return this.messageController;
     }
 
+    /**
+     * Adds an Update Listener do the current list
+     *
+     * @param listener new Update Listener
+     */
     public void addDataUpdateListener(DataUpdateListener listener) {
         listeners.add(listener);
     }
 
+    /**
+     * Removes a given Update Listener
+     *
+     * @param listener Update Listener to be removed
+     */
     public void removeDataUpdateListener(DataUpdateListener listener) {
         listeners.remove(listener);
     }
 
+    /**
+     * Iterates all Data Update Listeners and updates them
+     *
+     * @param e
+     */
     public void updateListeners(USOCEvent e) {
         for (DataUpdateListener dataUpdateListener : listeners) {
             dataUpdateListener.update(messageController, e);
         }
     }
 
+    /**
+     * Exports data to CSV
+     */
     public void exportCSV() {
         FileChooser fc = new FileChooser();
         fc.setTitle("Export .csv");
@@ -162,6 +210,9 @@ public class MainController {
         }
     }
 
+    /**
+     * Reads a given binary file
+     */
     public void openBinaryFile() {
         FileChooser fc = new FileChooser();
         fc.setTitle("Open binary file");
@@ -191,10 +242,16 @@ public class MainController {
             messageController.addSBD340Message(text);
             updateListeners(new USOCEvent(DataSource.FILE));
         } catch (IOException ex) {
-            System.out.println("something wrong happend when adding the file");
+            System.out.println("something wrong happened when adding the file");
         }
     }
 
+    /**
+     * Creates a thread that updates the Serial Port list every
+     * 500 ms
+     *
+     * @param sp SerialPanelController
+     */
     public static void startPortThread(final SerialPanelController sp) {
         Thread t = new Thread() {
             @Override
@@ -212,6 +269,10 @@ public class MainController {
         t.start();
     }
 
+    /**
+     * Clears all data from Message Controller
+     * and updates Listeners
+     */
     public void clearData() {
         messageController.clearData();
         updateListeners(new USOCEvent(DataSource.ALL));
