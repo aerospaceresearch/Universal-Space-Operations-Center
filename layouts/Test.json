@@ -1,0 +1,48 @@
+{
+  "experimentName" : "Test",
+  "maximized" : true,
+  "width" : 0,
+  "height" : 0,
+  "resizable" : true,
+  "statePaneProperties" : {
+    "enabled" : true,
+    "segments" : [ {
+      "name" : "seg2",
+      "states" : [ {
+        "keyword" : "k1",
+        "sensorName" : null,
+        "varName" : null
+      }, {
+        "keyword" : "k2",
+        "sensorName" : null,
+        "varName" : null
+      } ]
+    }, {
+      "name" : "seg1",
+      "states" : [ ]
+    } ]
+  },
+  "usocPaneProperties" : {
+    "enabled" : true,
+    "gnssEnabled" : true,
+    "chartColumns" : 2,
+    "charts" : [ {
+      "title" : "a",
+      "xLabel" : "",
+      "yLabel" : ""
+    }, {
+      "title" : "b",
+      "xLabel" : "",
+      "yLabel" : ""
+    }, {
+      "title" : "v",
+      "xLabel" : "",
+      "yLabel" : ""
+    } ]
+  },
+  "logPaneProperties" : {
+    "enabled" : true,
+    "serialPanelEnabled" : true,
+    "iridiumPanelEnabled" : true
+  }
+}

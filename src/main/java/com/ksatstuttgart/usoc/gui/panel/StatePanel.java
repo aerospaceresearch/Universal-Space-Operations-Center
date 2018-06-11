@@ -3,6 +3,7 @@ package com.ksatstuttgart.usoc.gui.panel;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -45,20 +46,20 @@ public class StatePanel extends ScrollPane {
 
             // Gets all keywords for current segment
             GridPane labelGrid = new GridPane();
-            List<String> keywords = segment.getKeywords();
+            List<State> states = segment.getStates();
 
             // Keeps track of each segment's row and col
             // Needs to start at one because GridPane.add() starts at 1 and not 0
             int currentRow = 1;
             int currentCol = 1;
 
-            for (String keyword : keywords) {
+            for (State state : states) {
                 if (currentCol == 5) {
                     currentRow++;
                     currentCol = 1;
                 }
 
-                Label label = new Label(keyword);
+                Label label = new Label(state.getKeyword());
                 GridPane.setHgrow(label, Priority.SOMETIMES);
                 GridPane.setVgrow(label, Priority.SOMETIMES);
                 GridPane.setHalignment(label, HPos.CENTER);

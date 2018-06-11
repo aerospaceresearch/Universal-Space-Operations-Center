@@ -92,6 +92,8 @@ public class InitialWindow extends VBox {
             File configFile =
                     fileChooser.showOpenDialog(MainController.getInstance().getStage());
 
+            if (configFile == null) return;
+
             try {
                 ConfigHandler.readConfigurationFile(configFile);
             } catch (IOException e) {

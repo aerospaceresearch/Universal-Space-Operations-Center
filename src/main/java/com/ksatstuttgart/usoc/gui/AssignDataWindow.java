@@ -3,24 +3,27 @@ package com.ksatstuttgart.usoc.gui;
 import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
-import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * Assign Data Window
+ * Responsible for assigning data defined in a protocol
+ * to the charts and states
+ */
 public class AssignDataWindow extends Stage {
 
     /**
@@ -29,34 +32,36 @@ public class AssignDataWindow extends Stage {
     private static final String WINDOW_TITLE = "Assign Data";
 
     /**
+     * Layout Data previously set
+     */
+    private Layout layoutData;
+
+    /**
      * Stage's Main Layout
      */
-    private GridPane mainLayout = new GridPane();
+    private VBox mainLayout = new VBox();
 
     /**
-     * Sensor List View
+     * Left Tree View
      */
-    private ListView<String> sensorListView = new ListView<>();
+    private TreeView<String> allVariablesTree = new TreeView<>();
 
     /**
-     * Variable List View
+     * Right Tree View
      */
-    private ListView<String> variableListView = new ListView<>();
+    private TreeView<String> chartsStatesTree = new TreeView<>();
 
     /**
-     * Shows selected Sensor Information
+     * Displays selected sensor and variable information
      */
-    private TextArea sensorInfoTextArea = new TextArea();
-
-    /**
-     * Show selected Var Information
-     */
-    private TextArea variableInfoTextArea = new TextArea();
+    private TextArea informationTextArea = new TextArea();
 
     /**
      * Creates window
      */
     public AssignDataWindow() {
+        layoutData = MainController.getInstance().getLayout();
+
         setProperties();
         prepareComponents();
 
@@ -70,120 +75,192 @@ public class AssignDataWindow extends Stage {
         setTitle(WINDOW_TITLE);
         setResizable(false);
         initModality(Modality.NONE);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setPadding(new Insets(30));
-        mainLayout.setHgap(20);
-        mainLayout.setVgap(20);
+
+        mainLayout.setPadding(new Insets(20));
+        mainLayout.setSpacing(20);
     }
 
     /**
      * Prepares window components
      */
     private void prepareComponents() {
-        prepareVariableListView();
-        prepareSensorListView();
-        prepareInfoTextArea();
+        prepareTreeViews();
+        prepareTextArea();
     }
 
     /**
-     * Prepares Variable List View
+     * Prepares Left and Right Tree Views
      */
-    private void prepareVariableListView() {
-        variableListView.setPrefHeight(150);
+    private void prepareTreeViews() {
+        prepareAllVariablesTreeView();
+        prepareChartsStatesTreeView();
 
-        ObservableList<String> variableObservableList =
-                FXCollections.observableArrayList();
+        // Assign and Remove Buttons
+        Button assignBtn = new Button("Assign");
+        assignBtn.setPrefSize(100, 30);
+        assignBtn.setOnAction(onAction -> {
+            // Get Selected Item from Left Tree
+            TreeItem<String> selectedLeft =
+                    allVariablesTree.getSelectionModel().getSelectedItem();
 
-        variableListView.setItems(variableObservableList);
+            // Get Selected Item from Right Tree
+            TreeItem<String> selectedRight =
+                    chartsStatesTree.getSelectionModel().getSelectedItem();
 
-        ChangeListener<String> listener = (observableValue, oldItem, newItem) -> {
-            if (newItem == null) return;
-            Sensor selectedSensor = MainController.getInstance().getMessageController()
-                    .getSensorByName(sensorListView.getSelectionModel().getSelectedItem());
-            Var selectedVar = selectedSensor.getVarByName(newItem);
+            // Check if selected proper tree item
+            if (!validSelectionLeft(selectedLeft)
+                    || !validSelectionRight(selectedRight)) return;
 
-            variableInfoTextArea.setText(selectedVar.toStringVerbose());
-        };
+            selectedRight.getChildren().add(selectedLeft);
+        });
 
-        variableListView.getSelectionModel().selectedItemProperty().addListener(listener);
+        Button removeBtn = new Button("Remove");
+        removeBtn.setPrefSize(100, 30);
+        removeBtn.setOnAction(onAction -> {
+            TreeItem<String> rightSelection = chartsStatesTree.getSelectionModel()
+                    .getSelectedItem();
 
-        VBox varBox = new VBox(new Label("Sensor Variables: "), variableListView);
-        varBox.setAlignment(Pos.CENTER);
-        varBox.setSpacing(5);
+            if (!canBeRemoved(rightSelection)) return;
 
-        mainLayout.add(varBox, 0, 1);
+            rightSelection.getParent().getChildren().remove(rightSelection);
+        });
+
+        Button confirmButton = new Button("Confirm");
+        confirmButton.setPrefSize(100, 30);
+        confirmButton.setOnAction(onAction -> {
+            //TODO Implement confirm
+
+            // Re-write to file
+
+            // Load data
+        });
+
+        VBox buttonBox = new VBox(assignBtn, removeBtn, confirmButton);
+        buttonBox.setSpacing(30);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        HBox treeBox = new HBox(allVariablesTree, buttonBox, chartsStatesTree);
+        treeBox.setAlignment(Pos.CENTER);
+        treeBox.setSpacing(20);
+        mainLayout.getChildren().add(treeBox);
     }
 
     /**
-     * Prepares Sensor List View
+     * Checks if the user selected a valid item in the left tree
+     * @param leftSelection right selection
+     * @return return true
      */
-    private void prepareSensorListView() {
-        sensorListView.setPrefHeight(150);
+    private boolean validSelectionLeft(TreeItem<String> leftSelection) {
+        if (leftSelection == null) return false;
+        if (leftSelection.getParent() == null) return false;
+        if (leftSelection.getParent().getValue().equals("Sensors")
+                && !leftSelection.isLeaf()) return false;
 
-        ArrayList<Sensor> sensors = MainController.getInstance().
-                getMessageController().getData().getSensors();
+        return true;
+    }
 
-        ObservableList<String> sensorObservableList =
-                FXCollections.observableArrayList();
+    /**
+     * Checks if the user selected a valid item in the right tree
+     * @param rightSelection right selection
+     * @return return true
+     */
+    private boolean validSelectionRight(TreeItem<String> rightSelection) {
+        if (rightSelection == null) return false;
+        if (rightSelection.getParent() == null) return false;
+        if (rightSelection.getParent().getValue().equals("Elements")) return false;
+        if (rightSelection.getParent().getValue().equals("Charts")) return true;
 
-        // Adds all sensor names to sensorListView
-        for (Sensor s :
-                sensors) {
-            sensorObservableList.add(s.getSensorName());
+        if (rightSelection.isLeaf()
+                && rightSelection.getParent()
+                .getParent().getValue().equals("Segments")) return true;
+
+        return false;
+    }
+
+    /**
+     * Checks if the selected right tree item can be removed
+     * @param rightSelection selected right tree item
+     * @return true if can be removed
+     */
+    private boolean canBeRemoved(TreeItem<String> rightSelection) {
+        if (rightSelection == null) return false;
+        if (rightSelection.getParent() == null) return false;
+        if (rightSelection.getValue().equals("Segments")
+                || rightSelection.getValue().equals("Charts")) return false;
+        if (rightSelection.getParent().getValue()
+                .equals("Segments")) return false;
+
+        return true;
+    }
+
+    /**
+     * Prepares information text area
+     */
+    private void prepareTextArea() {
+        informationTextArea.setEditable(false);
+        informationTextArea.setPrefColumnCount(20);
+
+        mainLayout.getChildren().add(informationTextArea);
+    }
+
+    /**
+     * Prepares Left Tree View
+     */
+    private void prepareAllVariablesTreeView() {
+        TreeItem<String> rootItem = new TreeItem<>("Sensors");
+
+        for (Sensor sensor :
+                MainController.getInstance().getMessageController().getData().getSensors()) {
+            TreeItem<String> sensorItem = new TreeItem<>(sensor.getSensorName());
+
+            for (Var sensorVar :
+                    sensor.getVars()) {
+                sensorItem.getChildren().add(new TreeItem<>(sensorVar.getDataName()));
+            }
+
+            rootItem.getChildren().add(sensorItem);
         }
 
-        sensorListView.setItems(sensorObservableList);
-        sensorListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-
-        ChangeListener<String> listener = (observableValue, oldItem, newItem) -> {
-            Sensor selectedSensor = MainController.getInstance()
-                    .getMessageController().getSensorByName(newItem);
-            ArrayList<Var> selectedSensorVariables = selectedSensor.getVars();
-
-            variableListView.getItems().clear();
-
-            List<String> varNames = new ArrayList<>();
-            for (Var var :
-                    selectedSensorVariables) {
-                varNames.add(var.getDataName());
-            }
-            variableListView.getItems().addAll(varNames);
-
-            sensorInfoTextArea.setText(selectedSensor.toString());
-            variableInfoTextArea.setText("Please select a Variable");
-        };
-        sensorListView.getSelectionModel().selectedItemProperty()
-                .addListener(listener);
-
-        VBox sensorListBox = new VBox(new Label("Sensors:"), sensorListView);
-        sensorListBox.setAlignment(Pos.CENTER);
-        sensorListBox.setSpacing(5);
-
-        mainLayout.add(sensorListBox, 0, 0);
+        rootItem.setExpanded(true);
+        allVariablesTree.setMaxSize(200, 400);
+        allVariablesTree.setEditable(false);
+        allVariablesTree.setRoot(rootItem);
     }
 
     /**
-     * Prepares Info Text Area
+     * Prepares Right Tree View
      */
-    private void prepareInfoTextArea() {
-        sensorInfoTextArea.setPrefColumnCount(20);
-        variableInfoTextArea.setPrefColumnCount(20);
+    private void prepareChartsStatesTreeView() {
+        TreeItem<String> rootItem = new TreeItem<>("Elements");
 
-        sensorInfoTextArea.setText("Please select a Sensor");
-        variableInfoTextArea.setText("Please select a Variable");
+        TreeItem<String> chartsItem = new TreeItem<>("Charts");
+        TreeItem<String> statesItem = new TreeItem<>("Segments");
 
-        sensorInfoTextArea.setEditable(false);
-        variableInfoTextArea.setEditable(false);
+        // Populate Charts
+        for (Chart chart :
+                layoutData.getUsocPaneProperties().getCharts()) {
+            chartsItem.getChildren().add(new TreeItem<>(chart.getTitle()));
+        }
 
-        VBox sensorInfoBox = new VBox(new Label("Sensor Information"), sensorInfoTextArea);
-        sensorInfoBox.setSpacing(5);
-        sensorInfoBox.setAlignment(Pos.CENTER);
+        // Populate States
+        for (Segment segment :
+                layoutData.getStatePaneProperties().getSegments()) {
+            TreeItem<String> segmentItem = new TreeItem<>(segment.getName());
 
-        VBox variableInfoBox = new VBox(new Label("Var Information"), variableInfoTextArea);
-        variableInfoBox.setSpacing(5);
-        variableInfoBox.setAlignment(Pos.CENTER);
+            for (State segmentState :
+                    segment.getStates()) {
+                segmentItem.getChildren().add(new TreeItem<>(segmentState.getKeyword()));
+            }
 
-        mainLayout.add(sensorInfoBox, 1, 0);
-        mainLayout.add(variableInfoBox, 1, 1);
+            statesItem.getChildren().add(segmentItem);
+        }
+
+        rootItem.getChildren().addAll(chartsItem, statesItem);
+        rootItem.setExpanded(true);
+
+        chartsStatesTree.setMaxSize(200, 400);
+        chartsStatesTree.showRootProperty().setValue(false);
+        chartsStatesTree.setEditable(false);
+        chartsStatesTree.setRoot(rootItem);
     }
 }

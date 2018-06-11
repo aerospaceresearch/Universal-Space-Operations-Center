@@ -202,11 +202,6 @@ public class USOCPane extends BorderPane implements Parsable {
         private TextField yLabelTextField = new TextField();
 
         /**
-         * Assign data to chart button
-         */
-        private Button assignDataButton = new Button("Assign Data");
-
-        /**
          * Deletes Chart Row from the grid
          */
         private Button deleteButton = new Button("Delete");
@@ -238,11 +233,6 @@ public class USOCPane extends BorderPane implements Parsable {
             xLabelTextField.setPromptText("x Label");
             yLabelTextField.setPromptText("y Label");
 
-            assignDataButton.setOnAction(actionEvent -> {
-                AssignDataWindow window = new AssignDataWindow();
-                window.show();
-            });
-
             deleteButton.setOnAction(actionEvent -> {
                 chartRowList.remove(ChartRow.this);
                 chartBox.getChildren().remove(ChartRow.this);
@@ -260,7 +250,7 @@ public class USOCPane extends BorderPane implements Parsable {
             add(chartLabel, 0, 0);
 
             // Contains assignDataButton and Delete Button
-            HBox assignDeleteBox = new HBox(assignDataButton, deleteButton);
+            HBox assignDeleteBox = new HBox(deleteButton);
             assignDeleteBox.setSpacing(5);
             add(assignDeleteBox, 1, 1);
 

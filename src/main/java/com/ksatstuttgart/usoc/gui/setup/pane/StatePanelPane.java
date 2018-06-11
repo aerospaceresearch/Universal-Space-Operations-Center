@@ -1,10 +1,10 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import com.ksatstuttgart.usoc.gui.AssignDataWindow;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -20,7 +20,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,14 +44,14 @@ public class StatePanelPane extends BorderPane implements Parsable {
     private ListView<String> segmentListView = new ListView<>();
 
     /**
-     * Keyword List View
+     * State List View
      */
-    private ListView<String> keywordListView = new ListView<>();
+    private ListView<State> stateListView = new ListView<>();
 
     /**
      * Segment Map
      */
-    private Map<String, List<String>> segmentMap =
+    private Map<String, List<State>> segmentMap =
             new HashMap<>();
     /**
      * Enabled checkbox
@@ -81,12 +80,6 @@ public class StatePanelPane extends BorderPane implements Parsable {
      */
     private final Button delKeywordBtn =
             new Button("Remove");
-
-    /**
-     * Assign Data to State Keyword Button
-     */
-    private final Button assignDataBtn =
-            new Button("Assign Data");
 
     /**
      * Creates a State Panel Pane
@@ -130,14 +123,14 @@ public class StatePanelPane extends BorderPane implements Parsable {
         segmentListView.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
 
-                    keywordListView.getItems().clear();
+                    stateListView.getItems().clear();
                     if (newValue == null) {
                         return;
                     }
 
-                    List<String> newKeywordList = segmentMap.get(newValue);
+                    List<State> newKeywordList = segmentMap.get(newValue);
 
-                    keywordListView.getItems().addAll(newKeywordList);
+                    stateListView.getItems().addAll(newKeywordList);
                 });
 
         segmentListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -151,12 +144,12 @@ public class StatePanelPane extends BorderPane implements Parsable {
         segmentBox.setSpacing(10);
 
         // Keyword List View
-        keywordListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        ObservableList<String> keywordObservableList = FXCollections.observableArrayList();
-        keywordListView.setItems(keywordObservableList);
-        keywordListView.setMaxHeight(170);
+        stateListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        ObservableList<State> keywordObservableList = FXCollections.observableArrayList();
+        stateListView.setItems(keywordObservableList);
+        stateListView.setMaxHeight(170);
 
-        VBox keywordBox = new VBox(new Label("Keywords"), keywordListView);
+        VBox keywordBox = new VBox(new Label("Keywords"), stateListView);
         keywordBox.setSpacing(10);
 
         centerPane.add(segmentBox, 0, 0);
@@ -180,9 +173,8 @@ public class StatePanelPane extends BorderPane implements Parsable {
 
         addSegmentBtn.setPrefWidth(150);
         delSegmentBtn.setPrefWidth(150);
-        addKeywordBtn.setPrefWidth(70);
-        delKeywordBtn.setPrefWidth(75);
-        assignDataBtn.setPrefWidth(150);
+        addKeywordBtn.setPrefWidth(150);
+        delKeywordBtn.setPrefWidth(150);
 
         addSegmentBtn.setOnAction(actionEvent -> {
             String input = StatePanelPane.this.showDialog("Input Dialog", "Add Segment",
@@ -207,7 +199,7 @@ public class StatePanelPane extends BorderPane implements Parsable {
             if (selectedItem != null) {
                 segmentListView.getItems().remove(selectedItem);
                 segmentMap.remove(selectedItem);
-                keywordListView.getItems().clear();
+                stateListView.getItems().clear();
             }
         });
 
@@ -224,47 +216,40 @@ public class StatePanelPane extends BorderPane implements Parsable {
                 return;
             }
 
-            List<String> segmentKeywordList = segmentMap.get(selectedSegment);
+            List<State> segmentStateList = segmentMap.get(selectedSegment);
 
-            if (segmentKeywordList.contains(input)) {
-                return;
+            for (State s :
+                    segmentStateList) {
+                if (s.getKeyword().equals(input)) {
+                    return;
+                }
             }
 
-            segmentKeywordList.add(input);
-            keywordListView.getItems().add(input);
-            keywordListView.getSelectionModel().select(input);
+            State state = new State();
+            state.setKeyword(input);
+            segmentStateList.add(state);
+            stateListView.getItems().add(state);
+            stateListView.getSelectionModel().select(state);
         });
 
         delKeywordBtn.setOnAction(actionEvent -> {
-            String selectedKeyword = keywordListView.getSelectionModel().getSelectedItem();
+            State selectedState = stateListView.getSelectionModel().getSelectedItem();
 
-            if (selectedKeyword == null) {
+            if (selectedState == null) {
                 return;
             }
 
             String selectedSegment = segmentListView.getSelectionModel().getSelectedItem();
 
-            keywordListView.getItems().remove(selectedKeyword);
-            segmentMap.get(selectedSegment).remove(selectedKeyword);
+            stateListView.getItems().remove(selectedState);
+            segmentMap.get(selectedSegment).remove(selectedState);
         });
 
-        assignDataBtn.setOnAction(actionEvent -> {
-            if (keywordListView.getSelectionModel().getSelectedItems().isEmpty()) {
-                return;
-            }
-
-            AssignDataWindow window = new AssignDataWindow();
-
-            window.show();
-        });
-
-        HBox addDelKeywordBox = new HBox(addKeywordBtn, delKeywordBtn);
-        addDelKeywordBox.setSpacing(5);
 
         buttonPane.add(addSegmentBtn, 0, 0);
         buttonPane.add(delSegmentBtn, 0, 1);
-        buttonPane.add(addDelKeywordBox, 1, 0);
-        buttonPane.add(assignDataBtn, 1, 1);
+        buttonPane.add(addKeywordBtn, 1, 0);
+        buttonPane.add(delKeywordBtn, 1, 1);
 
         return buttonPane;
     }
@@ -299,11 +284,11 @@ public class StatePanelPane extends BorderPane implements Parsable {
         properties.setEnabled(enabledCheckBox.isSelected());
 
         List<Segment> segments = new ArrayList<>();
-        for (Map.Entry<String, List<String>> entry : segmentMap.entrySet()) {
+        for (Map.Entry<String, List<State>> entry : segmentMap.entrySet()) {
             String segmentName = entry.getKey();
-            List<String> keywords = entry.getValue();
+            List<State> states = entry.getValue();
 
-            Segment segment = new Segment(segmentName, keywords);
+            Segment segment = new Segment(segmentName, states);
             segments.add(segment);
         }
 

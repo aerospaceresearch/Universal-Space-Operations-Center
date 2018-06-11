@@ -1,6 +1,7 @@
 package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.gui.AssignDataWindow;
 import com.ksatstuttgart.usoc.gui.MainWindow;
 import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
@@ -15,6 +16,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -34,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * The Layout Creator Window
@@ -195,9 +199,10 @@ public class LayoutCreator extends BorderPane {
         confirmButton.setAlignment(Pos.CENTER);
         confirmButton.setPrefWidth(200);
         confirmButton.setOnAction(actionEvent -> {
+
+
             Layout layout
                     = MainController.getInstance().getLayout();
-
             try {
                 for (Parsable parsableComponent : componentsMap.values()) {
                     if (parsableComponent != null) {
@@ -216,14 +221,29 @@ public class LayoutCreator extends BorderPane {
                 return;
             }
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Layout Saved");
-            alert.setHeaderText(null);
-            alert.setContentText("Your custom layout has been saved!");
+            // Ask to Assign Data Now or Later
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Assign Data");
+            alert.setHeaderText("Assign Data to Variables");
+            alert.setContentText("Assign variable data now or later?");
 
-            alert.showAndWait();
+            ButtonType nowBtn = new ButtonType("Now");
+            ButtonType laterBtn = new ButtonType("Later");
+            ButtonType cancelBtn = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(nowBtn, laterBtn, cancelBtn);
 
-            MainController.getInstance().getStage().getScene().setRoot(new MainWindow());
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.get() == nowBtn) {
+                AssignDataWindow window = new AssignDataWindow();
+                window.showAndWait();
+
+                MainController.getInstance().getStage().getScene().setRoot(new MainWindow());
+            } else if (result.get() == laterBtn) {
+                MainController.getInstance().getStage().getScene().setRoot(new MainWindow());
+            } else {
+                return;
+            }
         });
 
         HBox buttonBox = new HBox(confirmButton);

@@ -6,14 +6,14 @@ public class Segment {
 
     private String name;
 
-    private List<String> keywords;
+    private List<State> states;
 
     public Segment() {
     }
 
-    public Segment(String name, List<String> keywords) {
+    public Segment(String name, List<State> states) {
         this.name = name;
-        this.keywords = keywords;
+        this.states = states;
     }
 
     public String getName() {
@@ -24,11 +24,11 @@ public class Segment {
         this.name = name;
     }
 
-    public List<String> getKeywords() {
-        return keywords;
+    public List<State> getStates() {
+        return states;
     }
 
-    public void setKeywords(List<String> keywords) {
-        this.keywords = keywords;
+    public void setStates(List<State> states) {
+        this.states = states;
     }
 }
