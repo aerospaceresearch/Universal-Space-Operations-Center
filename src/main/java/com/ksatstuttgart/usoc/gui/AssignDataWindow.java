@@ -4,16 +4,18 @@ import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
+import com.ksatstuttgart.usoc.gui.setup.configuration.UIEntity;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Placeholder;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -39,7 +41,7 @@ public class AssignDataWindow extends Stage {
     /**
      * Stage's Main Layout
      */
-    private VBox mainLayout = new VBox();
+    private BorderPane mainLayout = new BorderPane();
 
     /**
      * Left Tree View
@@ -49,7 +51,7 @@ public class AssignDataWindow extends Stage {
     /**
      * Right Tree View
      */
-    private TreeView<String> chartsStatesTree = new TreeView<>();
+    private TreeView<UIEntity> chartsStatesTree = new TreeView<>();
 
     /**
      * Displays selected sensor and variable information
@@ -77,131 +79,108 @@ public class AssignDataWindow extends Stage {
         initModality(Modality.NONE);
 
         mainLayout.setPadding(new Insets(20));
-        mainLayout.setSpacing(20);
     }
 
     /**
      * Prepares window components
      */
     private void prepareComponents() {
-        prepareTreeViews();
-        prepareTextArea();
+        prepareCenter();
+        prepareBottom();
     }
 
     /**
-     * Prepares Left and Right Tree Views
+     * Prepares Center Region
      */
-    private void prepareTreeViews() {
-        prepareAllVariablesTreeView();
+    private void prepareCenter() {
         prepareChartsStatesTreeView();
+        prepareInfoTextArea();
 
-        // Assign and Remove Buttons
-        Button assignBtn = new Button("Assign");
-        assignBtn.setPrefSize(100, 30);
-        assignBtn.setOnAction(onAction -> {
-            // Get Selected Item from Left Tree
-            TreeItem<String> selectedLeft =
-                    allVariablesTree.getSelectionModel().getSelectedItem();
+        HBox centerBox = new HBox(chartsStatesTree, informationTextArea);
+        centerBox.setAlignment(Pos.CENTER);
+        centerBox.setSpacing(50);
 
-            // Get Selected Item from Right Tree
-            TreeItem<String> selectedRight =
-                    chartsStatesTree.getSelectionModel().getSelectedItem();
-
-            // Check if selected proper tree item
-            if (!validSelectionLeft(selectedLeft)
-                    || !validSelectionRight(selectedRight)) return;
-
-            selectedRight.getChildren().add(selectedLeft);
-        });
-
-        Button removeBtn = new Button("Remove");
-        removeBtn.setPrefSize(100, 30);
-        removeBtn.setOnAction(onAction -> {
-            TreeItem<String> rightSelection = chartsStatesTree.getSelectionModel()
-                    .getSelectedItem();
-
-            if (!canBeRemoved(rightSelection)) return;
-
-            rightSelection.getParent().getChildren().remove(rightSelection);
-        });
-
-        Button confirmButton = new Button("Confirm");
-        confirmButton.setPrefSize(100, 30);
-        confirmButton.setOnAction(onAction -> {
-            //TODO Implement confirm
-
-            // Re-write to file
-
-            // Load data
-        });
-
-        VBox buttonBox = new VBox(assignBtn, removeBtn, confirmButton);
-        buttonBox.setSpacing(30);
-        buttonBox.setAlignment(Pos.CENTER);
-
-        HBox treeBox = new HBox(allVariablesTree, buttonBox, chartsStatesTree);
-        treeBox.setAlignment(Pos.CENTER);
-        treeBox.setSpacing(20);
-        mainLayout.getChildren().add(treeBox);
+        mainLayout.setCenter(centerBox);
     }
 
     /**
-     * Checks if the user selected a valid item in the left tree
-     * @param leftSelection right selection
-     * @return return true
+     * Prepares Right Tree View
      */
-    private boolean validSelectionLeft(TreeItem<String> leftSelection) {
-        if (leftSelection == null) return false;
-        if (leftSelection.getParent() == null) return false;
-        if (leftSelection.getParent().getValue().equals("Sensors")
-                && !leftSelection.isLeaf()) return false;
+    private void prepareChartsStatesTreeView() {
+        TreeItem<UIEntity> rootItem = new TreeItem<>(new Placeholder("Root"));
 
-        return true;
-    }
+        TreeItem<UIEntity> chartsItem = new TreeItem<>(new Placeholder("Charts"));
+        TreeItem<UIEntity> segmentsItem = new TreeItem<>(new Placeholder("Segments"));
 
-    /**
-     * Checks if the user selected a valid item in the right tree
-     * @param rightSelection right selection
-     * @return return true
-     */
-    private boolean validSelectionRight(TreeItem<String> rightSelection) {
-        if (rightSelection == null) return false;
-        if (rightSelection.getParent() == null) return false;
-        if (rightSelection.getParent().getValue().equals("Elements")) return false;
-        if (rightSelection.getParent().getValue().equals("Charts")) return true;
+        rootItem.setExpanded(true);
+        chartsItem.setExpanded(true);
+        segmentsItem.setExpanded(true);
 
-        if (rightSelection.isLeaf()
-                && rightSelection.getParent()
-                .getParent().getValue().equals("Segments")) return true;
+        // Populate Charts
+        for (Chart chart :
+                layoutData.getUsocPaneProperties().getCharts()) {
+            chartsItem.getChildren().add(new TreeItem<>(chart));
+        }
 
-        return false;
-    }
+        // Populate States
+        for (Segment segment :
+                layoutData.getStatePaneProperties().getSegments()) {
+            TreeItem<UIEntity> segmentItem = new TreeItem<>(segment);
 
-    /**
-     * Checks if the selected right tree item can be removed
-     * @param rightSelection selected right tree item
-     * @return true if can be removed
-     */
-    private boolean canBeRemoved(TreeItem<String> rightSelection) {
-        if (rightSelection == null) return false;
-        if (rightSelection.getParent() == null) return false;
-        if (rightSelection.getValue().equals("Segments")
-                || rightSelection.getValue().equals("Charts")) return false;
-        if (rightSelection.getParent().getValue()
-                .equals("Segments")) return false;
+            for (State segmentState :
+                    segment.getStates()) {
+                segmentItem.getChildren().add(new TreeItem<>(segmentState));
+            }
 
-        return true;
+            segmentsItem.getChildren().add(segmentItem);
+        }
+
+        // Click Listener
+        chartsStatesTree.getSelectionModel().selectedItemProperty()
+                .addListener((observableValue, oldValue, newValue) -> {
+                    if (newValue == null) return;
+
+                    if (newValue.getValue() instanceof Placeholder
+                            || newValue.getValue() instanceof Segment) {
+                        return;
+                    }
+
+                    if (newValue.getValue() instanceof Chart) {
+                        System.out.println("Chart");
+                    } else if (newValue.getValue() instanceof State) {
+                        System.out.println("State");
+                    }
+                });
+
+        rootItem.getChildren().addAll(chartsItem, segmentsItem);
+
+        chartsStatesTree.setMaxSize(200, 300);
+        chartsStatesTree.showRootProperty().setValue(false);
+        chartsStatesTree.setEditable(false);
+        chartsStatesTree.setRoot(rootItem);
     }
 
     /**
      * Prepares information text area
      */
-    private void prepareTextArea() {
+    private void prepareInfoTextArea() {
         informationTextArea.setEditable(false);
         informationTextArea.setPrefColumnCount(20);
 
         mainLayout.getChildren().add(informationTextArea);
     }
+
+    /**
+     * Prepares Bottom Region
+     */
+    private void prepareBottom() {
+
+    }
+
+    /*
+    ===================================================================================
+                                    OLD METHODS
+     */
 
     /**
      * Prepares Left Tree View
@@ -222,45 +201,9 @@ public class AssignDataWindow extends Stage {
         }
 
         rootItem.setExpanded(true);
+
         allVariablesTree.setMaxSize(200, 400);
         allVariablesTree.setEditable(false);
         allVariablesTree.setRoot(rootItem);
-    }
-
-    /**
-     * Prepares Right Tree View
-     */
-    private void prepareChartsStatesTreeView() {
-        TreeItem<String> rootItem = new TreeItem<>("Elements");
-
-        TreeItem<String> chartsItem = new TreeItem<>("Charts");
-        TreeItem<String> statesItem = new TreeItem<>("Segments");
-
-        // Populate Charts
-        for (Chart chart :
-                layoutData.getUsocPaneProperties().getCharts()) {
-            chartsItem.getChildren().add(new TreeItem<>(chart.getTitle()));
-        }
-
-        // Populate States
-        for (Segment segment :
-                layoutData.getStatePaneProperties().getSegments()) {
-            TreeItem<String> segmentItem = new TreeItem<>(segment.getName());
-
-            for (State segmentState :
-                    segment.getStates()) {
-                segmentItem.getChildren().add(new TreeItem<>(segmentState.getKeyword()));
-            }
-
-            statesItem.getChildren().add(segmentItem);
-        }
-
-        rootItem.getChildren().addAll(chartsItem, statesItem);
-        rootItem.setExpanded(true);
-
-        chartsStatesTree.setMaxSize(200, 400);
-        chartsStatesTree.showRootProperty().setValue(false);
-        chartsStatesTree.setEditable(false);
-        chartsStatesTree.setRoot(rootItem);
     }
 }

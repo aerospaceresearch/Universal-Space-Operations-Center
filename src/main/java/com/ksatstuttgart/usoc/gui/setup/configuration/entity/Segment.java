@@ -1,8 +1,11 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration.entity;
 
-import java.util.List;
+import com.ksatstuttgart.usoc.gui.setup.configuration.UIEntity;
 
-public class Segment {
+import java.util.List;
+import java.util.Objects;
+
+public class Segment implements UIEntity {
 
     private String name;
 
@@ -30,5 +33,24 @@ public class Segment {
 
     public void setStates(List<State> states) {
         this.states = states;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Segment segment = (Segment) o;
+        return Objects.equals(name, segment.name) &&
+                Objects.equals(states, segment.states);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, states);
     }
 }
