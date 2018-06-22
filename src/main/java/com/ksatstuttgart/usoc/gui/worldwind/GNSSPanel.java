@@ -266,9 +266,9 @@ public class GNSSPanel extends DataPanel {
         int numPoints = 0;
 
         ArrayList<Position> positions = new ArrayList<>();
-        //get Sensor data for gps positions
+        //get SensorDTO data for gps positions
         for (Sensor sensor : controller.getData().getSensors()) {
-            //currently only supports one GNSS Sensor
+            //currently only supports one GNSS SensorDTO
             if (sensor.getType() == SensorType.GNSS) {
                 //set the number of position per message
                 numPoints = sensor.getNumPoints();
@@ -293,7 +293,7 @@ public class GNSSPanel extends DataPanel {
                 }
 
                 if (altValues == null || lonValues == null || latValues == null) {
-                    //not a valid GNSS Sensor Type
+                    //not a valid GNSS SensorDTO Type
                     //TODO: maybe throw exception here
                     continue;
                 }

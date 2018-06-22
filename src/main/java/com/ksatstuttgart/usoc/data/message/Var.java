@@ -24,6 +24,8 @@
 package com.ksatstuttgart.usoc.data.message;
 
 import com.ksatstuttgart.usoc.data.message.dataPackage.DataType;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.UIEntity;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.VarDTO;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import java.util.Objects;
@@ -34,7 +36,7 @@ import java.util.TreeMap;
  *
  * @author valentinstarlinger
  */
-public class Var implements Cloneable {
+public class Var implements Cloneable, UIEntity {
     private String dataName;
     private DataType dataType;
     private int startPosition;
@@ -211,5 +213,9 @@ public class Var implements Cloneable {
             return false;
         }
         return Objects.equals(this.getValues(), other.getValues());
+    }
+
+    public VarDTO toDTO() {
+        return new VarDTO(dataName, dataType.name());
     }
 }

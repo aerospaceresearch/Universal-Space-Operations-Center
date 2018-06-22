@@ -1,7 +1,8 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration.entity;
 
 import com.ksatstuttgart.usoc.data.message.Var;
-import com.ksatstuttgart.usoc.gui.setup.configuration.UIEntity;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.SensorDTO;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.VarDTO;
 
 import java.util.Objects;
 
@@ -9,7 +10,9 @@ public class State implements UIEntity {
 
     private String keyword;
 
-    private Var var;
+    private SensorDTO sensor;
+
+    private VarDTO var;
 
     public State() {
     }
@@ -26,11 +29,19 @@ public class State implements UIEntity {
         this.keyword = keyword;
     }
 
-    public Var getVar() {
+    public SensorDTO getSensor() {
+        return sensor;
+    }
+
+    public void setSensor(SensorDTO sensor) {
+        this.sensor = sensor;
+    }
+
+    public VarDTO getVar() {
         return var;
     }
 
-    public void setVar(Var var) {
+    public void setVar(VarDTO var) {
         this.var = var;
     }
 
@@ -40,12 +51,14 @@ public class State implements UIEntity {
         if (o == null || getClass() != o.getClass()) return false;
         State state = (State) o;
         return Objects.equals(keyword, state.keyword) &&
+                Objects.equals(sensor, state.sensor) &&
                 Objects.equals(var, state.var);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(keyword, var);
+
+        return Objects.hash(keyword, sensor, var);
     }
 
     @Override

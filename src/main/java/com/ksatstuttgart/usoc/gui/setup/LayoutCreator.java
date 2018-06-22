@@ -199,26 +199,13 @@ public class LayoutCreator extends BorderPane {
         confirmButton.setAlignment(Pos.CENTER);
         confirmButton.setPrefWidth(200);
         confirmButton.setOnAction(actionEvent -> {
-
-
             Layout layout
                     = MainController.getInstance().getLayout();
-            try {
-                for (Parsable parsableComponent : componentsMap.values()) {
-                    if (parsableComponent != null) {
-                        parsableComponent.writeToPOJO(layout);
-                    }
+
+            for (Parsable parsableComponent : componentsMap.values()) {
+                if (parsableComponent != null) {
+                    parsableComponent.writeToPOJO(layout);
                 }
-
-                ConfigHandler.writeConfigurationFile();
-            } catch (IOException | IllegalArgumentException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error creating layout");
-                alert.setHeaderText(null);
-                alert.setContentText(e.getMessage());
-
-                alert.showAndWait();
-                return;
             }
 
             // Ask to Assign Data Now or Later
@@ -238,8 +225,12 @@ public class LayoutCreator extends BorderPane {
                 AssignDataWindow window = new AssignDataWindow();
                 window.showAndWait();
 
+                // Finally writes Layout Data to JSON File
+                marshallJSONFile();
+
                 MainController.getInstance().getStage().getScene().setRoot(new MainWindow());
             } else if (result.get() == laterBtn) {
+                marshallJSONFile();
                 MainController.getInstance().getStage().getScene().setRoot(new MainWindow());
             } else {
                 return;
@@ -251,6 +242,20 @@ public class LayoutCreator extends BorderPane {
 
         setBottom(buttonBox);
         setMargin(buttonBox, new Insets(20));
+    }
+
+    private void marshallJSONFile() {
+        try {
+            ConfigHandler.writeConfigurationFile();
+        } catch (IOException | IllegalArgumentException e) {
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+            errorAlert.setTitle("Error creating layout");
+            errorAlert.setHeaderText(null);
+            errorAlert.setContentText(e.getMessage());
+
+            errorAlert.showAndWait();
+            return;
+        }
     }
 
     /**

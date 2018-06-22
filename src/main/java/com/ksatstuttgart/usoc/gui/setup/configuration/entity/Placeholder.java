@@ -1,7 +1,5 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration.entity;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.UIEntity;
-
 /**
  * A Dummy class used to represent placeholder values
  * in a tree

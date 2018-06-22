@@ -42,8 +42,8 @@ public class DataModification {
      * This should be modified for every experiment. 
      * Currently adjusted for the MIRKA2-ICV experiment!
      * 
-     * @param sensor - Sensor: A sensor that should be adjusted
-     * @return a modified Sensor
+     * @param sensor - SensorDTO: A sensor that should be adjusted
+     * @return a modified SensorDTO
      */
     public static Sensor adjustSensorData(Sensor sensor) {
         //copy the sensor so the original sensor is not messed with

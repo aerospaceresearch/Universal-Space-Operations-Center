@@ -1,7 +1,5 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration.entity;
 
-import com.ksatstuttgart.usoc.gui.setup.configuration.UIEntity;
-
 import java.util.List;
 import java.util.Objects;
 

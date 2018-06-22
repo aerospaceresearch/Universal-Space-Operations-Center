@@ -1,8 +1,9 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration.entity;
 
-import com.ksatstuttgart.usoc.data.message.Var;
-import com.ksatstuttgart.usoc.gui.setup.configuration.UIEntity;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.SensorDTO;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.VarDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ public class Chart implements UIEntity {
 
     private String yLabel;
 
-    private List<Var> variables;
+    private List<SensorDTO> sensors = new ArrayList<>();
 
     public Chart() {
 
@@ -50,12 +51,31 @@ public class Chart implements UIEntity {
         this.yLabel = yLabel;
     }
 
-    public List<Var> getVariables() {
-        return variables;
+    public List<SensorDTO> getSensors() {
+        return sensors;
     }
 
-    public void setVariables(List<Var> variables) {
-        this.variables = variables;
+    public void setSensors(List<SensorDTO> sensors) {
+        this.sensors = sensors;
+    }
+
+    public void addVariable(SensorDTO sensor) {
+        if (!sensors.contains(sensor)) {
+            sensors.add(sensor);
+            return;
+        }
+
+        for (SensorDTO sensorDTO : sensors) {
+            if (sensorDTO.equals(sensor)) {
+                for (VarDTO sensorVar : sensorDTO.getVariables()) {
+                    if (!sensorDTO.getVariables().contains(sensorVar)) {
+                        sensorDTO.getVariables().add(sensorVar);
+                    }
+
+                    return;
+                }
+            }
+        }
     }
 
     @Override
@@ -66,12 +86,12 @@ public class Chart implements UIEntity {
         return Objects.equals(title, chart.title) &&
                 Objects.equals(xLabel, chart.xLabel) &&
                 Objects.equals(yLabel, chart.yLabel) &&
-                Objects.equals(variables, chart.variables);
+                Objects.equals(sensors, chart.sensors);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, xLabel, yLabel, variables);
+        return Objects.hash(title, xLabel, yLabel, sensors);
     }
 
     @Override

@@ -285,7 +285,7 @@ public class MessageController {
     }
 
     /**
-     * Returns the desired Sensor
+     * Returns the desired SensorDTO
      *
      * @param sensorName - sensor that should be returned, note that senor names
      * are supposed to be unique so only one sensor will be returned.

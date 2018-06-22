@@ -4,20 +4,22 @@ import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.data.message.Var;
 import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
-import com.ksatstuttgart.usoc.gui.setup.configuration.UIEntity;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.UIEntity;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Placeholder;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.SensorDTO;
+import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.VarDTO;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -34,6 +36,12 @@ public class AssignDataWindow extends Stage {
     private static final String WINDOW_TITLE = "Assign Data";
 
     /**
+     * Information Text Area Placeholder text
+     */
+    private static final String INFO_PLACEHOLDER =
+            "Please select a state/chart to display assigned variables";
+
+    /**
      * Layout Data previously set
      */
     private Layout layoutData;
@@ -42,11 +50,6 @@ public class AssignDataWindow extends Stage {
      * Stage's Main Layout
      */
     private BorderPane mainLayout = new BorderPane();
-
-    /**
-     * Left Tree View
-     */
-    private TreeView<String> allVariablesTree = new TreeView<>();
 
     /**
      * Right Tree View
@@ -142,13 +145,51 @@ public class AssignDataWindow extends Stage {
 
                     if (newValue.getValue() instanceof Placeholder
                             || newValue.getValue() instanceof Segment) {
+                        informationTextArea.setText(INFO_PLACEHOLDER);
+                        informationTextArea.setWrapText(true);
                         return;
                     }
 
+                    final String separator = "===========================";
+
                     if (newValue.getValue() instanceof Chart) {
-                        System.out.println("Chart");
+                        Chart selectedChart = (Chart)newValue.getValue();
+
+                        if (selectedChart.getSensors().isEmpty()) {
+                            informationTextArea.setText("No variables assigned");
+                            return;
+                        }
+
+                        StringBuilder content = new StringBuilder("Variables\n");
+
+                        for (SensorDTO chartSensor :
+                                selectedChart.getSensors()) {
+                            Sensor realSensor = MainController.getInstance().getMessageController()
+                                    .getSensorByName(chartSensor.getSensorName());
+                            content.append("SENSOR\n" + separator + "\n" + realSensor.toString());
+
+                            for (VarDTO chartSensorVar :
+                                    chartSensor.getVariables()) {
+                                Var realVar = realSensor.getVarByName(chartSensorVar.getVarName());
+
+                                content.append(realVar.toStringVerbose()
+                                        + "\n" + separator + "\n");
+                            }
+                        }
+
                     } else if (newValue.getValue() instanceof State) {
-                        System.out.println("State");
+                        State selectedState = (State)newValue.getValue();
+
+                        if (selectedState.getVar() == null) {
+                            informationTextArea.setText("No variable assigned");
+                            informationTextArea.setWrapText(false);
+                            return;
+                        }
+
+                        informationTextArea.setText("Variable\n" +
+                                selectedState.getVar() + "\n" + separator);
+                        informationTextArea.setWrapText(false);
+                        return;
                     }
                 });
 
@@ -167,6 +208,9 @@ public class AssignDataWindow extends Stage {
         informationTextArea.setEditable(false);
         informationTextArea.setPrefColumnCount(20);
 
+        informationTextArea.setText(INFO_PLACEHOLDER);
+        informationTextArea.setWrapText(true);
+
         mainLayout.getChildren().add(informationTextArea);
     }
 
@@ -174,36 +218,37 @@ public class AssignDataWindow extends Stage {
      * Prepares Bottom Region
      */
     private void prepareBottom() {
+        Button manageButton = new Button("Manage Variables");
+        manageButton.setPrefSize(150, 40);
+        manageButton.setOnAction(onClick -> {
+            TreeItem<UIEntity> selectedItem =
+                    chartsStatesTree.getSelectionModel().getSelectedItem();
 
-    }
+            if (selectedItem == null) return;
 
-    /*
-    ===================================================================================
-                                    OLD METHODS
-     */
+            UIEntity selected = selectedItem.getValue();
 
-    /**
-     * Prepares Left Tree View
-     */
-    private void prepareAllVariablesTreeView() {
-        TreeItem<String> rootItem = new TreeItem<>("Sensors");
+            VarManagementWindow varManagementWindow = new VarManagementWindow(selected);
+            varManagementWindow.showAndWait();
+        });
 
-        for (Sensor sensor :
-                MainController.getInstance().getMessageController().getData().getSensors()) {
-            TreeItem<String> sensorItem = new TreeItem<>(sensor.getSensorName());
+        Button okButton = new Button("Ok");
+        okButton.setPrefSize(150, 40);
+        okButton.setOnAction(onClick -> {
+            // TODO
 
-            for (Var sensorVar :
-                    sensor.getVars()) {
-                sensorItem.getChildren().add(new TreeItem<>(sensorVar.getDataName()));
-            }
+            // Check for unassigned variables
 
-            rootItem.getChildren().add(sensorItem);
-        }
+            // Continue
+            onClick.consume();
+            close();
+        });
 
-        rootItem.setExpanded(true);
+        HBox buttonBox = new HBox(manageButton, okButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setSpacing(50);
 
-        allVariablesTree.setMaxSize(200, 400);
-        allVariablesTree.setEditable(false);
-        allVariablesTree.setRoot(rootItem);
+        mainLayout.setBottom(buttonBox);
+        BorderPane.setMargin(buttonBox, new Insets(20, 0, 0, 0));
     }
 }

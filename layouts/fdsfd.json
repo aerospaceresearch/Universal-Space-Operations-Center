@@ -1,0 +1,82 @@
+{
+  "experimentName" : "fdsfd",
+  "maximized" : true,
+  "width" : 0,
+  "height" : 0,
+  "resizable" : false,
+  "statePaneProperties" : {
+    "enabled" : true,
+    "segments" : [ {
+      "name" : "seg1",
+      "states" : [ {
+        "keyword" : "dsa",
+        "sensor" : {
+          "sensorName" : "UBLOX M8",
+          "variables" : [ {
+            "varName" : "Latitude",
+            "dataType" : "FLOAT32"
+          }, {
+            "varName" : "Longitude",
+            "dataType" : "FLOAT32"
+          }, {
+            "varName" : "Altitude",
+            "dataType" : "FLOAT32"
+          }, {
+            "varName" : "Ground Speed",
+            "dataType" : "FLOAT32"
+          }, {
+            "varName" : "Heading",
+            "dataType" : "FLOAT32"
+          } ]
+        },
+        "var" : {
+          "varName" : "Heading",
+          "dataType" : "FLOAT32"
+        }
+      } ]
+    } ]
+  },
+  "usocPaneProperties" : {
+    "enabled" : true,
+    "gnssEnabled" : false,
+    "chartColumns" : 2,
+    "charts" : [ {
+      "title" : "fds",
+      "xLabel" : "",
+      "yLabel" : "",
+      "sensors" : [ {
+        "sensorName" : "UBLOX M8",
+        "variables" : [ {
+          "varName" : "Latitude",
+          "dataType" : "FLOAT32"
+        }, {
+          "varName" : "Longitude",
+          "dataType" : "FLOAT32"
+        }, {
+          "varName" : "Altitude",
+          "dataType" : "FLOAT32"
+        }, {
+          "varName" : "Ground Speed",
+          "dataType" : "FLOAT32"
+        }, {
+          "varName" : "Heading",
+          "dataType" : "FLOAT32"
+        }, {
+          "varName" : "Latitude",
+          "dataType" : "FLOAT32"
+        }, {
+          "varName" : "Longitude",
+          "dataType" : "FLOAT32"
+        }, {
+          "varName" : "Altitude",
+          "dataType" : "FLOAT32"
+        } ]
+      } ]
+    } ]
+  },
+  "logPaneProperties" : {
+    "enabled" : true,
+    "serialPanelEnabled" : false,
+    "iridiumPanelEnabled" : false
+  }
+}
