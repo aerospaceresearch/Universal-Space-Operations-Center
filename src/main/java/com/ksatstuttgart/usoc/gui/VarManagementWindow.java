@@ -27,18 +27,41 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * After selecting a Chart/State, this window allows
+ * assigning data to it
+ */
 public class VarManagementWindow extends Stage {
 
+    /**
+     * Window Title
+     */
     private static final String WINDOW_TITLE = "Variable Management";
 
+    /**
+     * Selected Entity
+     */
     private UIEntity entity;
 
+    /**
+     * Main Window Layout
+     */
     private BorderPane mainLayout = new BorderPane();
 
+    /**
+     * Tree View that displays all Sensors and Variables
+     */
     private TreeView<UIEntity> allVariablesTreeView = new TreeView<>();
 
+    /**
+     * Displays Information about the selected variable
+     */
     private TextArea selectedVarInfoArea = new TextArea();
 
+    /**
+     * Default Constructor
+     * @param entity selected chart/state
+     */
     public VarManagementWindow(UIEntity entity) {
         this.entity = entity;
 
@@ -48,17 +71,26 @@ public class VarManagementWindow extends Stage {
         setScene(new Scene(mainLayout));
     }
 
+    /**
+     * Sets Window Properties
+     */
     private void setProperties() {
         setTitle(WINDOW_TITLE);
         setResizable(false);
         initModality(Modality.APPLICATION_MODAL);
     }
 
+    /**
+     * Prepares Window
+     */
     private void prepareWindow() {
         prepareCenter();
         prepareBottom();
     }
 
+    /**
+     * Prepares Center
+     */
     private void prepareCenter() {
         // Sensor Tree
         prepareTree();
@@ -75,6 +107,9 @@ public class VarManagementWindow extends Stage {
         BorderPane.setMargin(centerBox, new Insets(20));
     }
 
+    /**
+     * Prepares Tree
+     */
     private void prepareTree() {
         allVariablesTreeView.setEditable(false);
 
@@ -129,12 +164,16 @@ public class VarManagementWindow extends Stage {
         allVariablesTreeView.setRoot(root);
     }
 
+    /**
+     * Prepares Bottom Region
+     */
     private void prepareBottom() {
         Button confirmBtn = new Button("Confirm");
         confirmBtn.setPrefHeight(40);
         confirmBtn.setOnAction(onClick -> {
             List<CheckBoxTreeItem<UIEntity>> checkedItems = new ArrayList<>();
 
+            // Goes through the list and checks marked/ticked items
             findCheckedItems((CheckBoxTreeItem<UIEntity>) allVariablesTreeView.getRoot(),
                     checkedItems);
 
@@ -147,12 +186,11 @@ public class VarManagementWindow extends Stage {
                     VarDTO var = (VarDTO) selectedEntity;
 
                     if (this.entity instanceof Chart) {
-                        sensor.getVariables().add((VarDTO) selectedEntity);
-
-                        ((Chart) this.entity).addVariable(sensor);
+                        ((Chart) this.entity).addVariable(sensor.getSensorName(),
+                                var.getVarName());
                     } else if (this.entity instanceof State) {
-                        ((State) this.entity).setSensor(sensor);
-                        ((State) this.entity).setVar(var);
+                        ((State) this.entity).addVariable(sensor.getSensorName(),
+                                var.getVarName());
                     }
                 }
             }
@@ -170,8 +208,15 @@ public class VarManagementWindow extends Stage {
         BorderPane.setMargin(buttonBox, new Insets(20));
     }
 
+    /**
+     * Finds Selected Items
+     * @param item root item
+     * @param checkedItems empty list
+     */
     private void findCheckedItems(CheckBoxTreeItem<UIEntity> item,
                                   List<CheckBoxTreeItem<UIEntity>> checkedItems) {
+        if (item == null || checkedItems == null) return;
+
         if (item.isSelected()) {
             checkedItems.add(item);
         }

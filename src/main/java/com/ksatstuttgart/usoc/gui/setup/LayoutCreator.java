@@ -244,6 +244,9 @@ public class LayoutCreator extends BorderPane {
         setMargin(buttonBox, new Insets(20));
     }
 
+    /**
+     * Writes all data inside the Layout class to a JSON File
+     */
     private void marshallJSONFile() {
         try {
             ConfigHandler.writeConfigurationFile();

@@ -139,7 +139,8 @@ public class AssignDataWindow extends Stage {
         }
 
         // Click Listener
-        chartsStatesTree.getSelectionModel().selectedItemProperty()
+        //TODO Commented because not working properly yet
+        /*chartsStatesTree.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
                     if (newValue == null) return;
 
@@ -180,18 +181,36 @@ public class AssignDataWindow extends Stage {
                     } else if (newValue.getValue() instanceof State) {
                         State selectedState = (State)newValue.getValue();
 
-                        if (selectedState.getVar() == null) {
+                        final String sensorName = selectedState.getSensorName();
+                        final String varName = selectedState.getVarName();
+
+                        Sensor foundSensor = MainController.getInstance()
+                                .getMessageController().getSensorByName(sensorName);
+
+                        if (foundSensor == null) {
+                            throw new IllegalArgumentException("Could not find sensor " + sensorName);
+                        }
+
+                        Var foundVar = foundSensor.getVarByName(varName);
+
+                        if (foundVar == null) {
+                            throw new IllegalArgumentException(
+                                    String.format("Could not find variable %s from sensor %s",
+                                            varName, sensorName));
+                        }
+
+                        if (foundVar == null) {
                             informationTextArea.setText("No variable assigned");
                             informationTextArea.setWrapText(false);
                             return;
                         }
 
                         informationTextArea.setText("Variable\n" +
-                                selectedState.getVar() + "\n" + separator);
+                                foundVar + "\n" + separator);
                         informationTextArea.setWrapText(false);
                         return;
                     }
-                });
+                });*/
 
         rootItem.getChildren().addAll(chartsItem, segmentsItem);
 

@@ -1,66 +1,101 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration.entity;
 
-import com.ksatstuttgart.usoc.data.message.Var;
-import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.SensorDTO;
-import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.VarDTO;
-
-import java.util.Objects;
-
+/**
+ * Represents a State, with a keyword
+ */
 public class State implements UIEntity {
 
+    /**
+     * Keyword
+     */
     private String keyword;
 
-    private SensorDTO sensor;
+    /**
+     * Assigned Sensor Name
+     */
+    private String sensorName;
 
-    private VarDTO var;
+    /**
+     * Assigned Variable/Data Point Name
+     */
+    private String varName;
 
+    /**
+     * Empty Constructor
+     */
     public State() {
     }
 
+    /**
+     * Constructor with keyword
+     * @param keyword keyword
+     */
     public State(String keyword) {
         this.keyword = keyword;
     }
 
+    /**
+     * Getter method
+     * @return keyword
+     */
     public String getKeyword() {
         return keyword;
     }
 
+    /**
+     * Setter method
+     * @param keyword keyword
+     */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
     }
 
-    public SensorDTO getSensor() {
-        return sensor;
+    /**
+     * Getter method
+     * @return sensor name
+     */
+    public String getSensorName() {
+        return sensorName;
+    }
+    /**
+     * Setter method
+     * @param sensorName sensor name
+     */
+    public void setSensorName(String sensorName) {
+        this.sensorName = sensorName;
     }
 
-    public void setSensor(SensorDTO sensor) {
-        this.sensor = sensor;
+    /**
+     * Getter method
+     * @return assigned variable name
+     */
+    public String getVarName() {
+        return varName;
     }
 
-    public VarDTO getVar() {
-        return var;
+    /**
+     * Setter method
+     * @param varName assigned variable name
+     */
+    public void setVarName(String varName) {
+        this.varName = varName;
     }
 
-    public void setVar(VarDTO var) {
-        this.var = var;
+    /**
+     * Adds a variable to this State, given a variable and its sensor
+     *
+     * @param sensorName sensor name
+     * @param varName variable name
+     */
+    public void addVariable(String sensorName, String varName) {
+        setSensorName(sensorName);
+        setVarName(varName);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        State state = (State) o;
-        return Objects.equals(keyword, state.keyword) &&
-                Objects.equals(sensor, state.sensor) &&
-                Objects.equals(var, state.var);
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(keyword, sensor, var);
-    }
-
+    /**
+     * ToString
+     * @return Object Description
+     */
     @Override
     public String toString() {
         return keyword;

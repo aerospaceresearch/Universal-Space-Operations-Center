@@ -1,0 +1,67 @@
+{
+  "experimentName": "TestExperiment",
+  "maximized": true,
+  "width": 0,
+  "height": 0,
+  "resizable": true,
+  "statePaneProperties": {
+    "enabled": true,
+    "segments": [
+      {
+        "name": "Segment1",
+        "states": [
+          {
+            "keyword": "key1",
+            "sensorName": "Thermocouple_GPS",
+            "varName": "Thermocouple_GPS"
+          },
+          {
+            "keyword": "Key2",
+            "sensorName": "Thermocouple_Bat-Analog",
+            "varName": "Thermocouple_Bat-Analog"
+          }
+        ]
+      }
+    ]
+  },
+  "usocPaneProperties": {
+    "enabled": true,
+    "gnssEnabled": true,
+    "chartColumns": 2,
+    "charts": [
+      {
+        "title": "ChartTest1",
+        "xLabel": "x",
+        "yLabel": "y",
+        "assignedData": {
+          "UBLOX M8": [
+            "Latitude",
+            "Longitude",
+            "Altitude",
+            "Ground Speed",
+            "Heading"
+          ]
+        }
+      },
+      {
+        "title": "ChartTest2",
+        "xLabel": "z",
+        "yLabel": "w",
+        "assignedData": {
+          "BNO055 IMU": [
+            "Quaternion_W",
+            "Quaternion_X",
+            "Quaternion_Y",
+            "Quaternion_Z",
+            "Calibration"
+          ]
+        }
+      }
+    ]
+  },
+  "logPaneProperties": {
+    "enabled": true,
+    "serialPanelEnabled": true,
+    "iridiumPanelEnabled": true
+  }
+}
