@@ -23,6 +23,9 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Assign Data Window
  * Responsible for assigning data defined in a protocol
@@ -139,8 +142,7 @@ public class AssignDataWindow extends Stage {
         }
 
         // Click Listener
-        //TODO Commented because not working properly yet
-        /*chartsStatesTree.getSelectionModel().selectedItemProperty()
+        chartsStatesTree.getSelectionModel().selectedItemProperty()
                 .addListener((observableValue, oldValue, newValue) -> {
                     if (newValue == null) return;
 
@@ -156,26 +158,32 @@ public class AssignDataWindow extends Stage {
                     if (newValue.getValue() instanceof Chart) {
                         Chart selectedChart = (Chart)newValue.getValue();
 
-                        if (selectedChart.getSensors().isEmpty()) {
+                        if (selectedChart.getAssignedData().isEmpty()) {
                             informationTextArea.setText("No variables assigned");
                             return;
                         }
 
                         StringBuilder content = new StringBuilder("Variables\n");
 
-                        for (SensorDTO chartSensor :
-                                selectedChart.getSensors()) {
-                            Sensor realSensor = MainController.getInstance().getMessageController()
-                                    .getSensorByName(chartSensor.getSensorName());
-                            content.append("SENSOR\n" + separator + "\n" + realSensor.toString());
+                        // Get list of Sensors
+                        Set<String> sensorNames = selectedChart.getAssignedData().keySet();
 
-                            for (VarDTO chartSensorVar :
-                                    chartSensor.getVariables()) {
-                                Var realVar = realSensor.getVarByName(chartSensorVar.getVarName());
+                        for (String sensorName :
+                                sensorNames) {
+                            Sensor currentSensor = MainController.getInstance().getMessageController()
+                                    .getSensorByName(sensorName);
+                            content.append(separator);
+                            content.append("Sensor: " + sensorName + "\n" + currentSensor.toString() + "\n");
 
-                                content.append(realVar.toStringVerbose()
-                                        + "\n" + separator + "\n");
+                            // Get selected sensor variables
+                            List<String> sensorVariableNames = selectedChart.getAssignedData().get(sensorName);
+                            for (String sensorVariableName :
+                                    sensorVariableNames) {
+                                Var currentSensorVariable = currentSensor.getVarByName(sensorVariableName);
+                                content.append(currentSensorVariable.toStringVerbose());
+                                content.append("\n");
                             }
+
                         }
 
                     } else if (newValue.getValue() instanceof State) {
@@ -183,6 +191,12 @@ public class AssignDataWindow extends Stage {
 
                         final String sensorName = selectedState.getSensorName();
                         final String varName = selectedState.getVarName();
+
+                        if (sensorName == null || varName == null) {
+                            informationTextArea.setText("No variable assigned");
+                            informationTextArea.setWrapText(false);
+                            return;
+                        }
 
                         Sensor foundSensor = MainController.getInstance()
                                 .getMessageController().getSensorByName(sensorName);
@@ -205,12 +219,15 @@ public class AssignDataWindow extends Stage {
                             return;
                         }
 
-                        informationTextArea.setText("Variable\n" +
-                                foundVar + "\n" + separator);
+                        final String textAreaContent = String.format("Sensor: %s\n%s\nVariable: %s\n%s\n",
+                                sensorName, foundSensor.toString(),
+                                foundVar.getDataName(), foundVar.toStringVerbose());
+
+                        informationTextArea.setText(textAreaContent);
                         informationTextArea.setWrapText(false);
                         return;
                     }
-                });*/
+                });
 
         rootItem.getChildren().addAll(chartsItem, segmentsItem);
 
