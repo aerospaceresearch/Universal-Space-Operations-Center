@@ -152,6 +152,8 @@ public class LayoutCreator extends BorderPane {
 
         File protocolFile = fileChooser.showOpenDialog(stage);
 
+        MainController.getInstance().getLayout().setProtocolName(protocolFile.getName());
+
         MainController.getInstance().loadProtocol(protocolFile.getPath());
     }
 

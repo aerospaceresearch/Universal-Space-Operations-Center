@@ -26,6 +26,7 @@ package com.ksatstuttgart.usoc.gui.setup.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.controller.xml.XMLReader;
 import javafx.stage.FileChooser;
 
 import java.io.File;

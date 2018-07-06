@@ -9,9 +9,9 @@ import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -33,6 +33,18 @@ import java.util.List;
  * Former Scene from GUIBuilder
  */
 public class MainWindow extends BorderPane {
+
+    private static final String FILE_MENU_TITLE = "File";
+
+    private static final String VIEW_MENU_TITLE = "View";
+
+    private static final String LAYOUT_MENU_TITLE = "Layout";
+
+    private StatePanel statePanel;
+
+    private USOCPanel usocPanel;
+
+    private LogPanel logPanel;
 
     public MainWindow() {
         // Loads the configuration file
@@ -84,23 +96,22 @@ public class MainWindow extends BorderPane {
                 0.15, 0.75
         );
 
-        // Create the State Panel
-        if (properties.getStatePaneProperties().isEnabled()) {
-            ScrollPane statePanel = new StatePanel();
-            mainFrameSplitPane.getItems().add(statePanel);
-        }
+        // Create State Pane
+        statePanel = new StatePanel();
+        mainFrameSplitPane.getItems().add(statePanel);
 
         // Create the Charts Panel
         // The USOCPanel (Contains Charts and GNSS)
-        mainFrameSplitPane.getItems().add(new USOCPanel());
+        usocPanel = new USOCPanel();
+        mainFrameSplitPane.getItems().add(usocPanel);
 
         // Create the Log Panel
-        USOCTabPane logPanel = new LogPanel();
+        logPanel = new LogPanel();
+        mainFrameSplitPane.getItems().add(logPanel);
 
-        // if not empty add the log view to the main pane
-        if (!logPanel.getTabs().isEmpty()) {
-            mainFrameSplitPane.getItems().add(logPanel);
-        }
+        statePanel.setVisible(properties.getStatePaneProperties().isEnabled());
+        usocPanel.setVisible(properties.getUsocPaneProperties().isEnabled());
+        logPanel.setVisible(properties.getLogPaneProperties().isEnabled());
 
         setCenter(mainFrameSplitPane);
     }
@@ -114,12 +125,11 @@ public class MainWindow extends BorderPane {
         // Main MenuBar
         MenuBar menuBar = new MenuBar();
 
-        // Create File Menu
-        Menu editMenu = new Menu("Edit");
+        // File Menu
+        Menu fileMenu = new Menu(FILE_MENU_TITLE);
 
         // Load Protocol Menu Item
         Menu loadProtocolSubMenu = new Menu("Protocol");
-
         // Get List of Protocols in /protocols
         List<String> protocols = getAvailableProtocols();
 
@@ -132,18 +142,19 @@ public class MainWindow extends BorderPane {
             ToggleGroup group = new ToggleGroup();
             for (final String protocol : protocols) {
                 RadioMenuItem radioMenuItem = new RadioMenuItem(protocol);
-                radioMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        MainController.getInstance()
-                                .loadProtocol("protocols/" + protocol);
-                        Alert a = new Alert(Alert.AlertType.INFORMATION,
-                                protocol, ButtonType.OK);
-                        a.setTitle("Success");
-                        a.setHeaderText("Protocol Loaded");
-                        a.showAndWait();
-                    }
+                radioMenuItem.setOnAction(actionEvent -> {
+                    MainController.getInstance()
+                            .loadProtocol("protocols/" + protocol);
+                    Alert a = new Alert(Alert.AlertType.INFORMATION,
+                            protocol, ButtonType.OK);
+                    a.setTitle("Success");
+                    a.setHeaderText("Protocol Loaded");
+                    a.showAndWait();
                 });
+
+                if (protocol.equals(MainController.getInstance().getLayout().getProtocolName())) {
+                    radioMenuItem.setSelected(true);
+                }
                 group.getToggles().add(radioMenuItem);
                 loadProtocolSubMenu.getItems().add(radioMenuItem);
             }
@@ -154,11 +165,35 @@ public class MainWindow extends BorderPane {
         quitMenuItem.setOnAction(actionEvent ->
                 MainController.getInstance().getStage().close());
 
-        // Adds all menu items to file menu
-        editMenu.getItems().addAll(loadProtocolSubMenu, new SeparatorMenuItem(), quitMenuItem);
+        fileMenu.getItems().addAll(loadProtocolSubMenu, new SeparatorMenuItem(), quitMenuItem);
+
+        // View Menu
+        Menu viewMenu = new Menu(VIEW_MENU_TITLE);
+        MenuItem statePanelItem = new CheckMenuItem("State Panel");
+        statePanelItem.setOnAction(actionEvent -> {
+            final boolean isVisible = statePanel.isVisible();
+            ((CheckMenuItem) statePanelItem).setSelected(isVisible);
+            statePanel.setVisible(!isVisible);
+        });
+        MenuItem usocPanelItem = new CheckMenuItem("USOC Panel");
+        usocPanelItem.setOnAction(actionEvent -> {
+            final boolean isVisible = statePanel.isVisible();
+            ((CheckMenuItem) usocPanelItem).setSelected(isVisible);
+            usocPanel.setVisible(!isVisible);
+        });
+        MenuItem logPanelItem = new CheckMenuItem("Log Panel");
+        logPanelItem.setOnAction(actionEvent -> {
+            final boolean isVisible = logPanel.isVisible();
+            ((CheckMenuItem) logPanelItem).setSelected(isVisible);
+            logPanel.setVisible(!isVisible);
+        });
+        viewMenu.getItems().addAll(statePanelItem, usocPanelItem, logPanelItem);
+
+        // Layout Menu
+        Menu layoutMenu = new Menu(LAYOUT_MENU_TITLE);
 
         // Adds all Menus to Menubar
-        menuBar.getMenus().addAll(editMenu);
+        menuBar.getMenus().addAll(fileMenu, viewMenu, layoutMenu);
 
         return menuBar;
     }
@@ -179,4 +214,5 @@ public class MainWindow extends BorderPane {
 
         return availableProtocols;
     }
+
 }

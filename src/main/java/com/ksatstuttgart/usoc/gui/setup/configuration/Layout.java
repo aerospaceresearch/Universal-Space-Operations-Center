@@ -5,6 +5,8 @@ package com.ksatstuttgart.usoc.gui.setup.configuration;
  */
 public class Layout {
 
+    private String protocolName;
+
     private String experimentName;
 
     private boolean maximized;
@@ -25,6 +27,14 @@ public class Layout {
         statePaneProperties = new StatePaneProperties();
         usocPaneProperties = new USOCPaneProperties();
         logPaneProperties = new LogPaneProperties();
+    }
+
+    public String getProtocolName() {
+        return protocolName;
+    }
+
+    public void setProtocolName(String protocolName) {
+        this.protocolName = protocolName;
     }
 
     public String getExperimentName() {
