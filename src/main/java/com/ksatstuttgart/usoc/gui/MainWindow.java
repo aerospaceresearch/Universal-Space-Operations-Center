@@ -23,6 +23,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import sun.applet.Main;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -35,15 +36,16 @@ import java.util.List;
 public class MainWindow extends BorderPane {
 
     private static final String FILE_MENU_TITLE = "File";
-
     private static final String VIEW_MENU_TITLE = "View";
-
     private static final String LAYOUT_MENU_TITLE = "Layout";
 
+    private static final double FIRST_DIVIDER_POSITION = 0;
+    private static final double SECOND_DIVIDER_POSITION = 0.75;
+
+    private SplitPane mainWindowSplitPane;
+
     private StatePanel statePanel;
-
     private USOCPanel usocPanel;
-
     private LogPanel logPanel;
 
     public MainWindow() {
@@ -91,29 +93,47 @@ public class MainWindow extends BorderPane {
         // Create the MenuBar
         setTop(prepareMenuBar());
 
-        SplitPane mainFrameSplitPane = new SplitPane();
-        mainFrameSplitPane.setDividerPositions(
-                0.15, 0.75
-        );
+        mainWindowSplitPane = new SplitPane();
 
-        // Create State Pane
         statePanel = new StatePanel();
-        mainFrameSplitPane.getItems().add(statePanel);
-
-        // Create the Charts Panel
-        // The USOCPanel (Contains Charts and GNSS)
         usocPanel = new USOCPanel();
-        mainFrameSplitPane.getItems().add(usocPanel);
-
-        // Create the Log Panel
         logPanel = new LogPanel();
-        mainFrameSplitPane.getItems().add(logPanel);
 
-        statePanel.setVisible(properties.getStatePaneProperties().isEnabled());
-        usocPanel.setVisible(properties.getUsocPaneProperties().isEnabled());
-        logPanel.setVisible(properties.getLogPaneProperties().isEnabled());
+        addPanelsToSplitPane();
 
-        setCenter(mainFrameSplitPane);
+        setCenter(mainWindowSplitPane);
+    }
+
+    private void addPanelsToSplitPane() {
+        boolean isStatePanelEnabled = MainController.getInstance()
+                .getLayout().getStatePaneProperties().isEnabled();
+
+        boolean isUSOCPanelEnabled = MainController.getInstance()
+                .getLayout().getUsocPaneProperties().isEnabled();
+
+        boolean isLogPanelEnabled = MainController.getInstance()
+                .getLayout().getLogPaneProperties().isEnabled();
+
+        mainWindowSplitPane.getItems().clear();
+
+        if (isStatePanelEnabled) {
+            mainWindowSplitPane.getItems().add(statePanel);
+        }
+
+        if (isUSOCPanelEnabled) {
+            mainWindowSplitPane.getItems().add(usocPanel);
+        }
+
+        if (isLogPanelEnabled) {
+            mainWindowSplitPane.getItems().add(logPanel);
+        }
+
+        if (mainWindowSplitPane.getItems().size() == 2) {
+            mainWindowSplitPane.setDividerPositions(0.5);
+        } else if (mainWindowSplitPane.getItems().size() == 3) {
+            mainWindowSplitPane.setDividerPositions(FIRST_DIVIDER_POSITION,
+                    SECOND_DIVIDER_POSITION);
+        }
     }
 
     /**
@@ -169,24 +189,39 @@ public class MainWindow extends BorderPane {
 
         // View Menu
         Menu viewMenu = new Menu(VIEW_MENU_TITLE);
-        MenuItem statePanelItem = new CheckMenuItem("State Panel");
+        CheckMenuItem statePanelItem = new CheckMenuItem("State Panel");
         statePanelItem.setOnAction(actionEvent -> {
-            final boolean isVisible = statePanel.isVisible();
-            ((CheckMenuItem) statePanelItem).setSelected(isVisible);
-            statePanel.setVisible(!isVisible);
+            MainController.getInstance().getLayout()
+                    .getStatePaneProperties().setEnabled(statePanelItem.isSelected());
+            addPanelsToSplitPane();
         });
-        MenuItem usocPanelItem = new CheckMenuItem("USOC Panel");
+
+        CheckMenuItem usocPanelItem = new CheckMenuItem("USOC Panel");
         usocPanelItem.setOnAction(actionEvent -> {
-            final boolean isVisible = statePanel.isVisible();
-            ((CheckMenuItem) usocPanelItem).setSelected(isVisible);
-            usocPanel.setVisible(!isVisible);
+            MainController.getInstance().getLayout()
+                    .getUsocPaneProperties().setEnabled(usocPanelItem.isSelected());
+            addPanelsToSplitPane();
         });
-        MenuItem logPanelItem = new CheckMenuItem("Log Panel");
+        CheckMenuItem logPanelItem = new CheckMenuItem("Log Panel");
         logPanelItem.setOnAction(actionEvent -> {
-            final boolean isVisible = logPanel.isVisible();
-            ((CheckMenuItem) logPanelItem).setSelected(isVisible);
-            logPanel.setVisible(!isVisible);
+            MainController.getInstance().getLayout()
+                    .getLogPaneProperties().setEnabled(logPanelItem.isSelected());
+            addPanelsToSplitPane();
         });
+
+        boolean isStatePanelEnabled = MainController.getInstance()
+                .getLayout().getStatePaneProperties().isEnabled();
+
+        boolean isUSOCPanelEnabled = MainController.getInstance()
+                .getLayout().getUsocPaneProperties().isEnabled();
+
+        boolean isLogPanelEnabled = MainController.getInstance()
+                .getLayout().getLogPaneProperties().isEnabled();
+
+        statePanelItem.setSelected(isStatePanelEnabled);
+        usocPanelItem.setSelected(isUSOCPanelEnabled);
+        logPanelItem.setSelected(isLogPanelEnabled);
+
         viewMenu.getItems().addAll(statePanelItem, usocPanelItem, logPanelItem);
 
         // Layout Menu
