@@ -91,7 +91,7 @@ public class MainWindow extends BorderPane {
      */
     private void createWindow(Layout properties) {
         // Create the MenuBar
-        setTop(prepareMenuBar());
+        setTop(prepareMenuBar(properties));
 
         mainWindowSplitPane = new SplitPane();
 
@@ -99,20 +99,20 @@ public class MainWindow extends BorderPane {
         usocPanel = new USOCPanel();
         logPanel = new LogPanel();
 
-        addPanelsToSplitPane();
+        addPanelsToSplitPane(properties);
 
         setCenter(mainWindowSplitPane);
     }
 
-    private void addPanelsToSplitPane() {
-        boolean isStatePanelEnabled = MainController.getInstance()
-                .getLayout().getStatePaneProperties().isEnabled();
+    private void addPanelsToSplitPane(Layout properties) {
+        boolean isStatePanelEnabled = properties.getStatePaneProperties()
+                .isEnabled();
 
-        boolean isUSOCPanelEnabled = MainController.getInstance()
-                .getLayout().getUsocPaneProperties().isEnabled();
+        boolean isUSOCPanelEnabled = properties.getUsocPaneProperties()
+                .isEnabled();
 
-        boolean isLogPanelEnabled = MainController.getInstance()
-                .getLayout().getLogPaneProperties().isEnabled();
+        boolean isLogPanelEnabled = properties.getLogPaneProperties()
+                .isEnabled();
 
         mainWindowSplitPane.getItems().clear();
 
@@ -141,7 +141,7 @@ public class MainWindow extends BorderPane {
      *
      * @return menu bar
      */
-    private MenuBar prepareMenuBar() {
+    private MenuBar prepareMenuBar(Layout properties) {
         // Main MenuBar
         MenuBar menuBar = new MenuBar();
 
@@ -191,32 +191,26 @@ public class MainWindow extends BorderPane {
         Menu viewMenu = new Menu(VIEW_MENU_TITLE);
         CheckMenuItem statePanelItem = new CheckMenuItem("State Panel");
         statePanelItem.setOnAction(actionEvent -> {
-            MainController.getInstance().getLayout()
-                    .getStatePaneProperties().setEnabled(statePanelItem.isSelected());
-            addPanelsToSplitPane();
+            properties.getStatePaneProperties().setEnabled(statePanelItem.isSelected());
+            addPanelsToSplitPane(properties);
         });
 
         CheckMenuItem usocPanelItem = new CheckMenuItem("USOC Panel");
         usocPanelItem.setOnAction(actionEvent -> {
-            MainController.getInstance().getLayout()
-                    .getUsocPaneProperties().setEnabled(usocPanelItem.isSelected());
-            addPanelsToSplitPane();
+            properties.getUsocPaneProperties().setEnabled(usocPanelItem.isSelected());
+            addPanelsToSplitPane(properties);
         });
         CheckMenuItem logPanelItem = new CheckMenuItem("Log Panel");
         logPanelItem.setOnAction(actionEvent -> {
-            MainController.getInstance().getLayout()
-                    .getLogPaneProperties().setEnabled(logPanelItem.isSelected());
-            addPanelsToSplitPane();
+            properties.getLogPaneProperties().setEnabled(logPanelItem.isSelected());
+            addPanelsToSplitPane(properties);
         });
 
-        boolean isStatePanelEnabled = MainController.getInstance()
-                .getLayout().getStatePaneProperties().isEnabled();
+        boolean isStatePanelEnabled = properties.getStatePaneProperties().isEnabled();
 
-        boolean isUSOCPanelEnabled = MainController.getInstance()
-                .getLayout().getUsocPaneProperties().isEnabled();
+        boolean isUSOCPanelEnabled = properties.getUsocPaneProperties().isEnabled();
 
-        boolean isLogPanelEnabled = MainController.getInstance()
-                .getLayout().getLogPaneProperties().isEnabled();
+        boolean isLogPanelEnabled = properties.getLogPaneProperties().isEnabled();
 
         statePanelItem.setSelected(isStatePanelEnabled);
         usocPanelItem.setSelected(isUSOCPanelEnabled);
