@@ -4,10 +4,7 @@ import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.panel.LogPanel;
 import com.ksatstuttgart.usoc.gui.panel.StatePanel;
 import com.ksatstuttgart.usoc.gui.panel.USOCPanel;
-import com.ksatstuttgart.usoc.gui.setup.USOCTabPane;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -16,14 +13,12 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import sun.applet.Main;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -37,7 +32,8 @@ public class MainWindow extends BorderPane {
 
     private static final String FILE_MENU_TITLE = "File";
     private static final String VIEW_MENU_TITLE = "View";
-    private static final String LAYOUT_MENU_TITLE = "Layout";
+    private static final String Data_MENU_TITLE = "Data";
+    private static final String ASSIGN_DATA_MENU_ITEM = "Assign Data";
 
     private static final double FIRST_DIVIDER_POSITION = 0;
     private static final double SECOND_DIVIDER_POSITION = 0.75;
@@ -219,7 +215,15 @@ public class MainWindow extends BorderPane {
         viewMenu.getItems().addAll(statePanelItem, usocPanelItem, logPanelItem);
 
         // Layout Menu
-        Menu layoutMenu = new Menu(LAYOUT_MENU_TITLE);
+        Menu layoutMenu = new Menu(Data_MENU_TITLE);
+        MenuItem assignDataMenuItem = new MenuItem(ASSIGN_DATA_MENU_ITEM);
+        assignDataMenuItem.setOnAction(actionEvent -> {
+            new AssignDataWindow().showAndWait();
+
+            // TODO Refresh States/Charts
+        });
+
+        layoutMenu.getItems().add(assignDataMenuItem);
 
         // Adds all Menus to Menubar
         menuBar.getMenus().addAll(fileMenu, viewMenu, layoutMenu);

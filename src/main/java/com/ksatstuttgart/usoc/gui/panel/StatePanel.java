@@ -4,10 +4,10 @@ import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -63,6 +63,17 @@ public class StatePanel extends ScrollPane {
                 GridPane.setHgrow(label, Priority.SOMETIMES);
                 GridPane.setVgrow(label, Priority.SOMETIMES);
                 GridPane.setHalignment(label, HPos.CENTER);
+
+                // Handles Right Click Context Menu
+                ContextMenu menu = new ContextMenu();
+                MenuItem assignDataItem = new MenuItem("Assign Data");
+                assignDataItem.setOnAction(onAction -> {
+                    // TODO
+                });
+
+
+                label.setContextMenu(menu);
+
                 labelGrid.add(label, currentCol, currentRow);
 
                 currentCol++;

@@ -8,24 +8,9 @@
   "statePaneProperties" : {
     "enabled" : true,
     "segments" : [ {
-      "name" : "Segment2",
-      "states" : [ {
-        "keyword" : "Key3",
-        "sensorName" : null,
-        "varName" : null
-      }, {
-        "keyword" : "Key4",
-        "sensorName" : null,
-        "varName" : null
-      } ]
-    }, {
       "name" : "Segment1",
       "states" : [ {
         "keyword" : "Key1",
-        "sensorName" : null,
-        "varName" : null
-      }, {
-        "keyword" : "Key2",
         "sensorName" : null,
         "varName" : null
       } ]
@@ -35,17 +20,7 @@
     "enabled" : true,
     "gnssEnabled" : true,
     "chartColumns" : 2,
-    "charts" : [ {
-      "title" : "Chart1",
-      "xLabel" : "x",
-      "yLabel" : "y",
-      "assignedData" : { }
-    }, {
-      "title" : "Chart2",
-      "xLabel" : "x",
-      "yLabel" : "y",
-      "assignedData" : { }
-    } ]
+    "charts" : [ ]
   },
   "logPaneProperties" : {
     "enabled" : true,

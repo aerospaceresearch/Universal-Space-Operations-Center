@@ -34,6 +34,11 @@ public class USOCPane extends BorderPane implements Parsable {
             new Insets(20);
 
     /**
+     * Default Number of Chart Columns to be displayed
+     */
+    private static final int DEFAULT_CHART_COLS = 2;
+
+    /**
      * Pane Enabled CheckBox
      */
     private final CheckBox enabledCheckBox =
@@ -160,7 +165,7 @@ public class USOCPane extends BorderPane implements Parsable {
         try {
             properties.setChartColumns(Integer.parseInt(chartColumnsTextField.getText()));
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Chart columns value must be numeric.");
+            properties.setChartColumns(DEFAULT_CHART_COLS);
         }
 
         List<Chart> charts = new ArrayList<>();

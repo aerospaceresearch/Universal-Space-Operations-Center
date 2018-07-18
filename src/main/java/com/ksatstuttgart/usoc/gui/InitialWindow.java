@@ -117,7 +117,7 @@ public class InitialWindow extends VBox {
     private static EventHandler<ActionEvent> defaultLayoutBtnEventHandler() {
         return actionEvent -> {
             try {
-                ConfigHandler.readConfigurationFile(new File("layouts/default.json"));
+                ConfigHandler.readConfigurationFile(new File("layouts/Default.json"));
             } catch (IOException e) {
                 Alert a = new Alert(Alert.AlertType.ERROR);
                 a.setTitle("Error");
@@ -125,6 +125,9 @@ public class InitialWindow extends VBox {
                 a.showAndWait();
                 return;
             }
+
+            MainController.getInstance().getStage()
+                    .getScene().setRoot(new MainWindow());
         };
     }
 }
