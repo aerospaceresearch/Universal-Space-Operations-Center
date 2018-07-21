@@ -65,24 +65,34 @@ public class StatePanel extends ScrollPane {
                 GridPane.setHalignment(label, HPos.CENTER);
 
                 // Handles Right Click Context Menu
-                ContextMenu menu = new ContextMenu();
-                MenuItem assignDataItem = new MenuItem("Assign Data");
-                assignDataItem.setOnAction(onAction -> {
+                MenuItem editItem = new MenuItem("Edit Data");
+                editItem.setOnAction(onAction -> {
                     // TODO
                 });
-
-
-                label.setContextMenu(menu);
+                MenuItem removeItem = new MenuItem("Remove");
+                removeItem.setOnAction(onAction -> {
+                    labelGrid.getChildren().remove(label);
+                    properties.findSegmentByTitle(segmentTitle).getStates().remove(state);
+                });
+                label.setContextMenu(new ContextMenu(editItem, removeItem));
 
                 labelGrid.add(label, currentCol, currentRow);
 
                 currentCol++;
             }
 
-            // Each titledPane holds information about a single segment
-            TitledPane titledPane = new TitledPane(segmentTitle, labelGrid);
-            titledPane.setCollapsible(false);
-            stateBox.getChildren().add(titledPane);
+            // Each segmentPane holds information about a single segment
+            TitledPane segmentPane = new TitledPane(segmentTitle, labelGrid);
+            segmentPane.setCollapsible(false);
+
+            // Segment Pane Context Menu
+            MenuItem addStateItem = new MenuItem("Add State");
+            addStateItem.setOnAction(onAction -> {
+                // TODO add Item
+            });
+            segmentPane.setContextMenu(new ContextMenu(addStateItem));
+
+            stateBox.getChildren().add(segmentPane);
         }
 
         setMinWidth(200);

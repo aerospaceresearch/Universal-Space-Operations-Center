@@ -29,6 +29,15 @@ public class Segment implements UIEntity {
         return states;
     }
 
+    public State findStateByKeyword(String keyword) {
+        for (State state :
+                states) {
+            if (state.getKeyword().equals(keyword)) return state;
+        }
+
+        return null;
+    }
+
     public void setStates(List<State> states) {
         this.states = states;
     }

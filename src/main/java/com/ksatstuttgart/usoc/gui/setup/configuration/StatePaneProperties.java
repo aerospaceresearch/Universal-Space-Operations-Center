@@ -22,6 +22,14 @@ public class StatePaneProperties {
         return segments;
     }
 
+    public Segment findSegmentByTitle(String title) {
+        for (Segment segment : segments) {
+            if (segment.getName().equals(title)) return segment;
+        }
+
+        return null;
+    }
+
     public void setSegments(List<Segment> segments) {
         this.segments = segments;
     }

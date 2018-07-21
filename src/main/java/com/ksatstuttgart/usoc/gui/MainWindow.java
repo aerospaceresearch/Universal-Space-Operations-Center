@@ -4,6 +4,7 @@ import com.ksatstuttgart.usoc.controller.MainController;
 import com.ksatstuttgart.usoc.gui.panel.LogPanel;
 import com.ksatstuttgart.usoc.gui.panel.StatePanel;
 import com.ksatstuttgart.usoc.gui.panel.USOCPanel;
+import com.ksatstuttgart.usoc.gui.setup.configuration.ConfigHandler;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
@@ -21,6 +22,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class MainWindow extends BorderPane {
 
     private static final String FILE_MENU_TITLE = "File";
     private static final String VIEW_MENU_TITLE = "View";
-    private static final String Data_MENU_TITLE = "Data";
+    private static final String DATA_MENU_TITLE = "Data";
     private static final String ASSIGN_DATA_MENU_ITEM = "Assign Data";
 
     private static final double FIRST_DIVIDER_POSITION = 0;
@@ -176,12 +178,23 @@ public class MainWindow extends BorderPane {
             }
         }
 
+        MenuItem saveLayoutItem = new MenuItem("Save Layout");
+        saveLayoutItem.setOnAction(onAction -> {
+            try {
+                ConfigHandler.writeConfigurationFile();
+            } catch (IOException e) {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Could not write to file");
+                errorAlert.showAndWait();
+            }
+        });
+
         // Quit Menu Item
         MenuItem quitMenuItem = new MenuItem("Quit");
         quitMenuItem.setOnAction(actionEvent ->
                 MainController.getInstance().getStage().close());
 
-        fileMenu.getItems().addAll(loadProtocolSubMenu, new SeparatorMenuItem(), quitMenuItem);
+        fileMenu.getItems().addAll(loadProtocolSubMenu, new SeparatorMenuItem(),
+                saveLayoutItem, new SeparatorMenuItem(), quitMenuItem);
 
         // View Menu
         Menu viewMenu = new Menu(VIEW_MENU_TITLE);
@@ -215,7 +228,7 @@ public class MainWindow extends BorderPane {
         viewMenu.getItems().addAll(statePanelItem, usocPanelItem, logPanelItem);
 
         // Layout Menu
-        Menu layoutMenu = new Menu(Data_MENU_TITLE);
+        Menu layoutMenu = new Menu(DATA_MENU_TITLE);
         MenuItem assignDataMenuItem = new MenuItem(ASSIGN_DATA_MENU_ITEM);
         assignDataMenuItem.setOnAction(actionEvent -> {
             new AssignDataWindow().showAndWait();
