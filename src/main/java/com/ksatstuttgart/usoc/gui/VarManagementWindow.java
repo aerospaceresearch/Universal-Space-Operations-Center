@@ -9,7 +9,6 @@ import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.UIEntity;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.SensorDTO;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.VarDTO;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -130,8 +129,7 @@ public class VarManagementWindow extends Stage {
                         selectedVarInfoArea.setWrapText(false);
                     } else if (newSelection.getValue() instanceof VarDTO) {
                         Sensor varSensor = MainController.getInstance().getMessageController()
-                                .getSensorByName(((SensorDTO) newSelection.getParent().getValue())
-                                        .getSensorName());
+                                .getSensorByName(((SensorDTO) newSelection.getParent().getValue()).getSensorName());
 
                         Var actualVar = varSensor.getVarByName(((VarDTO) newSelection.getValue()).getVarName());
 

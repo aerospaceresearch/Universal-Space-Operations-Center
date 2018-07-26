@@ -9,8 +9,6 @@ import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Placeholder;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
-import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.SensorDTO;
-import com.ksatstuttgart.usoc.gui.setup.configuration.entity.data.VarDTO;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -172,6 +170,7 @@ public class AssignDataWindow extends Stage {
                                 sensorNames) {
                             Sensor currentSensor = MainController.getInstance().getMessageController()
                                     .getSensorByName(sensorName);
+
                             content.append(separator);
                             content.append("Sensor: " + sensorName + "\n" + currentSensor.toString() + "\n");
 

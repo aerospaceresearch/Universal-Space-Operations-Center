@@ -1,18 +1,24 @@
 package com.ksatstuttgart.usoc.gui.panel;
 
 import com.ksatstuttgart.usoc.controller.MainController;
+import com.ksatstuttgart.usoc.data.message.Var;
+import com.ksatstuttgart.usoc.data.message.dataPackage.Sensor;
 import com.ksatstuttgart.usoc.gui.setup.configuration.StatePaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Segment;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.State;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.StageStyle;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * State Panel
@@ -67,7 +73,7 @@ public class StatePanel extends ScrollPane {
                 // Handles Right Click Context Menu
                 MenuItem editItem = new MenuItem("Edit Data");
                 editItem.setOnAction(onAction -> {
-                    // TODO
+                    showEditDataPopup(label, state);
                 });
                 MenuItem removeItem = new MenuItem("Remove");
                 removeItem.setOnAction(onAction -> {
@@ -99,5 +105,81 @@ public class StatePanel extends ScrollPane {
         setFitToWidth(true);
         setFitToHeight(true);
         setContent(stateBox);
+    }
+
+    private void showEditDataPopup(Label label, State state) {
+        Dialog<String> popupDialog = new Dialog<>();
+        popupDialog.initStyle(StageStyle.UTILITY);
+        popupDialog.setTitle("Edit Data");
+        popupDialog.setHeaderText("Modify State keyword and data point.");
+        popupDialog.getDialogPane().getButtonTypes().addAll(ButtonType.APPLY, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField keywordTF = new TextField();
+        keywordTF.setPromptText("Keyword");
+
+        Sensor foundSensor = MainController.getInstance().getMessageController()
+                .getSensorByName(state.getSensorName());
+
+        // If no sensors are assigned, the sensor that displays in the comboBox
+        // is the first one from the selected protocol
+        if (foundSensor == null) {
+            foundSensor = MainController.getInstance().getMessageController()
+                    .getData().getSensors().get(0);
+        }
+
+        // Handles Var Choice Dialog
+        ComboBox<Var> varComboBox = new ComboBox();
+        varComboBox.getItems().addAll(foundSensor.getVars());
+
+        // Same thing as above. If no data is assigned to this state,
+        // then foundVar returns null. In that case, the first var in foundSensor
+        // is shown  by default in the comboBox
+        Var foundVar = foundSensor.getVarByName(state.getVarName());
+        if (foundVar == null) {
+            foundVar = foundSensor.getVars().get(0);
+        }
+        varComboBox.setValue(foundVar);
+
+        ComboBox<Sensor> sensorComboBox =
+                new ComboBox<>();
+        sensorComboBox.getItems().addAll(MainController.getInstance().getMessageController()
+                .getData().getSensors());
+        sensorComboBox.valueProperty().addListener((observableValue, oldValue, newValue) -> {
+            varComboBox.getItems().clear();
+            varComboBox.getItems().addAll(newValue.getVars());
+        });
+
+        grid.add(new Label("Keyword:"), 0, 0);
+        grid.add(keywordTF, 1, 0);
+        grid.add(new Label("Sensor:"), 0, 1);
+        grid.add(sensorComboBox, 1, 1);
+        grid.add(new Label("Variable:"), 0, 2);
+        grid.add(varComboBox, 1, 2);
+
+        popupDialog.getDialogPane().setContent(grid);
+
+        // Set Focus on Keyword Text Field
+        Platform.runLater(() -> keywordTF.requestFocus());
+
+        popupDialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.APPLY) {
+                return keywordTF.getText();
+            }
+            return null;
+        });
+
+        Optional<String> result = popupDialog.showAndWait();
+
+        result.ifPresent(usernamePassword -> {
+            label.setText(result.get());
+            state.setKeyword(result.get());
+            state.setVarName(varComboBox.getValue().getDataName());
+            state.setSensorName(sensorComboBox.getValue().getSensorName());
+        });
     }
 }
