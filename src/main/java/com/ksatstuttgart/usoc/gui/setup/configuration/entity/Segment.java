@@ -1,5 +1,6 @@
 package com.ksatstuttgart.usoc.gui.setup.configuration.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -10,6 +11,7 @@ public class Segment implements UIEntity {
     private List<State> states;
 
     public Segment() {
+        states = new ArrayList<>();
     }
 
     public Segment(String name, List<State> states) {
