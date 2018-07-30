@@ -1,19 +1,12 @@
 package com.ksatstuttgart.usoc.gui.setup.pane;
 
-import com.ksatstuttgart.usoc.gui.AssignDataWindow;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
 import com.ksatstuttgart.usoc.gui.setup.configuration.USOCPaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.entity.Chart;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;

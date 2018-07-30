@@ -182,6 +182,13 @@ public class MainWindow extends BorderPane {
         saveLayoutItem.setOnAction(onAction -> {
             try {
                 ConfigHandler.writeConfigurationFile();
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText("Save Layout to file");
+                alert.setContentText("Your layout was saved successfully!");
+
+                alert.showAndWait();
             } catch (IOException e) {
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Could not write to file");
                 errorAlert.showAndWait();
