@@ -19,11 +19,16 @@ import java.io.IOException;
 
 /**
  * Initial Popup Window that lets the user choose from
- * creating a new layout, loading a custom layout or a default
- * one
+ * creating a new layout, loading a custom layout or
+ * a default one
+ *
+ * @author Pedro Portela (Pedro12909)
  */
 public class InitialWindow extends VBox {
 
+    /**
+     * Creates an instance of the Initial Window
+     */
     public InitialWindow() {
         setProperties();
         createWindow();

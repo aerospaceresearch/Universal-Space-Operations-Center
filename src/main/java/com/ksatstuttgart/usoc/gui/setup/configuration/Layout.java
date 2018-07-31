@@ -2,25 +2,54 @@ package com.ksatstuttgart.usoc.gui.setup.configuration;
 
 /**
  * POJO class for the General Layout
+ *
+ * @author Pedro Portela (Pedro12909)
  */
 public class Layout {
 
+    /**
+     * Protocol Name
+     */
     private String protocolName;
 
+    /**
+     * Experiment Name
+     */
     private String experimentName;
 
+    /**
+     * Should window open maximized
+     */
     private boolean maximized;
 
+    /**
+     * Width of window (if not maximized)
+     */
     private int width;
 
+    /**
+     * Height of window (if not maximized)
+     */
     private int height;
 
+    /**
+     * Should window be resizable
+     */
     private boolean resizable;
 
+    /**
+     * All configuration items related with the State Pane
+     */
     private StatePaneProperties statePaneProperties;
 
+    /**
+     * All configuration items related with the USOC Pane
+     */
     private USOCPaneProperties usocPaneProperties;
 
+    /**
+     * All configuration items related with the Log Pane
+     */
     private LogPaneProperties logPaneProperties;
 
     public Layout() {

@@ -28,6 +28,8 @@ import java.util.Set;
  * Assign Data Window
  * Responsible for assigning data defined in a protocol
  * to the charts and states
+ *
+ * @author Pedro Portela (Pedro12909)
  */
 public class AssignDataWindow extends Stage {
 

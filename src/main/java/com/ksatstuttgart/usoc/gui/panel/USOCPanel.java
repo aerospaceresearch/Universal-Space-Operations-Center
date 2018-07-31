@@ -16,6 +16,7 @@ import java.util.Optional;
 
 /**
  * Tab Panel
+ * Contains GNSS View and Chart Grid
  */
 public class USOCPanel extends TabPane {
 
@@ -24,14 +25,31 @@ public class USOCPanel extends TabPane {
      */
     private USOCPaneProperties properties;
 
+    /**
+     * Chart Tab
+     */
     private Tab chartTab = new Tab();
 
+    /**
+     * Chart Grid
+     */
     private GridPane chartGrid = new GridPane();
 
+    /**
+     * GNSS Tab
+     */
     private Tab gnssTab = new Tab();
 
+    /**
+     * Keeps track of the current row index
+     * in the chart grid
+     */
     private int row = 0;
 
+    /**
+     * Keeps track of the current column index
+     * in the chart grid
+     */
     private int column = 0;
 
     /**
@@ -71,7 +89,6 @@ public class USOCPanel extends TabPane {
 
         getTabs().add(chartTab);
 
-        //TODO: Doesn't work yet with JavaFX -> doesn't close on window close
         if (properties.isGnssEnabled()) {
             StackPane gnssStack = new StackPane();
             GNSSPanel.addGNSSPaneltoStackPane(gnssStack);
@@ -83,6 +100,9 @@ public class USOCPanel extends TabPane {
         }
     }
 
+    /**
+     * Prepares ChartGrid Context Menu
+     */
     private void prepareContextMenu() {
         ContextMenu chartGridContextMenu = new ContextMenu();
         chartGridContextMenu.setImpl_showRelativeToWindow(true);
@@ -91,7 +111,7 @@ public class USOCPanel extends TabPane {
         addChartMenuItem.setOnAction(onAction -> {
             chartGridContextMenu.hide();
 
-            Dialog<Chart> addChartDialog = showAddEditChartDialog(false);
+            Dialog<Chart> addChartDialog = createAddEditChartDialog(false);
 
             Optional<Chart> result = addChartDialog.showAndWait();
 
@@ -100,6 +120,8 @@ public class USOCPanel extends TabPane {
                 properties.getCharts().add(newChart);
             });
         });
+
+        chartGridContextMenu.setImpl_showRelativeToWindow(true);
 
         chartGrid.setOnContextMenuRequested(onRequest -> {
             onRequest.consume();
@@ -110,7 +132,13 @@ public class USOCPanel extends TabPane {
         chartGridContextMenu.getItems().addAll(addChartMenuItem);
     }
 
-    private Dialog<Chart> showAddEditChartDialog(boolean isEditDialog) {
+    /**
+     * Creates the add/edit chart dialog
+     *
+     * @param isEditDialog flag used to tell if the dialog is used to edit or add a chart
+     * @return the created dialog
+     */
+    private Dialog<Chart> createAddEditChartDialog(boolean isEditDialog) {
         Dialog<Chart> dialog = new Dialog<>();
 
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -155,6 +183,12 @@ public class USOCPanel extends TabPane {
         return dialog;
     }
 
+    /**
+     * Creates a new Line Chart, and adds it to the correct
+     * position inside the chartGrid
+     *
+     * @param chart given chart configuration instance
+     */
     private void addChart(Chart chart) {
         final int maxColumns = properties.getChartColumns();
 
@@ -170,16 +204,12 @@ public class USOCPanel extends TabPane {
 
         // Create context menu for each chart
         ContextMenu chartContextMenu = new ContextMenu();
-        MenuItem assignDataMenuItem = new MenuItem("Assign Data");
-        assignDataMenuItem.setOnAction(onAction -> {
-            chartContextMenu.hide();
-            //TODO
-        });
+
         MenuItem editChartMenuItem = new MenuItem("Edit");
         editChartMenuItem.setOnAction(onAction -> {
             chartContextMenu.hide();
 
-            Dialog<Chart> editChartDialog = showAddEditChartDialog(true);
+            Dialog<Chart> editChartDialog = createAddEditChartDialog(true);
             Optional<Chart> res = editChartDialog.showAndWait();
 
             res.ifPresent(newChart -> {
@@ -202,7 +232,7 @@ public class USOCPanel extends TabPane {
 
         // Auto-Hides Menu when clicked outside of it
         chartContextMenu.setImpl_showRelativeToWindow(true);
-        chartContextMenu.getItems().addAll(assignDataMenuItem, editChartMenuItem,
+        chartContextMenu.getItems().addAll(editChartMenuItem,
                 new SeparatorMenuItem(), deleteChartMenuItem);
 
         lineChart.setOnContextMenuRequested(onAction -> {

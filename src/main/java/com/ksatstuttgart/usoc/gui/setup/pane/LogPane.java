@@ -3,14 +3,14 @@ package com.ksatstuttgart.usoc.gui.setup.pane;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Layout;
 import com.ksatstuttgart.usoc.gui.setup.configuration.LogPaneProperties;
 import com.ksatstuttgart.usoc.gui.setup.configuration.Parsable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 
 /**
  * Creates and prepares the LogPanel Pane
+ *
+ * @author Pedro Portela (Pedro12909)
  */
 public class LogPane extends GridPane implements Parsable {
 
@@ -74,6 +74,11 @@ public class LogPane extends GridPane implements Parsable {
         add(iridiumPanelCheckBox, 1, 1);
     }
 
+    /**
+     * Sets all Properties related to this class to a POJO instance
+     *
+     * @param pojoClass POJO Class to set properties
+     */
     @Override
     public void writeToPOJO(Layout pojoClass) {
         LogPaneProperties properties = pojoClass.getLogPaneProperties();

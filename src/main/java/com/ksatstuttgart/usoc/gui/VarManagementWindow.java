@@ -29,6 +29,8 @@ import java.util.List;
 /**
  * After selecting a Chart/State, this window allows
  * assigning data to it
+ *
+ * @author Pedro Portela (Pedro12909)
  */
 public class VarManagementWindow extends Stage {
 

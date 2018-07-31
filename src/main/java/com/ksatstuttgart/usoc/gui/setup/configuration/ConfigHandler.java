@@ -26,14 +26,8 @@ package com.ksatstuttgart.usoc.gui.setup.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ksatstuttgart.usoc.controller.MainController;
-import com.ksatstuttgart.usoc.controller.xml.XMLReader;
-import javafx.stage.FileChooser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**

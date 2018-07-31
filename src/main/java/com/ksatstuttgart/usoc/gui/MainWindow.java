@@ -32,20 +32,64 @@ import java.util.List;
  */
 public class MainWindow extends BorderPane {
 
+    /**
+     * File Menu Title
+     */
     private static final String FILE_MENU_TITLE = "File";
+
+    /**
+     * View Menu Title
+     */
     private static final String VIEW_MENU_TITLE = "View";
+
+    /**
+     * Data Menu Title
+     */
     private static final String DATA_MENU_TITLE = "Data";
+
+    /**
+     * Protocol Menu Title
+     */
+    private static final String PROTOCOL_MENU_TITLE = "Protocol";
+
+    /**
+     * Assign Data Menu Item Title
+     */
     private static final String ASSIGN_DATA_MENU_ITEM = "Assign Data";
 
+    /**
+     * First divider position (relative)
+     */
     private static final double FIRST_DIVIDER_POSITION = 0;
+
+    /**
+     * Second divider position (relative)
+     */
     private static final double SECOND_DIVIDER_POSITION = 0.75;
 
+    /**
+     * Split Pane used to show dividers between panes
+     */
     private SplitPane mainWindowSplitPane;
 
+    /**
+     * Instance of the State Panel
+     */
     private StatePanel statePanel;
+
+    /**
+     * Instance of the USOC Panel
+     */
     private USOCPanel usocPanel;
+
+    /**
+     * Instance of the Log Panel
+     */
     private LogPanel logPanel;
 
+    /**
+     * Creates an instance of the main window
+     */
     public MainWindow() {
         // Loads the configuration file
         Layout properties = MainController.getInstance().getLayout();
@@ -102,6 +146,10 @@ public class MainWindow extends BorderPane {
         setCenter(mainWindowSplitPane);
     }
 
+    /**
+     * Adds active panels to the Split Pane
+     * @param properties instance of properties
+     */
     private void addPanelsToSplitPane(Layout properties) {
         boolean isStatePanelEnabled = properties.getStatePaneProperties()
                 .isEnabled();
@@ -147,7 +195,7 @@ public class MainWindow extends BorderPane {
         Menu fileMenu = new Menu(FILE_MENU_TITLE);
 
         // Load Protocol Menu Item
-        Menu loadProtocolSubMenu = new Menu("Protocol");
+        Menu loadProtocolSubMenu = new Menu(PROTOCOL_MENU_TITLE);
         // Get List of Protocols in /protocols
         List<String> protocols = getAvailableProtocols();
 

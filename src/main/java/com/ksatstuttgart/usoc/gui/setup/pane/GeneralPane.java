@@ -7,15 +7,12 @@ import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 
 /**
  * Creates and prepares the GeneralPane
+ *
+ * @author Pedro Portela (Pedro12909)
  */
 public class GeneralPane extends Pane implements Parsable {
 
@@ -67,6 +64,7 @@ public class GeneralPane extends Pane implements Parsable {
         experimentNameBox.setPadding(DEFAULT_PADDING);
         experimentNameBox.add(new Label("Experiment Name"), 0, 0);
         experimentNameBox.add(experimentNameTextField, 1, 0);
+
         experimentNameTextField.setPromptText("Experiment Name");
 
         windowHeight.setPrefColumnCount(5);

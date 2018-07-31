@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * USOC Panel Pane (Charts + GNSS View)
+ *
+ * @author Pedro Portela (Pedro12909)
  */
 public class USOCPane extends BorderPane implements Parsable {
 

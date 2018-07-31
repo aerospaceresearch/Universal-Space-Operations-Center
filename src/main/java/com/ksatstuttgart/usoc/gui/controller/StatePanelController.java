@@ -21,31 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.ksatstuttgart.usoc.gui.controller; 
+package com.ksatstuttgart.usoc.gui.controller;
 
 import com.ksatstuttgart.usoc.controller.MessageController;
 import com.ksatstuttgart.usoc.data.USOCEvent;
-import javafx.scene.control.Label;
 
-/** 
+/**
  * <h1>StatePanelController</h1>
  * This class ensure the functionality of the StatePanel.
  * <p>
  * It contains a method for setting and
  * updating the labels in the StatePanel. A label is automatically
  * set for every entered keyword.
- * 
+ *
  * @author Victor Hertel
  * @version 1.0
-*/
-public class StatePanelController extends DataController { 
-    
-    public void addLabel(Label label, String value) {
-        label.setText(value);
-    }
-    
+ */
+public class StatePanelController extends DataController {
+
     @Override
     public void updateData(MessageController msgController, USOCEvent e) {
-        
+        // TODO
     }
 }

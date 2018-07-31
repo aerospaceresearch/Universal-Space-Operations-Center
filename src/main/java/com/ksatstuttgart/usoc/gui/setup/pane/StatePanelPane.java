@@ -277,6 +277,10 @@ public class StatePanelPane extends BorderPane implements Parsable {
         return null;
     }
 
+    /**
+     *
+     * @param pojoClass POJO Class to set properties
+     */
     @Override
     public void writeToPOJO(Layout pojoClass) {
         StatePaneProperties properties = pojoClass.getStatePaneProperties();

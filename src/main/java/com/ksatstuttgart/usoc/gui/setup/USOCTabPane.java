@@ -24,24 +24,31 @@
 package com.ksatstuttgart.usoc.gui.setup;
 
 import com.ksatstuttgart.usoc.gui.controller.DataController;
-import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 
+import java.io.IOException;
+
 /**
+ * Custom implementation of the Tab Pane
  *
  * @author Victor
  */
 public class USOCTabPane extends TabPane {
-    
-    public USOCTabPane(){
+
+    public USOCTabPane() {
         super();
     }
-    
-    public void addFXMLTab(String resourcePath, String text){
+
+    /**
+     * Adds a new Tab to the TabPane from a given FXML file
+     *
+     * @param resourcePath resource path
+     * @param text         tab Test
+     */
+    public void addFXMLTab(String resourcePath, String text) {
         try {
             Tab tab = new Tab();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(resourcePath));
@@ -53,7 +60,14 @@ public class USOCTabPane extends TabPane {
             ex.printStackTrace();
         }
     }
-    
+
+    /**
+     * Adds a new Tab to the TabPane from a given FXML file
+     *
+     * @param resourcePath resource path
+     * @param controller   DataController
+     * @param text         tab Test
+     */
     public void addFXMLTab(String resourcePath, DataController controller, String text) {
         try {
             Tab tab = new Tab();
