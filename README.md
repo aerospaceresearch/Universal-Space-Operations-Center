@@ -23,7 +23,7 @@ The documentation of for this project can be found [here](https://github.com/aer
 
 * **[Valentin Starlinger](https://github.com/vstarlinger)** - *Initial work*
 * **[Victor Hertel](https://github.com/vhertel)** - *Generic GUI Configuration*
-* **[Pedro Portela](https://github.com/Pedro12909)** - *Further development of the GUI. Implementation of user layouts*
+* **[Pedro Portela](https://github.com/Pedro12909)** - *Further development of the GUI. Implementation of window layouts*
 
 
 ## License
