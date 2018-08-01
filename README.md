@@ -15,14 +15,15 @@ The documentation of for this project can be found [here](https://github.com/aer
 
 ## How To Contribute
 -   Create a **Issue** if none exists for the work you want to do and state what you want to do. If you want to work on an issue that's already open. Comment on that issue so that we know that you are working on it.
--   **Fork** the project
+-   **Fork** the project (make sure you fork the develop branch, as it is the most up-to-date)
 -   Add your code
--   Create a **pull request**
+-   Create a **pull request** (again, to de develop branch, not master)
 
 ## Authors
 
 * **[Valentin Starlinger](https://github.com/vstarlinger)** - *Initial work*
 * **[Victor Hertel](https://github.com/vhertel)** - *Generic GUI Configuration*
+* **[Pedro Portela](https://github.com/Pedro12909)** - *Further development of the GUI. Implementation of user layouts*
 
 
 ## License
